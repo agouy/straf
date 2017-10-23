@@ -6770,17 +6770,27 @@ button.close {
 }
 
 
-
-.js-irs-0 .irs-bar, .js-irs-1 .irs-bar, .js-irs-2 .irs-bar {
+/*
+.js-irs-0 .irs-bar, .js-irs-1 .irs-bar, .js-irs-2 .irs-bar, .js-irs-3 .irs-bar {
 border-top-color: #E95420;
 border-bottom-color: #E95420;
 } 
 
-.js-irs-0 .irs-bar-edge, .js-irs-1 .irs-bar-edge, .js-irs-2 .irs-bar-edge {
+.js-irs-0 .irs-bar-edge, .js-irs-1 .irs-bar-edge, .js-irs-2 .irs-bar-edge, .js-irs-3 .irs-bar-edge {
 border-color: #E95420;
 }
+*/
 
-.js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar, .js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar, .js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2 .irs-bar {
+.js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar,
+.js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar,
+.js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2 .irs-bar,
+.js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar,
+.js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {
+  
+border-top-color: #E95420;
+border-bottom-color: #E95420;
 background: #E95420;
+border-color: #E95420;
+
 }
 
