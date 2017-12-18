@@ -1004,8 +1004,8 @@ genind4LD <- function(Ifile, Imicrovariants, Incode, Iploidy) {
       )
     )
     pop(D) <- dat$pop
-    
   }
+  
   return(D)
 }
 
@@ -1018,7 +1018,6 @@ getFreqAllPop <- function(data) {
   
   freq <- list()
   freq$all <- getFreqFromGenind(data)
-  
   
   for(popu in unique(data$pop)) {
     

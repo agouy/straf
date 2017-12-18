@@ -335,7 +335,11 @@ shinyUI(
                       
                       condition = "input.displayLDplot == true | input.displayLDtable == true",
                       
-                      checkboxInput('displayLDpvalplot', 'Plot LD p-values distribution', FALSE),
+                      checkboxInput(
+                        'displayLDpvalplot',
+                        'Plot LD p-values distribution',
+                        FALSE
+                      ),
                       
                       conditionalPanel(
                         condition = "input.displayLDpvalplot == true",
