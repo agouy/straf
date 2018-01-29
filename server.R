@@ -1,11 +1,14 @@
 # SERVER -----------------------------------------------------------------------
 
-library(shiny)
-library(ade4)
-library(adegenet)
-library(pegas)
-library(hierfstat)
-library(DT)
+suppressPackageStartupMessages({
+  library(shiny)
+  library(ade4)
+  library(adegenet)
+  library(pegas)
+  library(hierfstat)
+  library(DT)
+  library(car)
+})
 
 shinyServer(function(input, output) {
 
@@ -771,22 +774,42 @@ shinyServer(function(input, output) {
     
     if(length(input$PCAaxis)==2){
       par(mfrow=c(1,1))
-      s.class(pcaY$li, fac = pop(dat2),
-              col = transp(funky(length(unique(pop(dat2)))),.6),
-              axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
-              yax = as.numeric(input$PCAaxis[2]))
+      # s.class(pcaY$li, fac = pop(dat2),
+      #         col = transp(funky(length(unique(pop(dat2)))),.6),
+      #         axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
+      #         yax = as.numeric(input$PCAaxis[2]))
+      coul <- transp(funky(length(unique(pop(dat2)))),.6)
+      plotPCA(
+        pca = pcaY,
+        popus = pop(dat2),
+        coul = coul,
+        axis = c(as.numeric(input$PCAaxis[1]), as.numeric(input$PCAaxis[2]))
+      )
     }
     if(length(input$PCAaxis)==3){
       
       par(mfrow = c(1,2))
-      s.class(pcaY$li, fac = pop(dat2),
-              col = transp(funky(length(unique(pop(dat2)))),.6),
-              axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
-              yax = as.numeric(input$PCAaxis[2]))
-      s.class(pcaY$li, fac = pop(dat2),
-              col = transp(funky(length(unique(pop(dat2)))),.6),
-              axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
-              yax = as.numeric(input$PCAaxis[3]))
+      coul <- transp(funky(length(unique(pop(dat2)))),.6)
+      plotPCA(
+        pca = pcaY,
+        popus = pop(dat2),
+        coul = coul,
+        axis = c(as.numeric(input$PCAaxis[1]), as.numeric(input$PCAaxis[2]))
+      )
+      plotPCA(
+        pca = pcaY,
+        popus = pop(dat2),
+        coul = coul,
+        axis = c(as.numeric(input$PCAaxis[1]), as.numeric(input$PCAaxis[3]))
+      )
+      # s.class(pcaY$li, fac = pop(dat2),
+      #         col = transp(funky(length(unique(pop(dat2)))),.6),
+      #         axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
+      #         yax = as.numeric(input$PCAaxis[2]))
+      # s.class(pcaY$li, fac = pop(dat2),
+      #         col = transp(funky(length(unique(pop(dat2)))),.6),
+      #         axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
+      #         yax = as.numeric(input$PCAaxis[3]))
     }
   })
   
@@ -1224,3 +1247,57 @@ getIndicesFromGenind <- function(data,
 fu <- function(a, b){
   2 * (a ^ 2) * (b ^ 2)
 }
+
+
+plotPCA <- function(pca, popus, coul, axis) {
+  
+  var1 <- round(100*(pca$eig/sum(pca$eig))[axis[1]], 2)
+  var2 <- round(100*(pca$eig/sum(pca$eig))[axis[2]], 2)
+  
+  plot(pca$li[, axis[1]],
+       pca$li[, axis[2]],
+       col = transp(coul[popus], 0.5),
+       pch = 16, cex = 1.7,
+       xlab = paste0("PC", axis[1], " (", var1, " %)"),
+       ylab = paste0("PC", axis[2], " (", var2, " %)"),
+       cex.lab = 1.5,
+       cex.axis = 1.5,
+       cex.main = 1.5,
+       xlim = c(-5, 10),
+       ylim = c(-6, 10),
+       bty = "l",
+       main = "PCA projection"
+  )
+  
+  sapply(unique(popus), function(x) {
+    ellipse(
+      c(mean(pca$li[popus %in% x, axis[1]]), mean(pca$li[popus %in% x, axis[2]])),
+      cov(pca$li[, axis[1:2]]),
+      0.95,
+      col = transp(coul[x], 1),
+      lty = 1,
+      lwd = 2,
+      center.pch = 0,
+      fill = TRUE,
+      fill.alpha = 0.2,
+      segments = 100
+    )
+  })
+  
+  invisible(sapply(unique(popus), function(x) {
+    legend(
+      mean(pca$li[popus %in% x, axis[1]]),
+      mean(pca$li[popus %in% x, axis[2]]),
+      x,
+      xjust = 0.5,
+      yjust = 0.5,
+      text.col=coul[x],
+      text.font = 2,
+      box.col = NA,
+      bg = transp("white", 0.5),
+      adj = 0.2
+    )
+  }))
+  
+}
+

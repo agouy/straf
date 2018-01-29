@@ -1,10 +1,12 @@
 # UI ---------------------------------------------------------------------------
 
-library(shiny)
-library(shinythemes)
-library(colourpicker)
-library(DT)
-
+suppressPackageStartupMessages({
+  library(shiny)
+  library(shinythemes)
+  library(colourpicker)
+  library(DT)
+})
+  
 shinyUI(
 
   navbarPage(
