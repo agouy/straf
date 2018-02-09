@@ -972,13 +972,13 @@ genind4LD <- function(Ifile, Imicrovariants, Incode, Iploidy) {
   mat <- mat[-1, ]
   mat <- sub("[.]", "", mat)
   mat[nchar(mat) == 2 & !is.na(mat)] <- paste(
-    mat[nchar(mat) == 2 & !is.na(mat)],
-    "0",
+    "0",mat[nchar(mat) == 2 & !is.na(mat)],
+    
     sep=""
   )
   mat[nchar(mat) == 1 & !is.na(mat)] <- paste(
-    mat[nchar(mat) == 1 & !is.na(mat)],
-    "00",
+    "00",mat[nchar(mat) == 1 & !is.na(mat)],
+    
     sep = ""
   )
   loci <- unique(colnames(mat[, -1:-2]))
@@ -1145,11 +1145,10 @@ getIndicesFromGenind <- function(data,
   alle <- as.numeric(unlist(
     lapply(nam, function(x) sub("-", ".", x[2]))
   ))
-  
   DAT <- data.frame(freq, loc, alle)
   N <- tapply(DAT$freq, DAT$loc, sum)
   DAT$frequency <- DAT$freq / N[DAT$loc]
-  
+
   PIC <- NULL
   for(i in unique(loc)) {
     
@@ -1263,8 +1262,6 @@ plotPCA <- function(pca, popus, coul, axis) {
        cex.lab = 1.5,
        cex.axis = 1.5,
        cex.main = 1.5,
-       xlim = c(-5, 10),
-       ylim = c(-6, 10),
        bty = "l",
        main = "PCA projection"
   )
