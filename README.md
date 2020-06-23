@@ -2,7 +2,7 @@
 
 ### What is STRAF?
 
-STRAF is a web application based on R/Shiny that allows perform forensics and population genetics analysis of STR data.
+STRAF is a web application based on R/Shiny to perform forensics and population genetics analysis of STR data.
 
 http://cmpg.unibe.ch/shiny/STRAF/
 
