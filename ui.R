@@ -11,7 +11,7 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF: STR Analysis for Forensics",
+    "STRAF 1.0.5: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     
@@ -508,6 +508,67 @@ shinyUI(
         ),
         column(width=3)
       )
-    )
+    ),
+    
+    ##### DOCUMENTATION TAB --------------------------------------------------------
+    
+    tabPanel(
+      "About STRAF",
+      
+      fluidRow(
+        
+        column(width=3),
+        column(width=6,
+               
+               p('STRAF is a browser-based application that allows to perform forensics 
+                 and population genetics analysis of STR data.'),
+               
+               h3("Updates"),
+               
+               tags$ul(
+                 tags$li("1.0.5 (18/09/2018) – a few bug fixes; new page with
+                         updates, license, data usage"), 
+                 tags$li("1.0.4 (30/01/2018) - percentages of explained variance 
+                         appear now on the PCA plot + style improvements"), 
+                 tags$li("1.0.3 (18/12/2017) - a few bugs fixed, and it is now 
+                         possible to analyse a single locus"),
+                 tags$li("1.0.2 (20/10/2017) - forensics parameters and 
+                         population genetics indices can be computed for 
+                         each population separately; PCA coordinates and 
+                         eigenvectors can be downloaded"), 
+                 tags$li("1.0.1 (22/09/2017) - allele frequencies can now be 
+                         computed and downloaded for each population separately"), 
+                 tags$li("1.0.0 (02/06/2017) - STRAF release")
+               ),
+               
+               h3("Data policy"),
+               
+               p("Any file uploaded to STRAF is deleted when the session is
+                 closed. No data is retained on the server."),
+
+               h3("License"),
+               
+               p("The STRAF software as a whole is distributed under GPL-3 (GNU 
+                GENERAL PUBLIC LICENSE version 3). This program is free 
+                software: you can redistribute it and/or modify it under the 
+                terms of the GNU General Public License version 3 (GPL-3) as 
+                published by the Free Software Foundation."),
+               
+               p("This program is distributed in the hope that it will be 
+                useful, but WITHOUT ANY WARRANTY; without even the implied 
+                warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+                PURPOSE.  See the GNU General Public License for more details 
+                (https://www.gnu.org/licenses/gpl.txt)."),
+               
+               h3("Acknowledgments"),
+               
+               p("STRAF benefited of the comments of Martin Zieger, 
+                 Peter Vallone, Peter de Knijff, Guanglin He and Martin Bodner.")
+               
+               ),
+        column(width=3)
+               )
+        )
+    
   )
 )

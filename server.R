@@ -838,6 +838,7 @@ shinyServer(function(input, output) {
     write.table(pcaY$c1, file, sep = "\t", na = "",row.names = TRUE)
     }
   )
+  
   output$dlPCAcoord <- downloadHandler(
     filename = function() {
       paste('PCA_coordinates.tsv', sep = '')
