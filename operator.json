@@ -3,5 +3,5 @@
   "description": "STRAF (STR Analysis for Forensics) in Tercen",
   "tags": ["forensics", "genetics"],
   "authors": ["tercen"],
-  "urls": ["https://github.com/agouy/STRAF"]
+  "urls": ["https://github.com/agouy/straf"]
 }
