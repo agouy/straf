@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
   library(colourpicker)
   library(DT)
 })
-  
+
 shinyUI(
 
   navbarPage(
