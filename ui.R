@@ -11,7 +11,7 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.0.5: STR Analysis for Forensics",
+    "STRAF 1.1.2: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     
@@ -153,7 +153,7 @@ shinyUI(
             h4('Contact'),
             
             p('Please address your questions and bug reports to Alexandre Gouy
-              (alexandre.gouy [at] iee.unibe.ch). Any suggestions are welcome!'),
+              (straf [at] agouy.com). Any suggestions are welcome!'),
 
             tags$hr(),
 
@@ -526,6 +526,7 @@ shinyUI(
                h3("Updates"),
                
                tags$ul(
+                 tags$li("1.1.2 (03/10/2020) – Preparation for integration to Tercen; few minor updates"), 
                  tags$li("1.0.5 (18/09/2018) – a few bug fixes; new page with
                          updates, license, data usage"), 
                  tags$li("1.0.4 (30/01/2018) - percentages of explained variance 
