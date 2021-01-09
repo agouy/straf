@@ -11,23 +11,15 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.1.2: STR Analysis for Forensics",
+    "STRAF 1.2.0: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
-    
     tabPanel(
       "Analysis",
-      
       fluidPage(
-        
         theme = "bootstrap.css",
-        
-        tags$head(
-          tags$style(
-            type="text/css",
-            ".container-fluid {max-width: 1200px}"
-          )
-        ),
+        tags$head(includeHTML(("google-analytics.html"))),
+        tags$head(tags$style(type="text/css", ".container-fluid {max-width: 1200px}")),
         
         sidebarLayout(
           
@@ -39,23 +31,8 @@ shinyUI(
             
             h4('Input'),
             
-            radioButtons(
-              
-              'microvariants',
-              "Number of columns per locus:"
-              , c('2', '1'),
-              inline = TRUE
-              
-            ),
-
-            radioButtons(
-              
-              'ploidy',
-              "Ploidy:",
-              c('Diploid', 'Haploid'),
-              inline = TRUE
-              
-            ),
+            radioButtons('microvariants', "Number of columns per locus:", c('2', '1'), inline = TRUE),
+            radioButtons('ploidy', "Ploidy:", c('Diploid', 'Haploid'), inline = TRUE),
 
             conditionalPanel(
               
@@ -69,96 +46,36 @@ shinyUI(
               )
             ),
 
-            fileInput('file1', 'Choose file to upload:',
-                      accept = c(
-                        'text/csv',
-                        'text/comma-separated-values',
-                        'text/tab-separated-values',
-                        'text/plain',
-                        '.csv',
-                        '.tsv'
-                        
-                      )
+            fileInput(
+              'file1', 'Choose file to upload:',
+              accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv')
             ),
 
             h4('Graphical parameters'),
             
-            checkboxInput(
-              
-              "hidegraph",
-              "Display graphical parameters",
-              FALSE
-              
-            ),
+            checkboxInput("hidegraph", "Display graphical parameters", FALSE),
 
             conditionalPanel(
               
               condition="input.hidegraph",
               
               p("Barplot color"),
+              colourInput("barplotcolor", NULL, "#AEA79F", showColour = "background"),
+              checkboxInput("borderbarplot", "Bar border", TRUE),
+              sliderInput("transparency", "Tranparency", 0, 1, 0.8, ticks = FALSE),
+              sliderInput("width", "Plot width", 40, 100, 100, ticks = FALSE, post = "%"),
+              sliderInput("height", "Plot height", 300, 800, 500, ticks = FALSE, post = "px"),
+              sliderInput("cexaxis", "Axis label size", 0.2, 1.5, 1, ticks = FALSE),
+              sliderInput("margin", "Margin", 1, 10, 7, ticks = FALSE)
               
-              colourInput(
-                "barplotcolor",
-                NULL,
-                "#AEA79F",
-                showColour = "background"
-              ),
-
-              checkboxInput(
-                "borderbarplot",
-                "Bar border",
-                TRUE
-              ),
-
-              sliderInput(
-                "transparency",
-                "Tranparency",
-                0, 1, 0.8,
-                ticks = FALSE
-              ),
-
-              sliderInput(
-                "width",
-                "Plot width",
-                40, 100, 100,
-                ticks = FALSE,
-                post = "%"
-              ),
-
-              sliderInput(
-                "height",
-                "Plot height",
-                300, 800, 500,
-                ticks = FALSE,
-                post = "px"
-              ),
-
-              sliderInput(
-                "cexaxis",
-                "Axis label size",
-                0.2, 1.5, 1,
-                ticks = FALSE
-              ),
-
-              sliderInput(
-                "margin",
-                "Margin",
-                1, 10, 7,
-                ticks = FALSE
-              )
             ),
 
             tags$hr(),
-            
             h4('Contact'),
-            
             p('Please address your questions and bug reports to Alexandre Gouy
               (straf [at] agouy.com). Any suggestions are welcome!'),
-
             tags$hr(),
-
             h4('Citation'),
-            
             p("Gouy, A., & Zieger, M. (2017). STRAF - A convenient online tool 
               for STR data evaluation in forensic genetics. 
               Forensic Science International: Genetics, 30, 148-151.")
@@ -303,11 +220,9 @@ shinyUI(
                   h3("Linkage disequilibrium"),
                   
                   checkboxInput(
-                    
                     'displayLDtable',
                     'Display pairwise LD p-values matrix',
                     FALSE
-                    
                   ),
 
                   conditionalPanel(
@@ -522,10 +437,11 @@ shinyUI(
                
                p('STRAF is a browser-based application that allows to perform forensics 
                  and population genetics analysis of STR data.'),
-               
+
                h3("Updates"),
                
                tags$ul(
+                 tags$li("1.2.2 (09/01/2021) – STRAF has moved to an AWS server (without any changes in the License)."), 
                  tags$li("1.1.2 (03/10/2020) – Preparation for integration to Tercen; few minor updates"), 
                  tags$li("1.0.5 (18/09/2018) – a few bug fixes; new page with
                          updates, license, data usage"), 
