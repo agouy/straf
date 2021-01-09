@@ -11,14 +11,14 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.2.0: STR Analysis for Forensics",
+    "STRAF 1.2.1: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     tabPanel(
       "Analysis",
       fluidPage(
         theme = "bootstrap.css",
-        tags$head(includeHTML(("google-analytics.html"))),
+        tags$head(includeHTML(("./www/googleanalytics.html"))),
         tags$head(tags$style(type="text/css", ".container-fluid {max-width: 1200px}")),
         
         sidebarLayout(
