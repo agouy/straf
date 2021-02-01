@@ -916,8 +916,8 @@ shinyServer(function(input, output) {
       paste('straf2familias.txt', sep='') 
     },
     content = function(file) {
-      gp <- straf2familias(input$file1$datapath)
-      cat(gp, file = file)
+      fmi <- straf2familias(input$file1$datapath)
+      cat(fmi, file = file)
     }
   )
   
@@ -1399,8 +1399,7 @@ straf2familias <- function(f.name) {
     df_out[[nm]] <- c(df_tmp[[i]], df_tmp[[i + 1]])
   }
   
-  df_out
-  
+
   tbs <- lapply(df_out, table)
   prop.tb <- lapply(tbs, prop.table)
   
