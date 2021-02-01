@@ -1392,7 +1392,7 @@ straf2familias <- function(f.name) {
   
   # add leading zeros
   # concatenate
-  idx <- seq_len(length(df_tmp2))
+  idx <- seq_len(length(df_tmp))
   ids <- as.logical(idx %% 2)
   
   df_out <- list()
