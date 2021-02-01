@@ -911,12 +911,15 @@ shinyServer(function(input, output) {
       cat(gp, file = file)
     }
   )
+  
+  getInput <- reactive(input$file1$datapath)
+  
   output$dlFamilias <- downloadHandler(
     filename = function() { 
-      paste('straf2familias.txt', sep='') 
+      paste('straf2familias.txt', sep='')
     },
     content = function(file) {
-      fmi <- straf2familias(input$file1$datapath)
+      fmi <- straf2familias(getInput())
       cat(fmi, file = file)
     }
   )
