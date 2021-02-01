@@ -11,7 +11,7 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.2.1: STR Analysis for Forensics",
+    "STRAF 1.3.0: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     tabPanel(
@@ -324,6 +324,15 @@ shinyUI(
                   
                   tags$hr()
                   
+                ),
+                tabPanel(
+                  "File conversion",
+                  
+                  h3("GENEPOP"),
+                  downloadButton('dlGenepop', 'Download file in the Genepop format'),
+                  h3("Familias"),
+                  downloadButton('dlFamilias', 'Download file in the Familias format')
+                  
                 )
               )
             )
@@ -441,6 +450,7 @@ shinyUI(
                h3("Updates"),
                
                tags$ul(
+                 tags$li("1.3.0 (01/02/2021) – STRAF can convert files to the Genepop and Familias formats. A File conversion tab has been added."), 
                  tags$li("1.2.2 (09/01/2021) – STRAF has moved to an AWS server (without any changes in the License)."), 
                  tags$li("1.1.2 (03/10/2020) – Preparation for integration to Tercen; few minor updates"), 
                  tags$li("1.0.5 (18/09/2018) – a few bug fixes; new page with

@@ -899,6 +899,28 @@ shinyServer(function(input, output) {
   output$plotLoadings <- renderUI({
     plotOutput('loadings', width = paste(input$width,"%",sep = ""), height = input$height)
   })
+  
+  
+  #### FILE CONVERSION
+  output$dlGenepop <- downloadHandler(
+    filename = function() { 
+      paste('straf2genepop.txt', sep='') 
+    },
+    content = function(file) {
+      gp <- straf2genepop(input$file1$datapath)
+      cat(gp, file = file)
+    }
+  )
+  output$dlFamilias <- downloadHandler(
+    filename = function() { 
+      paste('straf2familias.txt', sep='') 
+    },
+    content = function(file) {
+      gp <- straf2familias(input$file1$datapath)
+      cat(gp, file = file)
+    }
+  )
+  
 })
 
 # EXTERNAL FUNCTIONS -----------------------------------------------------------
@@ -1299,3 +1321,97 @@ plotPCA <- function(pca, popus, coul, axis) {
   
 }
 
+
+straf2genepop <- function(f.name) {
+  df <- readLines(f.name)
+  
+  spt <- do.call("rbind", strsplit(df, "\t"))
+  colnames(spt) <- spt[1, ]
+  df <- as.data.frame(spt[-1, ])
+  
+  df_tmp <- lapply(df[, -1:-2], function(x) gsub("[.]", "", x))
+  
+  # add leading zeros
+  df_tmp2 <- lapply(df_tmp, function(x) {
+    x[nchar(x) == 1] <- paste0(x[nchar(x) == 1], "00")
+    x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
+    if(any(nchar(x) != 3)) stop("Error while converting allele labels.")
+    return(x)
+  })
+  
+  # concatenate
+  idx <- seq_len(length(df_tmp2))
+  ids <- idx %% 2
+  
+  df_out <- list()
+  for(i in idx[as.logical(ids)]) {
+    nm <- names(df_tmp2[i])
+    nm <- gsub(" ", "", nm)
+    df_out[[nm]] <- paste0(df_tmp2[[i]], df_tmp2[[i + 1]])
+  }
+  
+  df_out <- as.data.frame(df_out)
+  
+  
+  first.line <- "STRAF-generated GENEPOP input file."
+  loci <- colnames(df_out)
+  
+  str_out <- apply(df_out, 1, paste0, collapse = "\t")
+  
+  ## get pops
+  populations <- unique(df$pop)
+  vec_out <- c()
+  for(i in populations) {
+    idx <- df$pop %in% i
+    vec_out <- c(
+      vec_out,
+      paste0("Pop\t", i),
+      paste(df[idx, ]$ind, str_out[idx], sep = "\t,\t")
+    )
+  }
+  
+  ## write file
+  output <- c(first.line, loci, vec_out)
+  output <- paste(output, "\n", collapse = "")
+  
+  return(output)
+}
+
+straf2familias <- function(f.name) {
+  
+  df <- readLines(f.name)
+  
+  spt <- do.call("rbind", strsplit(df, "\t"))
+  colnames(spt) <- spt[1, ]
+  df <- as.data.frame(spt[-1, ])
+  
+  df_tmp <- df[, -1:-2]
+  
+  # add leading zeros
+  # concatenate
+  idx <- seq_len(length(df_tmp2))
+  ids <- as.logical(idx %% 2)
+  
+  df_out <- list()
+  for(i in idx[ids]) {
+    nm <- names(df_tmp[i])
+    nm <- gsub(" ", "", nm)
+    df_out[[nm]] <- c(df_tmp[[i]], df_tmp[[i + 1]])
+  }
+  
+  df_out
+  
+  tbs <- lapply(df_out, table)
+  prop.tb <- lapply(tbs, prop.table)
+  
+  str.list <- lapply(prop.tb, function(x) {
+    vec <- x
+    str_loc <- paste0(names(vec), "\t", unname(vec), collapse = "\n")
+    return(str_loc)
+  })
+  
+  output <- paste(names(prop.tb), str.list, sep = "\n")
+  out <- paste(output, collapse = "\n\n")
+  out <- paste0(out, "\n")
+  return(out)
+}
