@@ -1176,13 +1176,14 @@ getIndicesFromGenind <- function(data,
   PIC <- NULL
   for(i in unique(loc)) {
     
-    FR <- c(DAT$frequency[names(DAT$frequency) == i])
+    #FR <- c(DAT$frequency[names(DAT$frequency) == i])
+    FR <- c(DAT$frequency[DAT$loc == i])
+
     xu <- outer(FR, FR, "fu")
     som <- sum(xu[lower.tri(xu)])
     PIC[i] <-  1 - sum(FR ^ 2) - som
     
   } 
-  
   Nall <- tapply(
     DAT[DAT$freq>0, ]$freq,
     DAT[DAT$freq>0, ]$loc,
