@@ -544,6 +544,13 @@ shinyServer(function(input, output) {
       yaxis = list(title = "Locus")
     )
     
+    pdf(NULL)
+    dummy_dev_id = dev.cur()  
+    on.exit({
+      if (dummy_dev_id %in% dev.list()) {
+        dev.off(dummy_dev_id) 
+      } else warning("Dummy graphics device was closed by someone else. This should not have happened...")
+    })  
     (fig)
   })
   
