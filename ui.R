@@ -11,7 +11,7 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.3.2: STR Analysis for Forensics",
+    "STRAF 1.3.3: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     tabPanel(
@@ -20,6 +20,12 @@ shinyUI(
         theme = "bootstrap.css",
         tags$head(includeHTML(("./www/googleanalytics.html"))),
         tags$head(tags$style(type="text/css", ".container-fluid {max-width: 1200px}")),
+        tags$head(tags$style('body {font-family: Arial;}')),
+        tags$head(tags$style('table {font-family: Arial;}')),
+        tags$head(tags$style('h1 {font-family: Arial;}')),
+        tags$head(tags$style('h2 {font-family: Arial;}')),
+        tags$head(tags$style('h3 {font-family: Arial;}')),
+        tags$head(tags$style('h4 {font-family: Arial;}')),
         
         sidebarLayout(
           
@@ -60,8 +66,8 @@ shinyUI(
               condition="input.hidegraph",
               
               p("Barplot color"),
-              colourInput("barplotcolor", NULL, "#AEA79F", showColour = "background"),
-              checkboxInput("borderbarplot", "Bar border", TRUE),
+              colourInput("barplotcolor", NULL, "#36648B", showColour = "background"),
+              checkboxInput("borderbarplot", "Bar border", FALSE),
               sliderInput("transparency", "Tranparency", 0, 1, 0.8, ticks = FALSE),
               sliderInput("width", "Plot width", 40, 100, 100, ticks = FALSE, post = "%"),
               sliderInput("height", "Plot height", 300, 800, 500, ticks = FALSE, post = "px"),
@@ -450,6 +456,7 @@ shinyUI(
                h3("Updates"),
                
                tags$ul(
+                 tags$li("1.3.3 (03/02/2021) – Minor bug fixes in file conversion and PIC computation. Improved graphics."), 
                  tags$li("1.3.0 (01/02/2021) – STRAF can convert files to the Genepop and Familias formats. A File conversion tab has been added."), 
                  tags$li("1.2.2 (09/01/2021) – STRAF has moved to an AWS server (without any changes in the License)."), 
                  tags$li("1.1.2 (03/10/2020) – Preparation for integration to Tercen; few minor updates"), 

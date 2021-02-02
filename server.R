@@ -8,6 +8,7 @@ suppressPackageStartupMessages({
   library(hierfstat)
   library(DT)
   library(car)
+  library(plotly)
 })
 
 shinyServer(function(input, output) {
@@ -514,7 +515,7 @@ shinyServer(function(input, output) {
   })
   
   # plot in the reactive UI
-  output$plotIndices <-  renderPlot({
+  output$plotIndices <-  renderPlotly({
     
     if(is.null(input$selectPop2)) return(NULL)
     else taB <- reacIndices()[[input$selectPop2]]
@@ -525,21 +526,29 @@ shinyServer(function(input, output) {
     if(is.null(input$plotIndicesFOR)) return(NULL)
     
     par(mar=rep(input$margin,4))
-    barplot(
-      dat[,input$plotIndicesFOR],
-      names.arg = dat[,"locus"],
-      horiz = TRUE,
-      las = 1,
-      col = transp(input$barplotcolor, input$transparency),
-      border = as.numeric(input$borderbarplot),
-      cex.axis = input$cexaxis,
-      cex.names = input$cexaxis,
-      xlab = input$plotIndicesFOR
+    library(plotly)
+    
+    fig <- plot_ly(
+      x = dat[, input$plotIndicesFOR],
+      y = dat[, "locus"],
+      name = "bp_for",
+      type = "bar",
+      text = paste0(
+        "Locus: ", dat[, "locus"],
+        "\nValue: ", round(dat[, input$plotIndicesFOR], 4)
+      ),
+      hoverinfo = 'text',
+      marker = list(color = transp(input$barplotcolor, input$transparency))
+    ) %>% layout(
+      xaxis = list(title = input$plotIndicesFOR, zeroline = FALSE),
+      yaxis = list(title = "Locus")
     )
+    
+    (fig)
   })
   
   output$plotFOR <- renderUI({
-    plotOutput('plotIndices', width=paste(input$width,"%",sep=""),
+    plotlyOutput('plotIndices', width=paste(input$width,"%",sep=""),
                height=input$height)
   })
   
