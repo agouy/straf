@@ -11,7 +11,7 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.3.1: STR Analysis for Forensics",
+    "STRAF 1.3.2: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     tabPanel(
@@ -73,7 +73,7 @@ shinyUI(
             tags$hr(),
             h4('Contact'),
             p('Please address your questions and bug reports to Alexandre Gouy
-              (straf [at] agouy.com). Any suggestions are welcome!'),
+              (alexandre.gouy [at] protonmail.com). Any suggestions are welcome!'),
             tags$hr(),
             h4('Citation'),
             p("Gouy, A., & Zieger, M. (2017). STRAF - A convenient online tool 
