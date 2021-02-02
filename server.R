@@ -518,8 +518,8 @@ shinyServer(function(input, output) {
     
     if(is.null(input$selectPop2)) return(NULL)
     else taB <- reacIndices()[[input$selectPop2]]
-    
-    if(is.null(taB) | dim(taB)[1]==0) return(NULL)
+
+    if(is.null(taB) || dim(taB)[1] == 0) return(NULL)
     dat <- taB
 
     if(is.null(input$plotIndicesFOR)) return(NULL)
@@ -587,7 +587,7 @@ shinyServer(function(input, output) {
     
     if (length(unique(dat2@pop)) == 1)
       stop("Multiple populations are required to perform this analysis")
-    matFST <- pairwise.fst(dat2, res.type = "matrix")
+    matFST <- pairwise.WCfst(genind2hierfstat(dat2))
     matFST[lower.tri(matFST)] <- NA
     matFST
   })
@@ -935,7 +935,7 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
     
     readLines(Ifile$datapath) -> matrix
     matrix <- strsplit(matrix,"[\t]")
-    
+
     mat <- matrix(unlist(matrix), nrow = length(matrix), ncol = length(matrix[[1]]),
                 byrow = TRUE)
     mat[mat == "0"] <- NA ###
@@ -995,18 +995,18 @@ genind4LD <- function(Ifile, Imicrovariants, Incode, Iploidy) {
   colnames(mat) <- mat[1, ]
   rownames(mat) <- mat[ ,1]
   
-  mat <- mat[-1, ]
-  mat <- sub("[.]", "", mat)
-  mat[nchar(mat) == 2 & !is.na(mat)] <- paste(
-    "0",mat[nchar(mat) == 2 & !is.na(mat)],
-    
+  mat_tmp <- mat[-1, ]
+  mat_tmp <- mat_tmp[, -1:-2]
+  mat_tmp <- sub("[.]", "", mat_tmp)
+  mat_tmp[nchar(mat_tmp) == 2 & !is.na(mat_tmp)] <- paste(
+    "0", mat_tmp[nchar(mat_tmp) == 2 & !is.na(mat_tmp)],
     sep=""
   )
-  mat[nchar(mat) == 1 & !is.na(mat)] <- paste(
-    "00",mat[nchar(mat) == 1 & !is.na(mat)],
-    
+  mat_tmp[nchar(mat_tmp) == 1 & !is.na(mat_tmp)] <- paste(
+    "00", mat_tmp[nchar(mat_tmp) == 1 & !is.na(mat_tmp)],
     sep = ""
   )
+  mat <- cbind(mat[-1, 1:2], mat_tmp)
   loci <- unique(colnames(mat[, -1:-2]))
   freqTAB <- NULL
   
@@ -1134,7 +1134,6 @@ getIndicesAllPop <- function(data,
   
   ind <- list()
   ind$all <- getIndicesFromGenind(data, hw, hwperm, ploidy)
-  
   for(popu in unique(data$pop)) {
     
     ind <- c(ind, x = NA)
@@ -1142,7 +1141,6 @@ getIndicesAllPop <- function(data,
     ind$x <- mat
     
     names(ind)[length(ind)] <- popu
-    
   }
   
   return(ind)
@@ -1368,7 +1366,7 @@ straf2genepop <- function(f.name) {
     idx <- df$pop %in% i
     vec_out <- c(
       vec_out,
-      paste0("Pop\t", i),
+      "Pop",
       paste(df[idx, ]$ind, str_out[idx], sep = "\t,\t")
     )
   }
