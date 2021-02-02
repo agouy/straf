@@ -5,6 +5,8 @@ suppressPackageStartupMessages({
   library(shinythemes)
   library(colourpicker)
   library(DT)
+  library(plotly)
+  
 })
 
 shinyUI(

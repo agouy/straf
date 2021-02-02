@@ -525,8 +525,7 @@ shinyServer(function(input, output) {
 
     if(is.null(input$plotIndicesFOR)) return(NULL)
     
-    par(mar=rep(input$margin,4))
-    library(plotly)
+    # par(mar=rep(input$margin,4))
     
     fig <- plot_ly(
       x = dat[, input$plotIndicesFOR],
@@ -544,17 +543,13 @@ shinyServer(function(input, output) {
       yaxis = list(title = "Locus")
     )
     
-<<<<<<< HEAD
-    pdf(NULL)
-=======
-    pdf(tempfile(fileext=".pdf"))
->>>>>>> 4804b290ae4e763546e7896c69666b2a5a37bbce
-    dummy_dev_id = dev.cur()  
-    on.exit({
-      if (dummy_dev_id %in% dev.list()) {
-        dev.off(dummy_dev_id) 
-      } else warning("Dummy graphics device was closed by someone else. This should not have happened...")
-    })  
+    # pdf(NULL)
+    # dummy_dev_id = dev.cur()  
+    # on.exit({
+    #   if (dummy_dev_id %in% dev.list()) {
+    #     dev.off(dummy_dev_id) 
+    #   } else warning("Dummy graphics device was closed by someone else. This should not have happened...")
+    # })  
     (fig)
   })
   
