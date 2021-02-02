@@ -4,7 +4,7 @@
 
 STRAF is a web application based on R/Shiny to perform forensics and population genetics analysis of STR data.
 
-http://cmpg.unibe.ch/shiny/STRAF/
+http://straf-app.com
 
 ### How to use STRAF?
 
