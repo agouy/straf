@@ -544,7 +544,11 @@ shinyServer(function(input, output) {
       yaxis = list(title = "Locus")
     )
     
+<<<<<<< HEAD
     pdf(NULL)
+=======
+    pdf(tempfile(fileext=".pdf"))
+>>>>>>> 4804b290ae4e763546e7896c69666b2a5a37bbce
     dummy_dev_id = dev.cur()  
     on.exit({
       if (dummy_dev_id %in% dev.list()) {
