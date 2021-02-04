@@ -929,7 +929,7 @@ shinyServer(function(input, output) {
   
   output$dlArlequin <- downloadHandler(
     filename = function() { 
-      paste('straf2arlequin.txt', sep='') 
+      paste('straf2arlequin.arp', sep='') 
     },
     content = function(file) {
       gp <- straf2arlequin(input$file1$datapath)
