@@ -13,7 +13,7 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.3.3: STR Analysis for Forensics",
+    "STRAF 1.3.4: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     tabPanel(
@@ -334,10 +334,14 @@ shinyUI(
                   
                 ),
                 tabPanel(
-                  "File conversion",
+                  "File conversion (beta)",
                   
-                  h3("GENEPOP"),
+                  h4("NB: these new features have not been extensively tested yet."),
+                  
+                  h3("Genepop (diploid data only)"),
                   downloadButton('dlGenepop', 'Download file in the Genepop format'),
+                  h3("Arlequin (diploid data only)"),
+                  downloadButton('dlArlequin', 'Download file in the Arlequin format'),
                   h3("Familias"),
                   downloadButton('dlFamilias', 'Download file in the Familias format')
                   
