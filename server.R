@@ -10,6 +10,8 @@ suppressPackageStartupMessages({
   library(car)
   library(plotly)
   library(openxlsx)
+  library(ggplot2)
+  library(ggrepel)
 })
 
 options(stringsAsFactors = FALSE)
@@ -848,6 +850,29 @@ shinyServer(function(input, output) {
   output$plotPCA <- renderUI({
     plotOutput('runPCA', width = paste(input$width,"%",sep = ""), 
                height = input$height, click = "plot_click")
+  })
+  output$plotMDS <- renderUI({
+    plotOutput('runMDS', width = paste(input$width,"%",sep = ""), 
+               height = input$height)
+  })
+  output$runMDS <- renderPlot({
+    if (!input$displayMDS)  return(NULL)
+    dat2 <- getgenind()
+    
+    obj <- genind2genpop(dat2)
+    dst <- dist.genpop(obj, method = 1)
+    # hc <- hclust(dst)
+    # plot(as.dendrogram(hc), horiz=T, xlab = "", sub = "", main = "Nei's distance between populations")
+
+    MDS <- cmdscale(dst)
+    MDS <- data.frame(ax1 = MDS[, 1], ax2 = MDS[, 2], pop = rownames(MDS))
+    # plot(MDS, xlab = "MDS Axis 1", ylab = "MDS Axis 2", pch = 16, col = dat2@pop)
+    p <- ggplot(MDS, aes(x=ax1, y=ax2, color = pop, label = pop)) +
+      geom_point() +
+      geom_text_repel() + 
+      labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
+      theme_minimal()
+    plot(p)
   })
   
   # DL principal components
