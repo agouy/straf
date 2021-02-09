@@ -12,7 +12,7 @@ straf2familias <- function(f.name) {
   
   # add leading zeros
   # concatenate
-  idx <- seq_len(length(df_tmp2))
+  idx <- seq_len(length(df_tmp))
   ids <- as.logical(idx %% 2)
   
   df_out <- list()
@@ -22,7 +22,6 @@ straf2familias <- function(f.name) {
     df_out[[nm]] <- c(df_tmp[[i]], df_tmp[[i + 1]])
   }
   
-  df_out
   
   tbs <- lapply(df_out, table)
   prop.tb <- lapply(tbs, prop.table)
@@ -38,8 +37,10 @@ straf2familias <- function(f.name) {
   out <- paste0(out, "\n")
   return(out)
 }
+str <- straf2familias("C:/Users/alexa/Desktop/Ausgangsdatei_STRAF_32markers_6pop.txt")
+cat(str)
 
-str <- straf2familias("./www/exampleSTRAFdiplo.txt")
-cat(str, file = "./scripts/testfamilias.txt")
+
+, file = "./scripts/testfamilias.txt")
 
     

@@ -6,13 +6,10 @@ straf2arlequin <- function(f.name) {
   colnames(spt) <- spt[1, ]
   df <- as.data.frame(spt[-1, ])
   
-  df_tmp <- lapply(df[, -1:-2], function(x) gsub("[.]", "", x))
-  
-  # add leading zeros
-  df_tmp2 <- lapply(df_tmp, function(x) {
-    x[nchar(x) == 1] <- paste0(x[nchar(x) == 1], "00")
-    x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
-    if(any(nchar(x) != 3)) stop("Error while converting allele labels.")
+  df_tmp2 <- lapply(df[, -1:-2], function(x) {
+    dot_idx <- grep("[.]", x)
+    x <- gsub("[.]", "", x)
+    if(length(dot_idx) > 0) x[-dot_idx] <- paste0(x[-dot_idx], "0")
     return(x)
   })
   df_tmp2 <- as.data.frame(df_tmp2)
