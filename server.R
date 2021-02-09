@@ -11,6 +11,8 @@ suppressPackageStartupMessages({
   library(plotly)
 })
 
+options(stringsAsFactors = FALSE)
+
 shinyServer(function(input, output) {
 
 # GET INPUT FILE -------------------------------------------------------------
