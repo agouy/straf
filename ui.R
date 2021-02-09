@@ -114,7 +114,7 @@ shinyUI(
                   ),
                   conditionalPanel(
                     condition = "input.displayTable == true",
-                    div(dataTableOutput('contents'), style = "font-size:70%")
+                    div(dataTableOutput('contents'), style = "font-size:70%"),
                   ),
 
                   tags$hr(),
@@ -142,7 +142,8 @@ shinyUI(
                     condition = "input.displayAlleleTable == true",
                     uiOutput("selectPop"),
                     div(dataTableOutput('tableFreq'), style = "font-size:70%"),
-                    downloadButton('dlTabfreq', 'Download')
+                    downloadButton('dlTabfreq', 'Download as text (.tsv)'),
+                    downloadButton('dlTabfreqXL', 'Download as Excel (.xlsx)')
                   ),
 
                   tags$hr()
@@ -165,7 +166,8 @@ shinyUI(
                     
                     uiOutput("selectPop2"),
                     div(tableOutput('forensics'), style = "font-size:75%"),
-                    downloadButton('dlForensics', 'Download'),
+                    downloadButton('dlForensics', 'Download as text (.tsv)'),
+                    downloadButton('dlForensicsXL', 'Download as Excel (.xlsx)'),
                     tags$hr(),
                     uiOutput("uiFOR"),
                     uiOutput("plotFOR")
@@ -216,7 +218,8 @@ shinyUI(
                     condition = "input.displayDiv == true",
                     
                     div(tableOutput('diversity'), style = "font-size:75%"),
-                    downloadButton('dlPopgen', 'Download'),
+                    downloadButton('dlPopgen', 'Download as text (.txt)'),
+                    downloadButton('dlPopgenCL', 'Download as Excel (.xlsx)'),
                     tags$hr(),
                     uiOutput("uiPG"),
                     uiOutput("plotPG")
@@ -237,8 +240,8 @@ shinyUI(
                     
                     condition = "input.displayLDtable == true",
                     div(tableOutput('LDtable'), style = "font-size:75%"),
-                    downloadButton('dlLDtable', 'Download')
-                    
+                    downloadButton('dlLDtable', 'Download as text'),
+                    downloadButton('dlLDtableXL', 'Download as Excel')
                   ),
 
                   conditionalPanel(
@@ -291,8 +294,8 @@ shinyUI(
                     condition = "input.displayFstMat == true",
                     
                     div(tableOutput('FstMat'), style = "font-size:75%"),
-                    downloadButton('dlFstMat', 'Download')
-                    
+                    downloadButton('dlFstMat', 'Download as text (.txt)'),
+                    downloadButton('dlFstMatXL', 'Download as Excel (.xlsx)')
                   ),
                   
                   tags$hr(),

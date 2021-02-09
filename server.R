@@ -9,6 +9,7 @@ suppressPackageStartupMessages({
   library(DT)
   library(car)
   library(plotly)
+  library(openxlsx)
 })
 
 options(stringsAsFactors = FALSE)
@@ -21,11 +22,7 @@ shinyServer(function(input, output) {
     
     ### check the input: returns NULL if problem
     ### if NULL, the function checkinputfile will print a message
-    if(is.null(input$file1)) {
-      
-      return(NULL)
-      
-    } else {
+    if(is.null(input$file1)) { return(NULL) } else {
       
       X <- read.table(
         input$file1$datapath,
@@ -54,7 +51,7 @@ shinyServer(function(input, output) {
         ),
         silent = TRUE
       )
-      
+
       testGeno2 <- try(
         genind4LD(
           Ifile = input$file1,
@@ -64,12 +61,12 @@ shinyServer(function(input, output) {
         ),
         silent = TRUE
       )
-      
+
       if(class(testGeno) == "try-error" | class(testGeno2) == "try-error") {
-        
+
         warning("Input file error.")
         return(NULL)
-        
+
       }
 
       if(length(unique(testGeno2@pop)) > 1 & length(locNames(testGeno2)) > 1) {
@@ -99,11 +96,7 @@ shinyServer(function(input, output) {
 
   })
   
-  output$fileUploaded <- reactive({
-    
-    return(!is.null(getData()))
-    
-  })
+  output$fileUploaded <- reactive({ return(!is.null(getData())) })
   
   output$checkInputFile <- renderText({ 
     
@@ -229,21 +222,12 @@ shinyServer(function(input, output) {
   
   output$alleleFreq <- renderPlot({ #barplots of allele freq distributions
     
-    if (is.null(getData()) | !input$displayAlleleFreq)  return(NULL)
-    
-    dat2 <- createGenind(
-      Ifile = getData(),
-      Imicrovariants = input$microvariants,
-      Incode = input$ncode,
-      Iploidy = input$ploidy
-    )
-    
+    if (!input$displayAlleleFreq)  return(NULL)
+    dat2 <- getgenind()
+
     freq <- apply(dat2@tab, 2, sum, na.rm = TRUE) #counts number of alleles
     
-    nam <- strsplit(
-      names(freq),
-      split = "[.]"
-    ) #split locus and allele name
+    nam <- strsplit(names(freq), split = "[.]") #split locus and allele name
     
     loc <- as.factor(unlist(
       lapply(nam, function(x) x[1])
@@ -252,32 +236,25 @@ shinyServer(function(input, output) {
       lapply(nam, function(x) sub("-", ".", x[2]))
     ))
     
-    DAT <- data.frame(freq,loc,alle)
-    DAT <- DAT[order(DAT$alle),]
+    DAT <- data.frame(freq, loc, alle)
+    DAT <- DAT[order(DAT$alle), ]
     
     ###depending on the number of loci, different number of columns:
     nL <- length(unique(DAT$loc))
-    if(nL <= 5) ncolo <- 2
-    if(nL >= 6) ncolo <- 3
-    if(nL >= 10) ncolo <- 4
-    par(mfrow = c(ceiling(nL / ncolo), ncolo))
+    if(nL <= 5) n_col <- 2
+    if(nL >= 6) n_col <- 3
+    if(nL >= 10) n_col <- 4
     
-    par(mar=c(2,2,2,2))
+    par(mfrow = c(ceiling(nL / n_col), n_col), mar = rep(2, 4))
     for(i in unique(DAT$loc)) {
-      
       barplot(
         DAT$freq[DAT$loc == i],
         names.arg = DAT$alle[DAT$loc == i],
         main = i,
-        col = transp(
-          input$barplotcolor,
-          input$transparency
-        ),
+        col = transp(input$barplotcolor, input$transparency),
         border = as.numeric(input$borderbarplot)
       )
-      
     }
-    
   })
   
   output$plotAF <- renderUI({ #display UI only if allele freq is checked
@@ -293,36 +270,19 @@ shinyServer(function(input, output) {
 # ALLELE FREQUENCIES TABLE -----------------------------------------------------
   
   alleleFreqTabs <- reactive({
-    
-    inFile <- input$file1
-    
-    if (is.null(inFile) | !input$displayAlleleTable) return(NULL)
-    
-    dat2 <- createGenind(
-      Ifile = inFile,
-      Imicrovariants = input$microvariants,
-      Incode = input$ncode,
-      Iploidy = input$ploidy
-    )
-
+    if (!input$displayAlleleTable)  return(NULL)
+    dat2 <- getgenind()
     matr <- getFreqAllPop(dat2)
-    
     return(matr)
-    
   })
 
   output$selectPop <- renderUI({
-    
     selectInput("selectPop", "Select a population:", popnames())
-    
   })
 
   output$tableFreq <- renderDataTable({
     
-    inFile <- input$file1
-
-    if (is.null(inFile) | !input$displayAlleleTable)
-      return(NULL)
+    if (!input$displayAlleleTable) return(NULL)
     
     if(input$selectPop == "") matr <- alleleFreqTabs()[[1]]
     else matr <- alleleFreqTabs()[[input$selectPop]]
@@ -338,10 +298,8 @@ shinyServer(function(input, output) {
     },
     
     content = function(file) {
-      inFile <- input$file1
-      
-      if (is.null(inFile) | !input$displayAlleleTable)
-        return(NULL)
+
+      if (!input$displayAlleleTable) return(NULL)
       
       if(input$selectPop == "") matr <- alleleFreqTabs()[[1]]
       else matr <- alleleFreqTabs()[[input$selectPop]]
@@ -349,7 +307,22 @@ shinyServer(function(input, output) {
       write.table(matr, file, sep = "\t", na = "", row.names = TRUE)
     }
   )
-
+  output$dlTabfreqXL <- downloadHandler(
+    
+    filename = function() { 
+      paste('allele_frequencies.xlsx', sep='') 
+    },
+    
+    content = function(file) {
+      
+      if (!input$displayAlleleTable) return(NULL)
+      
+      if(input$selectPop == "") matr <- alleleFreqTabs()[[1]]
+      else matr <- alleleFreqTabs()[[input$selectPop]]
+      
+      openxlsx::write.xlsx(list(allele_frequencies = matr), file = file, rowNames = TRUE)
+    }
+  )
   
    
 # STATISTICS TABLE -------------------------------------------------------------
@@ -435,11 +408,7 @@ shinyServer(function(input, output) {
   
   output$dlForensics <- downloadHandler(
     
-    filename = function() { 
-      
-      paste('forensics_parameters.tsv', sep = '') 
-      
-    },
+    filename = function() { paste('forensics_parameters.tsv', sep = '') },
     
     content = function(file) {
       
@@ -455,7 +424,19 @@ shinyServer(function(input, output) {
     }
     
   )
-  
+  output$dlForensicsXL <- downloadHandler(
+    
+    filename = function() { paste('forensics_parameters.xlsx', sep = '') },
+    
+    content = function(file) {
+      
+      if(is.null(input$selectPop2)) taB <- reacIndices()[[1]]
+      else taB <- reacIndices()[[input$selectPop2]]
+      out <- taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")]
+      openxlsx::write.xlsx(list(forensics_parameters = out), file, row.names = FALSE)
+    }
+    
+  )
   ### popgen table display + download
   
   output$diversity <- renderTable({
@@ -490,7 +471,27 @@ shinyServer(function(input, output) {
     }
     
   )
-  
+  output$dlPopgenXL <- downloadHandler(
+    
+    filename = function() {
+      paste('popgen_statistics.xlsx', sep='') 
+    },
+    
+    content = function(file) {
+      
+      if(is.null(input$selectPop3)) taB <- reacIndices()[[1]]
+      else taB <- reacIndices()[[input$selectPop3]]
+      
+      taB2 <- taB[, !colnames(taB) %in% c("PIC","PD","PE","TPI", "PM")]
+      openxlsx::write.xlsx(
+        list(popgen_parameters = taB2),
+        file,
+        row.names = FALSE
+      )
+      
+    }
+    
+  )  
   ### plot forensics parameters + popgen indices
   
   # reactive UI: displayed if indices are computed
@@ -565,12 +566,12 @@ shinyServer(function(input, output) {
     if(is.null(input$selectPop3)) return(NULL)
     else taB <- reacIndices()[[input$selectPop3]]
     
-    if(is.null(taB) | dim(taB)[1]==0) return(NULL)
+    if(is.null(taB) | dim(taB)[1] == 0) return(NULL)
     datpl <- taB
     
     if(is.null(input$plotIndicesPG)) return(NULL)
     
-    par(mar=rep(input$margin,4))
+    par(mar = rep(input$margin, 4))
     barplot(
       datpl[, input$plotIndicesPG],
       names.arg = datpl[, "locus"],
@@ -588,19 +589,29 @@ shinyServer(function(input, output) {
     plotOutput('plotIndicesPopgen', width=paste(input$width,"%",sep=""),
                height=input$height)
   })
+
+# create genind function
   
+  getgenind <- reactive({
+    inFile <- input$file1
+    
+    if(is.null(inFile)) return(NULL)
+    
+    df_out <- createGenind(
+      Ifile = inFile,
+      Imicrovariants = input$microvariants,
+      Incode = input$ncode,
+      Iploidy = input$ploidy
+    )
+    return(df_out)
+  })
   
 # PAIRWISE FST -----------------------------------------------------------------
   
   #reactive function to compute FST matrix
   fstMatInput <- reactive({
-    inFile <- input$file1
-    
-    if (is.null(inFile) | !input$displayFstMat)
-      return(NULL)
-    
-    dat2 <- createGenind(Ifile=inFile,Imicrovariants=input$microvariants,
-                       Incode=input$ncode,Iploidy=input$ploidy)
+    if (!input$displayFstMat)  return(NULL)
+    dat2 <- getgenind()
     
     if (length(unique(dat2@pop)) == 1)
       stop("Multiple populations are required to perform this analysis")
@@ -624,7 +635,15 @@ shinyServer(function(input, output) {
       write.table(matFST, file, sep="\t", na = "",row.names = TRUE)
     }
   )
-  
+  output$dlFstMatXL <- downloadHandler(
+    filename = function() { 
+      paste('pairwise_fst.xlsx', sep='') 
+    },
+    content = function(file) {
+      matFST <- apply(fstMatInput(),1,rev)
+      openxlsx::write.xlsx(list(fst=matFST), file, keepNA = FALSE,row.names = TRUE)
+    }
+  )
 # LD ---------------------------------------------------------------------------
   
   #compute LD table
@@ -773,17 +792,24 @@ shinyServer(function(input, output) {
       write.table(pairLD, file, sep = "\t", na = "", row.names = TRUE)
     }
   )
-  
+  output$dlLDtableXL <- downloadHandler(
+    
+    filename = function() { 
+      paste('LD_pvalues.xlsx', sep='') 
+    },
+    
+    content = function(file) {
+      pairLD <- reacLDtable()
+      pairLD[lower.tri(pairLD)] <- NA
+      pairLD <- apply(pairLD, 1, rev)
+      openxlsx::write.xlsx(list(LD=pairLD), file, keepNA = FALSE, row.names = TRUE)
+    }
+  )
 # PCA --------------------------------------------------------------------------
   
   output$runPCA <- renderPlot({
-    inFile <- input$file1
-    
-    if (is.null(inFile) | !input$displayPCA)
-      return(NULL)
-    
-    dat2 <- createGenind(Ifile=inFile,Imicrovariants=input$microvariants,
-                       Incode=input$ncode,Iploidy=input$ploidy)
+    if (!input$displayPCA)  return(NULL)
+    dat2 <- getgenind()
     
     FREQ <- makefreq(dat2,missing="mean")
     pcaY <- dudi.pca(FREQ, nf = 3, scannf = FALSE)
@@ -791,10 +817,6 @@ shinyServer(function(input, output) {
     
     if(length(input$PCAaxis)==2){
       par(mfrow=c(1,1))
-      # s.class(pcaY$li, fac = pop(dat2),
-      #         col = transp(funky(length(unique(pop(dat2)))),.6),
-      #         axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
-      #         yax = as.numeric(input$PCAaxis[2]))
       coul <- transp(funky(length(unique(pop(dat2)))),.6)
       plotPCA(
         pca = pcaY,
@@ -819,14 +841,7 @@ shinyServer(function(input, output) {
         coul = coul,
         axis = c(as.numeric(input$PCAaxis[1]), as.numeric(input$PCAaxis[3]))
       )
-      # s.class(pcaY$li, fac = pop(dat2),
-      #         col = transp(funky(length(unique(pop(dat2)))),.6),
-      #         axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
-      #         yax = as.numeric(input$PCAaxis[2]))
-      # s.class(pcaY$li, fac = pop(dat2),
-      #         col = transp(funky(length(unique(pop(dat2)))),.6),
-      #         axesel = FALSE, cstar = 0, cpoint = 2,xax = as.numeric(input$PCAaxis[1]),
-      #         yax = as.numeric(input$PCAaxis[3]))
+
     }
   })
   
@@ -842,13 +857,8 @@ shinyServer(function(input, output) {
       },
       content = function(file) {
     
-    inFile <- input$file1
-    
-    if (is.null(inFile) | !input$displayPCA)
-      return(NULL)
-    
-    dat2 <- createGenind(Ifile = inFile,Imicrovariants = input$microvariants,
-                         Incode = input$ncode,Iploidy = input$ploidy)
+    if (!input$displayPCA)  return(NULL)
+    dat2 <- getgenind()
   
     FREQ <- makefreq(dat2,missing = "mean")
     pcaY <- dudi.pca(FREQ, nf = 3, scannf = FALSE)
@@ -861,15 +871,8 @@ shinyServer(function(input, output) {
       paste('PCA_coordinates.tsv', sep = '')
     },
     content = function(file) {
-      
-      inFile <- input$file1
-      
-      if (is.null(inFile) | !input$displayPCA)
-        return(NULL)
-      
-      dat2 <- createGenind(Ifile = inFile,Imicrovariants = input$microvariants,
-                           Incode = input$ncode,Iploidy = input$ploidy)
-      
+      if (!input$displayPCA)  return(NULL)
+      dat2 <- getgenind()
       FREQ <- makefreq(dat2,missing = "mean")
       pcaY <- dudi.pca(FREQ, nf = 3, scannf = FALSE)
       write.table(pcaY$li, file, sep = "\t", na = "",row.names = TRUE)
@@ -879,13 +882,8 @@ shinyServer(function(input, output) {
   # plot eigen values
   
   output$info <- renderPrint({
-    inFile <- input$file1
-    
-    if (is.null(inFile) | !input$displayPCA & length(input$PCAaxis)==2)
-      return(NULL)
-    
-    dat2 <- createGenind(Ifile = inFile,Imicrovariants = input$microvariants,
-                       Incode = input$ncode,Iploidy = input$ploidy)
+    if (!input$displayPCA)  return(NULL)
+    dat2 <- getgenind()
     
     FREQ <- makefreq(dat2,missing = "mean",quiet = TRUE)
     pcaY <- dudi.pca(FREQ, nf = 3, scannf = FALSE)
@@ -904,11 +902,8 @@ shinyServer(function(input, output) {
   })
   
   output$loadings <- renderPlot({
-    inFile <- input$file1
-    if(is.null(inFile) | !input$displayPCA) return(NULL)
-    
-    dat2 <- createGenind(Ifile = inFile,Imicrovariants = input$microvariants,
-                       Incode = input$ncode,Iploidy = input$ploidy)
+    if (!input$displayPCA)  return(NULL)
+    dat2 <- getgenind()
     FREQ <- makefreq(dat2,missing = "mean")
     pcaY <- dudi.pca(FREQ, nf = 3, scannf = FALSE)
     loadingplot(pcaY$c1^2)
