@@ -530,8 +530,6 @@ shinyServer(function(input, output) {
 
     if(is.null(input$plotIndicesFOR)) return(NULL)
     
-    # par(mar=rep(input$margin,4))
-    
     fig <- plot_ly(
       x = dat[, input$plotIndicesFOR],
       y = dat[, "locus"],
@@ -547,14 +545,7 @@ shinyServer(function(input, output) {
       xaxis = list(title = input$plotIndicesFOR, zeroline = FALSE),
       yaxis = list(title = "Locus")
     )
-    
-    # pdf(NULL)
-    # dummy_dev_id = dev.cur()  
-    # on.exit({
-    #   if (dummy_dev_id %in% dev.list()) {
-    #     dev.off(dummy_dev_id) 
-    #   } else warning("Dummy graphics device was closed by someone else. This should not have happened...")
-    # })  
+
     (fig)
   })
   
@@ -1017,9 +1008,26 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
     dat <- read.table(Ifile$datapath, header = TRUE,
                     sep = "\t",colClasses = "character")
     rownames(dat) <- dat$ind
-    dat2 <- df2genind(dat[,-1:-2],ncode = switch(
-      Incode, "2" = 2, "3" = 3),ploidy = switch(
-        Iploidy, Diploid = 2, Haploid = 1));pop(dat2) <- dat$pop
+    
+    if(Iploidy == "Haploid") {
+      dat_tmp <- dat[, -1:-2]
+      if(length(grep("[.]", unlist(dat_tmp))) > 0) {
+        new_dat <- apply(dat_tmp, MARGIN = 2, function(x) {
+          x <- gsub("[.]", "", x)
+          x[nchar(x) == 1] <- paste0("0", x[nchar(x) == 1], "0")
+          x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
+          if(any(nchar(x) != 3)) stop("Allele encoding error.")
+          return(x)
+        })
+        dat[, -1:-2] <- new_dat
+      }
+    }
+    
+    
+    dat2 <- df2genind(dat[, -1:-2],ncode = switch(
+      Incode, "2" = 2, "3" = 3), ploidy = switch(
+        Iploidy, Diploid = 2, Haploid = 1))
+    pop(dat2) <- dat$pop
   }
   return(dat2)
 }
@@ -1085,6 +1093,20 @@ genind4LD <- function(Ifile, Imicrovariants, Incode, Iploidy) {
       colClasses = "character"
     )
     rownames(dat) <- dat$ind
+
+    if(Iploidy == "Haploid") {
+      dat_tmp <- dat[, -1:-2]
+      if(length(grep("[.]", unlist(dat_tmp))) > 0) {
+        new_dat <- apply(dat_tmp, MARGIN = 2, function(x) {
+          x <- gsub("[.]", "", x)
+          x[nchar(x) == 1] <- paste0("0", x[nchar(x) == 1], "0")
+          x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
+          if(any(nchar(x) != 3)) stop("Allele encoding error.")
+          return(x)
+        })
+        dat[, -1:-2] <- new_dat
+      }
+    }
     
     D <- df2genind(
       dat[, -1:-2],

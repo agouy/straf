@@ -13,7 +13,7 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.4.0: STR Analysis for Forensics",
+    "STRAF 1.4.1: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     tabPanel(
@@ -482,8 +482,10 @@ shinyUI(
                h3("Updates"),
                
                tags$ul(
+                 tags$li("1.4.1 (08/03/2021) – STRAF now accepts point alleles for haploid data. In that case, all allele values are multiplied by 10."), 
                  tags$li("1.4.0 (09/02/2021) – STRAF can now perform an MDS. All results can be downloaded as Excel files. Minor bug fixes in file conversion."), 
                  tags$li("1.3.3 (03/02/2021) – Minor bug fixes in file conversion and PIC computation. Improved graphics."), 
+                 tags$li("1.3.2 (02/02/2021) – STRAF can convert files to the Arlequin format."), 
                  tags$li("1.3.0 (01/02/2021) – STRAF can convert files to the Genepop and Familias formats. A File conversion tab has been added."), 
                  tags$li("1.2.2 (09/01/2021) – STRAF has moved to an AWS server (without any changes in the License)."), 
                  tags$li("1.1.2 (03/10/2020) – Preparation for integration to Tercen; few minor updates"), 
