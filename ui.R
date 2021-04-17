@@ -15,7 +15,7 @@ shinyUI(
 
   navbarPage(
 
-    "STRAF 1.4.1: STR Analysis for Forensics",
+    "STRAF 1.4.2: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ----------------------------------------------------------
     tabPanel(
