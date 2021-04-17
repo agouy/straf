@@ -15,6 +15,7 @@ suppressPackageStartupMessages({
 })
 
 options(stringsAsFactors = FALSE)
+load("./www/strider_frequencies.rda")
 
 shinyServer(function(input, output) {
 
@@ -865,7 +866,34 @@ shinyServer(function(input, output) {
       theme_minimal()
     plot(p)
   })
-  
+
+  output$plotMDS_strider <- renderUI({
+    plotOutput('runMDS_strider', width = paste(input$width,"%",sep = ""), 
+               height = input$height)
+  })
+  output$runMDS_strider <- renderPlot({
+   #if (!input$displayMDS)  return(NULL)
+    
+    X <- strider_frequencies[input$location, ]
+    d <- X %*% t(X)
+    vec <- sqrt(diag(d))
+    d <- d/vec[col(d)]
+    d <- d/vec[row(d)]
+    d <- -log(d)
+    d <- as.dist(d)
+    
+    mds <- cmdscale(d)
+    MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
+    
+    p <- ggplot(MDS, aes(x=ax1, y=ax2, color = pop, label = pop)) +
+      geom_point() +
+      geom_text_repel() + 
+      labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
+      theme_minimal()
+    plot(p)
+    
+  })  
+    
   # DL principal components
   output$dlPCAeigen <- downloadHandler(
       filename = function() {

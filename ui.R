@@ -8,6 +8,8 @@ suppressPackageStartupMessages({
   library(plotly)
   
 })
+strider_pop <- c('Asia', 'AUSTRIA', 'BELGIUM', 'BOSNIA_AND_HERZEGOWINA', 'CZECH_REPUBLIC', 'DENMARK', 'Entire_Database', 'Europe', 'FINLAND', 'FRANCE', 'GERMANY', 'GREECE', 'HUNGARY', 'IRELAND', 'MONTENEGRO', 'NORWAY', 'POLAND', 'SAUDI_ARABIA', 'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'SWEDEN', 'SWITZERLAND', 'THAILAND')
+
 
 shinyUI(
 
@@ -350,6 +352,15 @@ shinyUI(
                     
                     condition = "input.displayMDS == true",
                     uiOutput('plotMDS')
+                  ),
+                  
+                  h4("MDS on STRidER allele frequency database"),
+                  
+                  uiOutput('plotMDS_strider'),
+                  checkboxGroupInput(
+                    'location', 'Select populations',
+                    choices = strider_pop, select = strider_pop,
+                    inline = TRUE
                   )
                   
                 ),
