@@ -985,6 +985,7 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
     freqTAB <- NULL
     mat2 <- mat
     mat2 <- sub("[.]","-",mat2)
+    
     for(i in 1:length(loci)){
       ids <- which(colnames(mat)==loci[i])
       alleles <- unique(c(mat[,ids]))
@@ -1006,9 +1007,9 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
     
   } else {
     dat <- read.table(Ifile$datapath, header = TRUE,
-                    sep = "\t",colClasses = "character")
+                     sep = "\t", colClasses = "character")
     rownames(dat) <- dat$ind
-    
+
     if(Iploidy == "Haploid") {
       dat_tmp <- dat[, -1:-2]
       if(length(grep("[.]", unlist(dat_tmp))) > 0) {
