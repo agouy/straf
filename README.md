@@ -1,10 +1,10 @@
-# STRAF - STR Analysis for Forensics
+# STRAF - STR Analysis for Forensics <a href='http://straf-app.com'><img src='www/STRAF_logo.png' align="right" height="139" /></a>
 
 ### What is STRAF?
 
 STRAF is a web application based on R/Shiny to perform forensics and population genetics analysis of STR data.
 
-http://straf-app.com
+[Click here to use the application.](http://straf-app.com)
 
 ### How to use STRAF?
 
@@ -16,10 +16,9 @@ If STRAF has been useful to you for your project, please consider citing our pap
 
 > Gouy, A., & Zieger, M. (2017). STRAF - A convenient online tool for STR data evaluation in forensic genetics. Forensic Science International: Genetics, 30, 148-151.
 
-
 ### Running the application locally
 
-It is possible to run the latest version of the app locally, provided that R is installed on your system.
+It is possible to run the latest version of the app locally, provided that R is installed on your system. You simply need to run the following lines in R:
 
 ```R
 library(shiny)
