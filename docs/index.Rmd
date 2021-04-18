@@ -10,8 +10,10 @@ biblio-style: apalike
 link-citations: yes
 description: "Test"
 ---
- 
+
 # Preface {-}
+
+<center>![](img/cover.png)</center>
 
 ## Why read this book {-}
 

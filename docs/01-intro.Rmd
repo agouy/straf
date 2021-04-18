@@ -1,5 +1,11 @@
 # Introduction to STRAF {#intro}
 
-## Test
+## What is STRAF
 
-blavla
+* Web application
+
+* scope of the app
+
+## How to use STRAF
+
+* available online at straf.fr

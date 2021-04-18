@@ -1,0 +1,9 @@
+# Importing data
+
+## STR data
+
+## Input data format
+
+## Generating the input data from Excel
+
+## Common issues
