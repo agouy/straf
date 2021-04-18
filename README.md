@@ -15,3 +15,13 @@ Please go to the `Documentation` tab within the application to learn how to use 
 If STRAF has been useful to you for your project, please consider citing our paper!
 
 > Gouy, A., & Zieger, M. (2017). STRAF - A convenient online tool for STR data evaluation in forensic genetics. Forensic Science International: Genetics, 30, 148-151.
+
+
+### Running the application locally
+
+It is possible to run the latest version of the app locally, provided that R is installed on your system.
+
+```R
+library(shiny)
+runGitHub("straf", "agouy")
+```

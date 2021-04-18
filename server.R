@@ -15,14 +15,12 @@ suppressPackageStartupMessages({
 })
 
 options(stringsAsFactors = FALSE)
+source("./scripts/helpers.R")
 load("./www/strider_frequencies.rda")
 
 shinyServer(function(input, output) {
-
-# GET INPUT FILE -------------------------------------------------------------
-    
-  getData <- reactive({ #get file from the input
-    
+  
+  getData <- reactive({
     ### check the input: returns NULL if problem
     ### if NULL, the function checkinputfile will print a message
     if(is.null(input$file1)) { return(NULL) } else {
@@ -33,7 +31,7 @@ shinyServer(function(input, output) {
         sep = "\t",
         colClasses = "character"
       )
-
+      
       if(class(X) != "data.frame" |
          colnames(X)[1] != "ind" |
          colnames(X)[2] != "pop" |
@@ -54,7 +52,7 @@ shinyServer(function(input, output) {
         ),
         silent = TRUE
       )
-
+      
       testGeno2 <- try(
         genind4LD(
           Ifile = input$file1,
@@ -64,16 +62,16 @@ shinyServer(function(input, output) {
         ),
         silent = TRUE
       )
-
+      
       if(class(testGeno) == "try-error" | class(testGeno2) == "try-error") {
-
+        
         warning("Input file error.")
         return(NULL)
-
+        
       }
-
+      
       if(length(unique(testGeno2@pop)) > 1 & length(locNames(testGeno2)) > 1) {
-
+        
         testGeno3 <- try(
           wc(
             testGeno2,
@@ -85,18 +83,18 @@ shinyServer(function(input, output) {
           ),
           silent = TRUE
         )
-
+        
         if(class(testGeno3) == "try-error") {
           warning("Input file error.")
           return(NULL)
         }
-
+        
       }
       
       return(input$file1)
       
     }
-
+    
   })
   
   output$fileUploaded <- reactive({ return(!is.null(getData())) })
@@ -130,7 +128,7 @@ shinyServer(function(input, output) {
         return("Input file error: incorrect number of columns. Please read 
                the documentation for more information.")
       } 
-
+      
       testGeno <- try(
         createGenind(
           Ifile=input$file1,
@@ -154,12 +152,12 @@ shinyServer(function(input, output) {
         ),
         silent = TRUE
       )
-
+      
       if(class(testGeno2) == "try-error") {
         return("Input file error. Wrong ploidy or number of digits (please check
                the left tab).")
       }
-
+      
       testGeno3 <- try(
         wc(
           testGeno2,
@@ -171,11 +169,11 @@ shinyServer(function(input, output) {
         ),
         silent = TRUE
       )
-
+      
       if(class(testGeno3) == "try-error") {
         return("Input file error. Wrong ploidy (please check the left tab).")
       }
-
+      
     }
     
   })
@@ -185,12 +183,9 @@ shinyServer(function(input, output) {
   
   popnames <- reactive({
     
-    if(is.null(input$file1)) {
-      
-      return("")
-      
+    if(is.null(input$file1)) { 
+      return("") 
     } else {
-      
       X <- read.table(
         input$file1$datapath,
         header = TRUE,
@@ -199,35 +194,27 @@ shinyServer(function(input, output) {
       )
       pop.names <- c("all", unique(X$pop))
       return(pop.names)
-      
     }
-    
   })
-
-# DISPLAY DATASET --------------------------------------------------------------
   
+  # DISPLAY DATASET --------------------------------------------------------------
   output$contents <- renderDataTable({
-    
-    if (is.null(getData()) | !input$displayTable) return(NULL)
-    
+    if (is.null(getData())) return(NULL)
     X <- read.table(
       getData()$datapath,
-      header = TRUE,
-      sep = "\t",
+      header = TRUE, sep = "\t",
       colClasses = "character"
     )
-    
-    DT::datatable(X) #datatable returns an interactive table
-    
+    DT::datatable(X)
   })
   
-# ALLELE FREQUENCIES -----------------------------------------------------------
+  # ALLELE FREQUENCIES -----------------------------------------------------------
   
   output$alleleFreq <- renderPlot({ #barplots of allele freq distributions
     
     if (!input$displayAlleleFreq)  return(NULL)
     dat2 <- getgenind()
-
+    
     freq <- apply(dat2@tab, 2, sum, na.rm = TRUE) #counts number of alleles
     
     nam <- strsplit(names(freq), split = "[.]") #split locus and allele name
@@ -270,7 +257,7 @@ shinyServer(function(input, output) {
     
   })
   
-# ALLELE FREQUENCIES TABLE -----------------------------------------------------
+  # ALLELE FREQUENCIES TABLE -----------------------------------------------------
   
   alleleFreqTabs <- reactive({
     if (!input$displayAlleleTable)  return(NULL)
@@ -278,11 +265,11 @@ shinyServer(function(input, output) {
     matr <- getFreqAllPop(dat2)
     return(matr)
   })
-
+  
   output$selectPop <- renderUI({
     selectInput("selectPop", "Select a population:", popnames())
   })
-
+  
   output$tableFreq <- renderDataTable({
     
     if (!input$displayAlleleTable) return(NULL)
@@ -293,7 +280,7 @@ shinyServer(function(input, output) {
     DT::datatable(matr) %>% formatRound(columns = colnames(matr), digits = 3)
     
   })
-
+  
   output$dlTabfreq <- downloadHandler(
     
     filename = function() { 
@@ -301,7 +288,7 @@ shinyServer(function(input, output) {
     },
     
     content = function(file) {
-
+      
       if (!input$displayAlleleTable) return(NULL)
       
       if(input$selectPop == "") matr <- alleleFreqTabs()[[1]]
@@ -327,8 +314,8 @@ shinyServer(function(input, output) {
     }
   )
   
-   
-# STATISTICS TABLE -------------------------------------------------------------
+  
+  # STATISTICS TABLE -------------------------------------------------------------
   
   ### compute forensics indices, reactive function
   output$selectPop2 <- renderUI({
@@ -356,10 +343,10 @@ shinyServer(function(input, output) {
       Incode = input$ncode,
       Iploidy = input$ploidy
     )
-
+    
     hw <- input$computeHW
     ploidy <- input$ploidy
-
+    
     DF <- getIndicesAllPop(
       dat2,
       hw = hw,
@@ -383,26 +370,18 @@ shinyServer(function(input, output) {
       Incode = input$ncode,
       Iploidy = input$ploidy
     )
-
+    
     if(is.null(input$selectPop2)) taB <- reacIndices()[[1]]
     else taB <- reacIndices()[[input$selectPop2]]
-
-    if(! is.null(input$selectPop2)) {
-      
+    
+    if(!is.null(input$selectPop2)) {
       if(length(unique(dat2@pop)) > 1 & input$selectPop2 == "all") {
-        
         taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")]
-        
       } else {
-        
         taB
-        
       }
-      
     } else {
-      
       taB
-      
     }
     
   }, digits = 4)
@@ -417,7 +396,7 @@ shinyServer(function(input, output) {
       
       if(is.null(input$selectPop2)) taB <- reacIndices()[[1]]
       else taB <- reacIndices()[[input$selectPop2]]
-
+      
       write.table(
         taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")],
         file,
@@ -525,10 +504,10 @@ shinyServer(function(input, output) {
     
     if(is.null(input$selectPop2)) return(NULL)
     else taB <- reacIndices()[[input$selectPop2]]
-
+    
     if(is.null(taB) || dim(taB)[1] == 0) return(NULL)
     dat <- taB
-
+    
     if(is.null(input$plotIndicesFOR)) return(NULL)
     
     fig <- plot_ly(
@@ -546,13 +525,13 @@ shinyServer(function(input, output) {
       xaxis = list(title = input$plotIndicesFOR, zeroline = FALSE),
       yaxis = list(title = "Locus")
     )
-
+    
     (fig)
   })
   
   output$plotFOR <- renderUI({
     plotlyOutput('plotIndices', width=paste(input$width,"%",sep=""),
-               height=input$height)
+                 height=input$height)
   })
   
   output$plotIndicesPopgen <-  renderPlot({
@@ -583,8 +562,8 @@ shinyServer(function(input, output) {
     plotOutput('plotIndicesPopgen', width=paste(input$width,"%",sep=""),
                height=input$height)
   })
-
-# create genind function
+  
+  # create genind function
   
   getgenind <- reactive({
     inFile <- input$file1
@@ -600,7 +579,7 @@ shinyServer(function(input, output) {
     return(df_out)
   })
   
-# PAIRWISE FST -----------------------------------------------------------------
+  # PAIRWISE FST -----------------------------------------------------------------
   
   #reactive function to compute FST matrix
   fstMatInput <- reactive({
@@ -638,7 +617,7 @@ shinyServer(function(input, output) {
       openxlsx::write.xlsx(list(fst=matFST), file, keepNA = FALSE,row.names = TRUE)
     }
   )
-# LD ---------------------------------------------------------------------------
+  # LD ---------------------------------------------------------------------------
   
   #compute LD table
   reacLDtable <- reactive({
@@ -648,7 +627,7 @@ shinyServer(function(input, output) {
       return(NULL)
     
     D <- genind4LD(Ifile=inFile,Imicrovariants=input$microvariants,
-                 Incode=input$ncode,Iploidy=input$ploidy)
+                   Incode=input$ncode,Iploidy=input$ploidy)
     
     datLD <- genind2loci(D)
     loci <- (unique(D@loc.fac))
@@ -661,9 +640,9 @@ shinyServer(function(input, output) {
         for(ii in 1:nloc){
           if(i<ii){
             if(input$ploidy=="Diploid") lx <- LD2(datLD,
-                                                locus=c(loci[i],loci[ii]))$T2
+                                                  locus=c(loci[i],loci[ii]))$T2
             if(input$ploidy=="Haploid") lx <- LD(datLD,
-                                               locus=c(loci[i],loci[ii]))$T2
+                                                 locus=c(loci[i],loci[ii]))$T2
             LDmat[i,ii] <- lx[3]
             LDmat[ii,i] <- lx[1]
             incProgress(1/npairs,message="Computing LD...")
@@ -692,7 +671,7 @@ shinyServer(function(input, output) {
     return(length(M)>30)
   })
   outputOptions(output, 'LD30', suspendWhenHidden=FALSE)
-
+  
   #plot heatmap LP p-values
   output$plotLD <- renderPlot({
     
@@ -799,7 +778,7 @@ shinyServer(function(input, output) {
       openxlsx::write.xlsx(list(LD=pairLD), file, keepNA = FALSE, row.names = TRUE)
     }
   )
-# PCA --------------------------------------------------------------------------
+  # PCA --------------------------------------------------------------------------
   
   output$runPCA <- renderPlot({
     if (!input$displayPCA)  return(NULL)
@@ -835,7 +814,7 @@ shinyServer(function(input, output) {
         coul = coul,
         axis = c(as.numeric(input$PCAaxis[1]), as.numeric(input$PCAaxis[3]))
       )
-
+      
     }
   })
   
@@ -849,16 +828,14 @@ shinyServer(function(input, output) {
   })
   output$runMDS <- renderPlot({
     if (!input$displayMDS)  return(NULL)
-    dat2 <- getgenind()
     
+    dat2 <- getgenind()
     obj <- genind2genpop(dat2)
     dst <- dist.genpop(obj, method = 1)
-    # hc <- hclust(dst)
-    # plot(as.dendrogram(hc), horiz=T, xlab = "", sub = "", main = "Nei's distance between populations")
-
+    
     MDS <- cmdscale(dst)
     MDS <- data.frame(ax1 = MDS[, 1], ax2 = MDS[, 2], pop = rownames(MDS))
-    # plot(MDS, xlab = "MDS Axis 1", ylab = "MDS Axis 2", pch = 16, col = dat2@pop)
+    
     p <- ggplot(MDS, aes(x=ax1, y=ax2, color = pop, label = pop)) +
       geom_point() +
       geom_text_repel() + 
@@ -866,15 +843,34 @@ shinyServer(function(input, output) {
       theme_minimal()
     plot(p)
   })
-
+  
   output$plotMDS_strider <- renderUI({
     plotOutput('runMDS_strider', width = paste(input$width,"%",sep = ""), 
                height = input$height)
   })
   output$runMDS_strider <- renderPlot({
-   #if (!input$displayMDS)  return(NULL)
+    #if (!input$displayMDS)  return(NULL)
     
     X <- strider_frequencies[input$location, ]
+    
+    if(input$add_current) {
+      dat2 <- getgenind()
+      obj <- genind2genpop(dat2)
+      
+      cn <- colnames(obj@tab)
+      cn <- gsub("[.]", "_", cn)
+      cn <- gsub("[-]", ".", cn)
+      colnames(obj@tab) <- cn
+      
+      common_cols <- intersect(colnames(obj@tab), colnames(X))
+      print(common_cols)
+      
+      X <- rbind(
+        subset(obj@tab, select = common_cols), 
+        subset(X, select = common_cols)
+      )
+    }
+    
     d <- X %*% t(X)
     vec <- sqrt(diag(d))
     d <- d/vec[col(d)]
@@ -887,26 +883,26 @@ shinyServer(function(input, output) {
     
     p <- ggplot(MDS, aes(x=ax1, y=ax2, color = pop, label = pop)) +
       geom_point() +
-      geom_text_repel() + 
+      geom_text_repel(max.overlaps = 50) + 
       labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
       theme_minimal()
     plot(p)
     
   })  
-    
+  
   # DL principal components
   output$dlPCAeigen <- downloadHandler(
-      filename = function() {
-        paste('PCA_eigenvectors.tsv', sep = '')
-      },
-      content = function(file) {
-    
-    if (!input$displayPCA)  return(NULL)
-    dat2 <- getgenind()
-  
-    FREQ <- makefreq(dat2,missing = "mean")
-    pcaY <- dudi.pca(FREQ, nf = 3, scannf = FALSE)
-    write.table(pcaY$c1, file, sep = "\t", na = "",row.names = TRUE)
+    filename = function() {
+      paste('PCA_eigenvectors.tsv', sep = '')
+    },
+    content = function(file) {
+      
+      if (!input$displayPCA)  return(NULL)
+      dat2 <- getgenind()
+      
+      FREQ <- makefreq(dat2,missing = "mean")
+      pcaY <- dudi.pca(FREQ, nf = 3, scannf = FALSE)
+      write.table(pcaY$c1, file, sep = "\t", na = "",row.names = TRUE)
     }
   )
   
@@ -933,15 +929,15 @@ shinyServer(function(input, output) {
     pcaY <- dudi.pca(FREQ, nf = 3, scannf = FALSE)
     
     if(length(input$PCAaxis) == 2){
-    cat("Click on a point to get its ID and coordinates\n\n")
-    
-    ta <- c("Axis1","Axis2","Axis3")
-    
-    if(!is.null(input$plot_click)){
-    nearPoints(pcaY$li, input$plot_click, 
-               xvar = ta[as.numeric(input$PCAaxis[1])], 
-               yvar = ta[as.numeric(input$PCAaxis[2])])
-    }
+      cat("Click on a point to get its ID and coordinates\n\n")
+      
+      ta <- c("Axis1","Axis2","Axis3")
+      
+      if(!is.null(input$plot_click)){
+        nearPoints(pcaY$li, input$plot_click, 
+                   xvar = ta[as.numeric(input$PCAaxis[1])], 
+                   yvar = ta[as.numeric(input$PCAaxis[2])])
+      }
     }
   })
   
@@ -992,584 +988,3 @@ shinyServer(function(input, output) {
   
 })
 
-# EXTERNAL FUNCTIONS -----------------------------------------------------------
-
-### convert input to genind object
-createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
-  
-  if(Imicrovariants == 2) {
-    
-    readLines(Ifile$datapath) -> matrix
-    matrix <- strsplit(matrix,"[\t]")
-
-    mat <- matrix(unlist(matrix), nrow = length(matrix), ncol = length(matrix[[1]]),
-                byrow = TRUE)
-    mat[mat == "0"] <- NA ###
-    colnames(mat) <- mat[1,]
-    rownames(mat) <- mat[,1]
-    
-    mat <- mat[-1,]
-    loci <- unique(colnames(mat[,-1:-2]))
-    freqTAB <- NULL
-    mat2 <- mat
-    mat2 <- sub("[.]","-",mat2)
-    
-    for(i in 1:length(loci)){
-      ids <- which(colnames(mat)==loci[i])
-      alleles <- unique(c(mat[,ids]))
-      alleles <- sub("[.]","-",alleles)
-      alleles <- alleles[!is.na(alleles)] ###
-      nameCol <- paste(loci[i],".",alleles,sep = "")
-      
-      newmat <- matrix(NA,ncol = length(nameCol),nrow = dim(mat)[1])
-      for(ii in 1:length(alleles)){
-        newmat[,ii] <- apply(mat2[,ids]==alleles[ii],1,sum)
-        colnames(newmat) <- nameCol
-      }
-      freqTAB <- cbind(freqTAB,newmat)
-    }
-    rownames(freqTAB) <- mat[,1]
-    colnames(freqTAB) <- sub(" ","",colnames(freqTAB))
-    dat2 <- as.genind(tab = freqTAB)
-    pop(dat2) <- mat[,"pop"]
-    
-  } else {
-    dat <- read.table(Ifile$datapath, header = TRUE,
-                     sep = "\t", colClasses = "character")
-    rownames(dat) <- dat$ind
-
-    if(Iploidy == "Haploid") {
-      dat_tmp <- dat[, -1:-2]
-      if(length(grep("[.]", unlist(dat_tmp))) > 0) {
-        new_dat <- apply(dat_tmp, MARGIN = 2, function(x) {
-          x <- gsub("[.]", "", x)
-          x[nchar(x) == 1] <- paste0("0", x[nchar(x) == 1], "0")
-          x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
-          if(any(nchar(x) != 3)) stop("Allele encoding error.")
-          return(x)
-        })
-        dat[, -1:-2] <- new_dat
-      }
-    }
-    
-    
-    dat2 <- df2genind(dat[, -1:-2],ncode = switch(
-      Incode, "2" = 2, "3" = 3), ploidy = switch(
-        Iploidy, Diploid = 2, Haploid = 1))
-    pop(dat2) <- dat$pop
-  }
-  return(dat2)
-}
-
-### convert input to genind object adapted to LD computation
-genind4LD <- function(Ifile, Imicrovariants, Incode, Iploidy) {
-  
-  if(Imicrovariants == 2) {
-    readLines(Ifile$datapath) -> matrix
-    matrix <- strsplit(matrix, "[\t]")
-
-  mat <- matrix(
-    unlist(matrix),
-    nrow = length(matrix),
-    ncol = length(matrix[[1]]),
-    byrow = TRUE
-  )
-  mat[mat=="0"] <- NA
-  
-  colnames(mat) <- mat[1, ]
-  rownames(mat) <- mat[ ,1]
-  
-  mat_tmp <- mat[-1, ]
-  mat_tmp <- mat_tmp[, -1:-2]
-  mat_tmp <- sub("[.]", "", mat_tmp)
-  mat_tmp[nchar(mat_tmp) == 2 & !is.na(mat_tmp)] <- paste(
-    "0", mat_tmp[nchar(mat_tmp) == 2 & !is.na(mat_tmp)],
-    sep=""
-  )
-  mat_tmp[nchar(mat_tmp) == 1 & !is.na(mat_tmp)] <- paste(
-    "00", mat_tmp[nchar(mat_tmp) == 1 & !is.na(mat_tmp)],
-    sep = ""
-  )
-  mat <- cbind(mat[-1, 1:2], mat_tmp)
-  loci <- unique(colnames(mat[, -1:-2]))
-  freqTAB <- NULL
-  
-  for(i in 1:length(loci)) {
-    ids <- which(colnames(mat)==loci[i])
-    alleles <- unique(c(mat[,ids]))
-    alleles <- alleles[!is.na(alleles)] ###
-    
-    nameCol <- paste(loci[i],".",alleles,sep="")
-    
-    newmat <- matrix(NA,ncol=length(nameCol),nrow=dim(mat)[1])
-    for(ii in 1:length(alleles)){
-      newmat[,ii] <- apply(mat[,ids]==alleles[ii],1,sum)
-      colnames(newmat) <- nameCol
-    }
-    freqTAB <- cbind(freqTAB,newmat)
-  }
-  rownames(freqTAB) <- mat[, 1]
-  colnames(freqTAB) <- sub(" ", "", colnames(freqTAB))
-  
-  D <- genind(tab = freqTAB, pop = mat[, "pop"])
-  
-  } else {
-    
-    dat <- read.table(
-      Ifile$datapath,
-      header = TRUE,
-      sep = "\t",
-      colClasses = "character"
-    )
-    rownames(dat) <- dat$ind
-
-    if(Iploidy == "Haploid") {
-      dat_tmp <- dat[, -1:-2]
-      if(length(grep("[.]", unlist(dat_tmp))) > 0) {
-        new_dat <- apply(dat_tmp, MARGIN = 2, function(x) {
-          x <- gsub("[.]", "", x)
-          x[nchar(x) == 1] <- paste0("0", x[nchar(x) == 1], "0")
-          x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
-          if(any(nchar(x) != 3)) stop("Allele encoding error.")
-          return(x)
-        })
-        dat[, -1:-2] <- new_dat
-      }
-    }
-    
-    D <- df2genind(
-      dat[, -1:-2],
-      ncode = switch(
-        Incode,
-        "2" = 2,
-        "3" = 3
-      ),
-      ploidy = switch(
-        Iploidy,
-        Diploid = 2,
-        Haploid = 1
-      )
-    )
-    pop(D) <- dat$pop
-  }
-  
-  return(D)
-}
-
-
-## getFreqAllPop
-## returns allele frequencies for each population
-# input: genind object
-# output: a list of allele frequencies tables
-getFreqAllPop <- function(data) {
-  
-  freq <- list()
-  freq$all <- getFreqFromGenind(data)
-  
-  for(popu in unique(data$pop)) {
-    
-    freq <- c(freq, x = NA)
-    mat <- getFreqFromGenind(data[data@pop == popu, ])
-    freq$x <- mat
-    
-    names(freq)[length(freq)] <- popu
-    
-  }
-  
-  return(freq)
-}
-
-## getFreqFromGenind
-## returns allele frequencies for a given population
-# input: genind object
-# output: an allele frequencies tables
-getFreqFromGenind <- function(data) {
-  
-  freq <- apply(data@tab, 2, sum, na.rm = TRUE)
-  nam <- strsplit(
-    names(freq),
-    split = "[.]"
-  )
-  loc <- as.factor(unlist(
-    lapply(nam, function(x) x[1])
-  ))
-  alle <- as.numeric(unlist(
-    lapply(nam, function(x) sub("-", ".", x[2]))
-  ))
-  
-  DAT <- data.frame(freq, loc, alle)
-  N <- tapply(DAT$freq, DAT$loc, sum)
-  DAT$frequency <- DAT$freq / N[DAT$loc]
-  
-  DAT$alle[is.na(DAT$alle)] <- 0
-  matr <- matrix(
-    NA,
-    ncol = length(unique(DAT$loc)),
-    nrow = length(unique(DAT$alle))
-  )
-  rownames(matr) <- sort(unique(DAT$alle))
-  colnames(matr) <- sort(unique(DAT$loc))
-  
-  for(i in sort(unique(DAT$alle))) {
-    matr[
-      as.character(i),
-      DAT[DAT$alle == i, ]$loc
-    ] <- DAT[DAT$alle==i, ]$frequency
-  }
-  
-  return(matr)
-}
-
-
-## getIndicesAllPop
-## returns indices for each population
-# input: genind object
-# output: a list of indices tables
-getIndicesAllPop <- function(data,
-                             hw = FALSE,
-                             hwperm = 1000,
-                             ploidy = "Diploid") {
-  
-  ind <- list()
-  ind$all <- getIndicesFromGenind(data, hw, hwperm, ploidy)
-  for(popu in unique(data$pop)) {
-    
-    ind <- c(ind, x = NA)
-    mat <- getIndicesFromGenind(data[data@pop == popu, ], hw, hwperm, ploidy)
-    ind$x <- mat
-    
-    names(ind)[length(ind)] <- popu
-  }
-  
-  return(ind)
-}
-
-## getIndicesFromGenind
-## returns indices for a given population
-# input: genind object
-# output: an indices table
-getIndicesFromGenind <- function(data,
-                                 hw = FALSE,
-                                 hwperm = 1000,
-                                 ploidy = "Diploid") {
-  
-  freq <- apply(data@tab, 2, sum, na.rm = TRUE)
-  
-  nam <- strsplit(
-    names(freq),
-    split="[.]"
-  )
-  
-  loc <- as.factor(unlist(
-    lapply(nam, function(x) x[1])
-  ))
-  
-  alle <- as.numeric(unlist(
-    lapply(nam, function(x) sub("-", ".", x[2]))
-  ))
-  DAT <- data.frame(freq, loc, alle)
-  N <- tapply(DAT$freq, DAT$loc, sum)
-  DAT$frequency <- DAT$freq / N[DAT$loc]
-
-  PIC <- NULL
-  for(i in unique(loc)) {
-    
-    #FR <- c(DAT$frequency[names(DAT$frequency) == i])
-    FR <- c(DAT$frequency[DAT$loc == i])
-
-    xu <- outer(FR, FR, "fu")
-    som <- sum(xu[lower.tri(xu)])
-    PIC[i] <-  1 - sum(FR ^ 2) - som
-    
-  } 
-  Nall <- tapply(
-    DAT[DAT$freq>0, ]$freq,
-    DAT[DAT$freq>0, ]$loc,
-    length
-  )
-  
-  GD <- tapply(
-    DAT$frequency,
-    DAT$loc,
-    function(x) 1 - sum(x ^ 2)
-  )
-  
-  GD <- GD * N / (N - 1) 
-  
-  PIC <- PIC[names(GD)]
-  
-  D2 <- genind2loci(data)
-  
-  sumloc <- summary(D2)[names(GD)]
-  
-  PM1 <- lapply(sumloc, function(x) {
-    sum((x$genotype / sum(x$genotype)) ^ 2)
-  })
-  
-  PM <- unlist(PM1)
-
-  DF <- data.frame(
-    locus = names(GD),
-    N = N,
-    Nall = Nall,
-    GD = GD,
-    PIC = PIC,
-    PM = PM,
-    PD = 1 - PM
-  )
-  
-  if(ploidy == "Diploid") {
-    
-    DF$Hobs <- summary(data)$Hobs[names(GD)]
-    DF$PE <- (DF$Hobs ^ 2) * (1 - 2 * (DF$Hobs) * ((1 - DF$Hobs) ^ 2))
-    DF$TPI <- 1 / (2 * (1 - DF$Hobs))
-    
-  }
-  
-  
-  if(length(unique(data@pop)) > 1 & length(locNames(data)) > 1) {
-    
-    basicstat <- basic.stats(
-      data,
-      diploid = switch(
-        ploidy,
-        Diploid = TRUE,
-        Haploid = FALSE
-      ),
-      digits = 4
-    )
-    
-    Fst <- wc(
-      data,
-      diploid = switch(
-        ploidy,
-        Diploid = TRUE,
-        Haploid = FALSE
-      )
-    )$per.loc$FST
-    
-    names(Fst) <- as.character(unique(data@loc.fac))
-    DF$Fst <- Fst[names(GD)]
-    
-    DF$Ht <- basicstat$perloc[names(GD), "Ht"]
-    DF$Fis <- basicstat$perloc[names(GD), "Fis"]
-
-  }
-  
-  if(ploidy == "Diploid" & hw) {
-    withProgress(message = 'Performing HW test...', value = 0, {
-      DF$pHW <- hw.test(data, B = hwperm)[names(GD), 4]
-    })
-  } 
-    
-  return(DF)
-}
-
-
-fu <- function(a, b){
-  2 * (a ^ 2) * (b ^ 2)
-}
-
-
-plotPCA <- function(pca, popus, coul, axis) {
-  
-  var1 <- round(100*(pca$eig/sum(pca$eig))[axis[1]], 2)
-  var2 <- round(100*(pca$eig/sum(pca$eig))[axis[2]], 2)
-  
-  plot(pca$li[, axis[1]],
-       pca$li[, axis[2]],
-       col = transp(coul[popus], 0.5),
-       pch = 16, cex = 1.7,
-       xlab = paste0("PC", axis[1], " (", var1, " %)"),
-       ylab = paste0("PC", axis[2], " (", var2, " %)"),
-       cex.lab = 1.5,
-       cex.axis = 1.5,
-       cex.main = 1.5,
-       bty = "l",
-       main = "PCA projection"
-  )
-  
-  sapply(unique(popus), function(x) {
-    ellipse(
-      c(mean(pca$li[popus %in% x, axis[1]]), mean(pca$li[popus %in% x, axis[2]])),
-      cov(pca$li[, axis[1:2]]),
-      0.95,
-      col = transp(coul[x], 1),
-      lty = 1,
-      lwd = 2,
-      center.pch = 0,
-      fill = TRUE,
-      fill.alpha = 0.2,
-      segments = 100
-    )
-  })
-  
-  invisible(sapply(unique(popus), function(x) {
-    legend(
-      mean(pca$li[popus %in% x, axis[1]]),
-      mean(pca$li[popus %in% x, axis[2]]),
-      x,
-      xjust = 0.5,
-      yjust = 0.5,
-      text.col=coul[x],
-      text.font = 2,
-      box.col = NA,
-      bg = transp("white", 0.5),
-      adj = 0.2
-    )
-  }))
-  
-}
-
-
-straf2genepop <- function(f.name) {
-  df <- readLines(f.name)
-  
-  spt <- do.call("rbind", strsplit(df, "\t"))
-  colnames(spt) <- spt[1, ]
-  df <- as.data.frame(spt[-1, ])
-  
-  df_tmp <- lapply(df[, -1:-2], function(x) gsub("[.]", "", x))
-  
-  # add leading zeros
-  df_tmp2 <- lapply(df_tmp, function(x) {
-    x[nchar(x) == 1] <- paste0(x[nchar(x) == 1], "00")
-    x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
-    if(any(nchar(x) != 3)) stop("Error while converting allele labels.")
-    return(x)
-  })
-  
-  # concatenate
-  idx <- seq_len(length(df_tmp2))
-  ids <- idx %% 2
-  
-  df_out <- list()
-  for(i in idx[as.logical(ids)]) {
-    nm <- names(df_tmp2[i])
-    nm <- gsub(" ", "", nm)
-    df_out[[nm]] <- paste0(df_tmp2[[i]], df_tmp2[[i + 1]])
-  }
-  
-  df_out <- as.data.frame(df_out)
-  
-  
-  first.line <- "STRAF-generated GENEPOP input file."
-  loci <- colnames(df_out)
-  
-  str_out <- apply(df_out, 1, paste0, collapse = "\t")
-  
-  ## get pops
-  populations <- unique(df$pop)
-  vec_out <- c()
-  for(i in populations) {
-    idx <- df$pop %in% i
-    vec_out <- c(
-      vec_out,
-      "Pop",
-      paste(df[idx, ]$ind, str_out[idx], sep = "\t,\t")
-    )
-  }
-  
-  ## write file
-  output <- c(first.line, loci, vec_out)
-  output <- paste(output, "\n", collapse = "")
-  
-  return(output)
-}
-
-straf2familias <- function(f.name) {
-  
-  df <- readLines(f.name)
-  
-  spt <- do.call("rbind", strsplit(df, "\t"))
-  colnames(spt) <- spt[1, ]
-  df <- as.data.frame(spt[-1, ])
-  
-  df_tmp <- df[, -1:-2]
-  
-  # add leading zeros
-  # concatenate
-  idx <- seq_len(length(df_tmp))
-  ids <- as.logical(idx %% 2)
-  
-  df_out <- list()
-  for(i in idx[ids]) {
-    nm <- names(df_tmp[i])
-    nm <- gsub(" ", "", nm)
-    df_out[[nm]] <- c(df_tmp[[i]], df_tmp[[i + 1]])
-  }
-  
-
-  tbs <- lapply(df_out, table)
-  prop.tb <- lapply(tbs, prop.table)
-  
-  str.list <- lapply(prop.tb, function(x) {
-    vec <- x
-    str_loc <- paste0(names(vec), "\t", unname(vec), collapse = "\n")
-    return(str_loc)
-  })
-  
-  output <- paste(names(prop.tb), str.list, sep = "\n")
-  out <- paste(output, collapse = "\n\n")
-  out <- paste0(out, "\n")
-  return(out)
-}
-
-straf2arlequin <- function(f.name) {
-  df <- readLines(f.name)
-  
-  spt <- do.call("rbind", strsplit(df, "\t"))
-  colnames(spt) <- spt[1, ]
-  df <- as.data.frame(spt[-1, ])
-  
-  df_tmp2 <- list()
-  
-  for(i in seq_len(ncol(df[, -1:-2]))) {
-    x <- df[, -1:-2][, i]
-    if(i %% 2 != 0) {
-      x2 <- df[, -1:-2][, i + 1]
-      dot_idx <- grep("[.]", x)
-      dot_idx2 <- grep("[.]", x2)
-      if(length(dot_idx) > 0 | length(dot_idx2) > 0) {
-        x <- gsub("[.]", "", x)
-        x[-dot_idx] <- paste0(x[-dot_idx], "0")
-        x2 <- gsub("[.]", "", x2)
-        x2[-dot_idx2] <- paste0(x2[-dot_idx2], "0")
-        if(length(dot_idx) == 0) x <- paste0(x, "0")
-        if(length(dot_idx2) == 0) x2 <- paste0(x2, "0")
-      }
-      df_tmp2[[i]] <- x
-      df_tmp2[[i+1]] <- x2
-      
-    } 
-    
-  }
-  df_tmp2 <- as.data.frame(df_tmp2)
-  
-  # concatenate
-  idx <- seq_len(length(df_tmp2))
-  ids <- as.logical(idx %% 2)
-  
-  out_str <- c()
-  for(pp in unique(df$pop)) {
-    df_pop <- df[df$pop == pp, ]
-    out_str <- c(out_str, paste0('SampleName="', pp, '"\nSampleSize=',nrow(df_pop),'\nSampleData={\n'))
-    
-    for(i in which(df$pop == pp)) {
-      samp_nm <- df[i, 1]
-      l1 <- paste0(c(samp_nm, "1", unname(unlist(df_tmp2[i, c(idx[ids])]))), collapse = "\t")
-      l2 <- paste0(c("", "", unname(unlist(df_tmp2[i, c(idx[!ids])]))), collapse = "\t")
-      out_str <- c(out_str, l1, l2)
-    }
-    out_str <- c(out_str, "}\n\n")
-  }
-  npop <- length(unique(df$pop))
-  header <- paste0('[Profile]\nTitle="STRAF-generated Arlequin file."\nNbSamples=',npop,'\nDataType=MICROSAT\n
-GenotypicData=1\nGameticPhase=0\nMissingData="?"\nLocusSeparator=WHITESPACE\n\n[Data]\n\n[[Samples]]\n\n')
-  
-  output <- c(header, out_str)
-  ## write file
-  output <- paste(output, "\n", collapse = "")
-  
-  return(output)
-}

@@ -41,6 +41,6 @@ sudo ln -s /etc/nginx/sites-available/shiny.conf .
 
 ```
 cd /srv/shiny-server/straf
-git pull
+sudo git pull
 sudo cp /srv/shiny-server/straf/* /srv/shiny-server/ -r
 ```
