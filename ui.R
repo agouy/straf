@@ -30,11 +30,21 @@ shinyUI(
 
         sidebarLayout(
           sidebarPanel(
-            p('STRAF performs forensics and population genetics analysis
-              of STR data. Please read the documentation for details about input
-              files and analyses.'),
+            fluidRow(
+              column(
+                width = 4, offset = 0,
+                tags$img(src='STRAF_logo.png', height = "120")
+              ),
+              column(
+                width = 8, offset = 0,
+                tags$b('Welcome to STRAF!'),
+                p('STRAF performs forensics and population genetics analysis of STR data.')
+              )
+            ),
             
+            tags$br(),
             h4('Input'),
+            p('Please read the documentation for details about input files and analyses.'),
             radioButtons('microvariants', "Number of columns per locus:", c('2', '1'), inline = TRUE),
             radioButtons('ploidy', "Ploidy:", c('Diploid', 'Haploid'), inline = TRUE),
             conditionalPanel(
