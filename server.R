@@ -20,6 +20,10 @@ load("./www/strider_frequencies.rda")
 
 shinyServer(function(input, output) {
   
+  observeEvent(input$load_example, {
+    load_ex <- ifelse(is.null(input$file1$datapath), TRUE, FALSE)
+  })
+  
   getData <- reactive({
     ### check the input: returns NULL if problem
     ### if NULL, the function checkinputfile will print a message
@@ -43,25 +47,8 @@ shinyServer(function(input, output) {
         
       }
       
-      testGeno <- try(
-        createGenind(
-          Ifile = input$file1,
-          Imicrovariants = input$microvariants,
-          Incode = input$ncode,
-          Iploidy = input$ploidy
-        ),
-        silent = TRUE
-      )
-      
-      testGeno2 <- try(
-        genind4LD(
-          Ifile = input$file1,
-          Imicrovariants = input$microvariants,
-          Incode = input$ncode,
-          Iploidy = input$ploidy
-        ),
-        silent = TRUE
-      )
+      testGeno <- try(getgenind(), silent = TRUE)
+      testGeno2 <- try(getgenind4ld(), silent = TRUE)
       
       if(class(testGeno) == "try-error" | class(testGeno2) == "try-error") {
         
@@ -113,49 +100,28 @@ shinyServer(function(input, output) {
                       colClasses="character")
       
       if(class(X) != "data.frame") {
-        return("Input file is not a data frame. Please read the documentation 
-               for more information.")
+        return("Input file is not a data frame. Please read the documentation for more information.")
       }
       if(colnames(X)[1] != "ind" | colnames(X)[2] != "pop") {
-        return("Input file error. Please read the documentation for more 
-               information.")
+        return("Input file error. Please read the documentation for more information.")
       }
       if(dim(X)[1] < 2) {
-        return("Input file error: incorrect number of rows. Please read the 
-               documentation for more information.")
+        return("Input file error: incorrect number of rows. Please read the documentation for more information.")
       }
       if(dim(X)[2] < 3) {
-        return("Input file error: incorrect number of columns. Please read 
-               the documentation for more information.")
+        return("Input file error: incorrect number of columns. Please read the documentation for more information.")
       } 
       
-      testGeno <- try(
-        createGenind(
-          Ifile=input$file1,
-          Imicrovariants=input$microvariants,
-          Incode=input$ncode,
-          Iploidy=input$ploidy
-        ),
-        silent=TRUE)
+      testGeno <- try(getgenind(), silent = TRUE)
       
       if(class(testGeno) == "try-error") {
-        return("Input file error. Wrong number of columns per locus 
-               (please check the left tab).")
+        return("Input file error. Wrong number of columns per locus (please check the left tab).")
       }
       
-      testGeno2 <- try(
-        genind4LD(
-          Ifile = input$file1,
-          Imicrovariants = input$microvariants,
-          Incode = input$ncode,
-          Iploidy = input$ploidy
-        ),
-        silent = TRUE
-      )
+      testGeno2 <- try(getgenind4ld(), silent = TRUE)
       
       if(class(testGeno2) == "try-error") {
-        return("Input file error. Wrong ploidy or number of digits (please check
-               the left tab).")
+        return("Input file error. Wrong ploidy or number of digits (please check the left tab).")
       }
       
       testGeno3 <- try(
@@ -213,7 +179,7 @@ shinyServer(function(input, output) {
   output$alleleFreq <- renderPlot({ #barplots of allele freq distributions
     
     if (!input$displayAlleleFreq)  return(NULL)
-    dat2 <- getgenind()
+    dat2 <- getgenind()##ts
     
     freq <- apply(dat2@tab, 2, sum, na.rm = TRUE) #counts number of alleles
     
@@ -331,50 +297,27 @@ shinyServer(function(input, output) {
   })
   
   reacIndices <- reactive({
-    
     inFile <- input$file1
-    
-    if (is.null(inFile))
-      return(NULL)
-    
-    dat2 <- genind4LD(
-      Ifile = inFile,
-      Imicrovariants = input$microvariants,
-      Incode = input$ncode,
-      Iploidy = input$ploidy
-    )
-    
-    hw <- input$computeHW
-    ploidy <- input$ploidy
-    
+    if(is.null(inFile)) return(NULL)
+
     DF <- getIndicesAllPop(
-      dat2,
-      hw = hw,
+      getgenind4ld(),
+      hw = input$computeHW,
       hwperm = input$hw_nperm,
-      ploidy = ploidy
+      ploidy = input$ploidy
     )
     return(DF)
-    
   })
   
   ### forensics table display
   output$forensics <- renderTable({
     
-    inFile <- input$file1
-    
-    if (is.null(inFile)) return(NULL)
-    
-    dat2 <- genind4LD(
-      Ifile = inFile,
-      Imicrovariants = input$microvariants,
-      Incode = input$ncode,
-      Iploidy = input$ploidy
-    )
-    
+    if (is.null(input$file1)) return(NULL)
     if(is.null(input$selectPop2)) taB <- reacIndices()[[1]]
     else taB <- reacIndices()[[input$selectPop2]]
     
     if(!is.null(input$selectPop2)) {
+      dat2 <- getgenind4ld()
       if(length(unique(dat2@pop)) > 1 & input$selectPop2 == "all") {
         taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")]
       } else {
@@ -578,7 +521,21 @@ shinyServer(function(input, output) {
     )
     return(df_out)
   })
+  # create genind function
   
+  getgenind4ld <- reactive({
+    inFile <- input$file1
+    
+    if(is.null(inFile)) return(NULL)
+    
+    df_out <- genind4LD(
+      Ifile = inFile,
+      Imicrovariants = input$microvariants,
+      Incode = input$ncode,
+      Iploidy = input$ploidy
+    )
+    return(df_out)
+  })
   # PAIRWISE FST -----------------------------------------------------------------
   
   #reactive function to compute FST matrix
@@ -626,9 +583,7 @@ shinyServer(function(input, output) {
     if (is.null(inFile))
       return(NULL)
     
-    D <- genind4LD(Ifile=inFile,Imicrovariants=input$microvariants,
-                   Incode=input$ncode,Iploidy=input$ploidy)
-    
+    D <- getgenind4ld()
     datLD <- genind2loci(D)
     loci <- (unique(D@loc.fac))
     nloc <- length(unique(D@loc.fac))

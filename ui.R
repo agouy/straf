@@ -6,12 +6,14 @@ suppressPackageStartupMessages({
   library(colourpicker)
   library(DT)
   library(plotly)
+  library(shinyWidgets)
 })
+options(warn = -1)
 strider_pop <- c('Asia', 'AUSTRIA', 'BELGIUM', 'BOSNIA_AND_HERZEGOWINA', 'CZECH_REPUBLIC', 'DENMARK', 'Entire_Database', 'Europe', 'FINLAND', 'FRANCE', 'GERMANY', 'GREECE', 'HUNGARY', 'IRELAND', 'MONTENEGRO', 'NORWAY', 'POLAND', 'SAUDI_ARABIA', 'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'SWEDEN', 'SWITZERLAND', 'THAILAND')
 
 shinyUI(
   navbarPage(
-    "STRAF 1.4.3: STR Analysis for Forensics",
+    "STRAF 1.4.4: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ---------------------------------------------------------
     tabPanel(
@@ -30,19 +32,14 @@ shinyUI(
 
         sidebarLayout(
           sidebarPanel(
+            width = 3,
             fluidRow(
-              column(
-                width = 4, offset = 0,
-                tags$img(src='STRAF_logo.png', height = "120")
-              ),
-              column(
-                width = 8, offset = 0,
-                tags$b('Welcome to STRAF!'),
-                p('STRAF performs forensics and population genetics analysis of STR data.')
-              )
-            ),
-            
-            tags$br(),
+              column(width = 6,
+              div(tags$img(src='STRAF_logo.png', height = "120"), style="text-align: center;"),
+              ), 
+              column( width = 6,
+                p(strong('Welcome!'), br(), br(), 'STRAF is an STR data analysis application.'),
+            )),
             h4('Input'),
             p('Please read the documentation for details about input files and analyses.'),
             radioButtons('microvariants', "Number of columns per locus:", c('2', '1'), inline = TRUE),
@@ -55,14 +52,17 @@ shinyUI(
               'file1', 'Choose file to upload:',
               accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv')
             ),
+            tags$hr(),
+            actionButton("load_example", "Download example dataset"),
+            tags$hr(),
             
             h4('Graphical parameters'),
-            checkboxInput("hidegraph", "Display graphical parameters", FALSE),
+            awesomeCheckbox("hidegraph", "Display graphical parameters", FALSE),
             conditionalPanel(
               condition = "input.hidegraph",
               p("Barplot color"),
               colourInput("barplotcolor", NULL, "#36648B", showColour = "background"),
-              checkboxInput("borderbarplot", "Bar border", FALSE),
+              awesomeCheckbox("borderbarplot", "Bar border", FALSE),
               sliderInput("transparency", "Tranparency", 0, 1, 0.8, ticks = FALSE),
               sliderInput("width", "Plot width", 40, 100, 100, ticks = FALSE, post = "%"),
               sliderInput("height", "Plot height", 300, 800, 500, ticks = FALSE, post = "px"),
@@ -81,7 +81,7 @@ shinyUI(
           ),
           
           mainPanel(
-            
+            width = 9,
             conditionalPanel(
               condition = "!output.fileUploaded",
               uiOutput("checkInputFile")
@@ -101,7 +101,7 @@ shinyUI(
                   
                   tags$hr(),
                   h3("Allele frequencies per locus"),
-                  checkboxInput(
+                  awesomeCheckbox(
                     'displayAlleleFreq', 'Plot the distribution of allele frequencies',
                     FALSE
                   ),
@@ -111,7 +111,7 @@ shinyUI(
                   ),
                   
                   tags$hr(),
-                  checkboxInput(
+                  awesomeCheckbox(
                     'displayAlleleTable',
                     'Display a table of allele frequencies',
                     FALSE
@@ -130,7 +130,7 @@ shinyUI(
                 tabPanel(
                   "Forensic parameters",
                   h3("Forensic parameters"),
-                  checkboxInput(
+                  awesomeCheckbox(
                     'displayForensics',
                     'Compute forensics statistics (H, GD, PIC, PD, PE & TPI)',
                     FALSE
@@ -151,9 +151,9 @@ shinyUI(
                 ),
                 
                 tabPanel(
-                  "Population genetics indices",
+                  "Population genetics",
                   h3("Summary statistics"),
-                  checkboxInput(
+                  awesomeCheckbox(
                     'displayDiv',
                     'Compute heterozygosities and F-statistics',
                     FALSE
@@ -166,7 +166,7 @@ shinyUI(
                   
                   conditionalPanel(
                     condition = "input.ploidy == 'Diploid'",
-                    checkboxInput(
+                    awesomeCheckbox(
                       'computeHW', 'Test for Hardy-Weinberg equilibrium',
                       FALSE
                     ),
@@ -187,7 +187,7 @@ shinyUI(
                   
                   tags$hr(),
                   h3("Linkage disequilibrium"),
-                  checkboxInput(
+                  awesomeCheckbox(
                     'displayLDtable', 'Display pairwise LD p-values matrix',
                     FALSE
                   ),
@@ -199,7 +199,7 @@ shinyUI(
                   ),
                   conditionalPanel(
                     condition = "output.LD30",
-                    checkboxInput(
+                    awesomeCheckbox(
                       'displayLDplot',
                       'Plot pairwise LD p-values matrix',
                       FALSE),
@@ -209,7 +209,7 @@ shinyUI(
                     ),
                     conditionalPanel(
                       condition = "input.displayLDplot == true | input.displayLDtable == true",
-                      checkboxInput(
+                      awesomeCheckbox(
                         'displayLDpvalplot',
                         'Plot LD p-values distribution',
                         FALSE
@@ -222,9 +222,8 @@ shinyUI(
                   ),
                   
                   tags$hr(),
-                  h3("Population structure"),
-                  h4("Pairwise Fst"),
-                  checkboxInput(
+                  h3("Pairwise Fst"),
+                  awesomeCheckbox(
                     'displayFstMat',
                     'Compute pairwise Fst matrix',
                     FALSE
@@ -241,7 +240,7 @@ shinyUI(
                 tabPanel(
                   "PCA - MDS",
                   h4("Principal Component Analysis (PCA)"),
-                  checkboxInput(
+                  awesomeCheckbox(
                     'displayPCA',
                     'Run and plot a PCA (Principal Component Analysis)',
                     FALSE
@@ -256,7 +255,7 @@ shinyUI(
                     verbatimTextOutput("info"),
                     downloadButton('dlPCAeigen', 'Download PCA eigenvectors'),
                     downloadButton('dlPCAcoord', 'Download PCA coordinates'),
-                    checkboxInput('displayloadings', 'Plot loadings (alleles contributions)', FALSE)
+                    awesomeCheckbox('displayloadings', 'Plot loadings (alleles contributions)', FALSE)
                   ),
                   conditionalPanel(
                     condition = "input.displayPCA == true & input.displayloadings == true",
@@ -265,7 +264,7 @@ shinyUI(
                   
                   tags$hr(),
                   h4("Multidimensional Scaling (MDS) based on Nei's distance"),
-                  checkboxInput(
+                  awesomeCheckbox(
                     'displayMDS',
                     "Compute Nei's genetic distance between populations and run MDS",
                     FALSE
@@ -275,22 +274,43 @@ shinyUI(
                     uiOutput('plotMDS')
                   ),
                   
+                  tags$hr()
+                ),
+                tabPanel(
+                  "Reference populations",
                   tags$hr(),
-                  h4("MDS on STRidER allele frequency database"),
-                  checkboxInput("add_current", "Include uploaded data to the MDS", FALSE),
+
+                  h3("Pemberton2013 database"),
+                  p("Checkbox input (add current pop to mds)"),
+                  h4("MDS plot"),
+                  p("Select input (sample)"),
+                  h4("Worldmap with match probabilities"),
+                  tags$hr(),
+                  
+                  h3("STRidER allele frequency database"),
+                  awesomeCheckbox("add_current", "Include uploaded data to the MDS", FALSE),
                   uiOutput('plotMDS_strider'),
-                  checkboxGroupInput(
+                  suppressMessages(pickerInput(
                     'location', 'Select populations',
-                    choices = strider_pop, select = strider_pop,
-                    inline = TRUE
-                  ),
+                    choices = strider_pop,
+                    selected = strider_pop,
+                    multiple = TRUE,
+                    options = list(
+                      `actions-box` = TRUE
+                    )
+                  )),
+                  # checkboxGroupInput(
+                  #   'location', 'Select populations',
+                  #   choices = strider_pop, select = strider_pop,
+                  #   inline = TRUE
+                  # ),
                   tags$hr(),
                   div("This MDS is performed on STRidER allele frequencies. Missing frequencies are imputed per allele as the mean allele frequency of other populations."), 
                   tags$a(href = "https://strider.online/frequencies", "Link to source data.")
                 ),
                 
                 tabPanel(
-                  "File conversion (beta)",
+                  "File conversion",
                   h4("NB: these new features have not been extensively tested yet."),
                   h3("Genepop (diploid data only)"),
                   downloadButton('dlGenepop', 'Download file in the Genepop format'),
