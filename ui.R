@@ -247,7 +247,7 @@ shinyUI(
                 
                 tabPanel(
                   "PCA - MDS",
-                  h4("Principal Component Analysis (PCA)"),
+                  h3("Principal Component Analysis (PCA)"),
                   awesomeCheckbox(
                     'displayPCA',
                     'Run and plot a PCA (Principal Component Analysis)',
@@ -271,7 +271,7 @@ shinyUI(
                   ),
                   
                   tags$hr(),
-                  h4("Multidimensional Scaling (MDS) based on Nei's distance"),
+                  h3("Multidimensional Scaling (MDS) based on Nei's distance"),
                   awesomeCheckbox(
                     'displayMDS',
                     "Compute Nei's genetic distance between populations and run MDS",
@@ -288,12 +288,12 @@ shinyUI(
                   "Reference populations",
                   tags$hr(),
 
-                  h3("Pemberton2013 database"),
-                  awesomeCheckbox("add_current_p13", "Include uploaded data to the MDS", FALSE),
-                  h4("MDS plot"),
-                  p("Select input (sample)"),
-                  h4("Worldmap with match probabilities"),
-                  tags$hr(),
+                  # h3("Pemberton2013 database"),
+                  # awesomeCheckbox("add_current_p13", "Include uploaded data to the MDS", FALSE),
+                  # h4("MDS plot"),
+                  # p("Select input (sample)"),
+                  # h4("Worldmap with match probabilities"),
+                  # tags$hr(),
                   
                   h3("STRidER allele frequency database"),
                   awesomeCheckbox("add_current", "Include uploaded data to the MDS", FALSE),
