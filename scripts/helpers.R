@@ -6,10 +6,10 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
   
   if(Imicrovariants == 2) {
     
-    readLines(Ifile$datapath) -> matrix
-    matrix <- strsplit(matrix,"[\t]")
+    mat <- readLines(Ifile$datapath)
+    mat <- strsplit(mat, "[\t]")
     
-    mat <- matrix(unlist(matrix), nrow = length(matrix), ncol = length(matrix[[1]]),
+    mat <- matrix(unlist(mat), nrow = length(mat), ncol = length(mat[[1]]),
                   byrow = TRUE)
     mat[mat == "0"] <- NA ###
     colnames(mat) <- mat[1,]
@@ -72,13 +72,13 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
 genind4LD <- function(Ifile, Imicrovariants, Incode, Iploidy) {
   
   if(Imicrovariants == 2) {
-    readLines(Ifile$datapath) -> matrix
-    matrix <- strsplit(matrix, "[\t]")
+    mat <- readLines(Ifile$datapath)
+    mat <- strsplit(mat, "[\t]")
     
     mat <- matrix(
-      unlist(matrix),
-      nrow = length(matrix),
-      ncol = length(matrix[[1]]),
+      unlist(mat),
+      nrow = length(mat),
+      ncol = length(mat[[1]]),
       byrow = TRUE
     )
     mat[mat=="0"] <- NA
@@ -232,22 +232,15 @@ getFreqFromGenind <- function(data) {
 ## returns indices for each population
 # input: genind object
 # output: a list of indices tables
-getIndicesAllPop <- function(data,
-                             hw = FALSE,
-                             hwperm = 1000,
-                             ploidy = "Diploid") {
-  
+getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = "Diploid") {
   ind <- list()
   ind$all <- getIndicesFromGenind(data, hw, hwperm, ploidy)
   for(popu in unique(data$pop)) {
-    
     ind <- c(ind, x = NA)
     mat <- getIndicesFromGenind(data[data@pop == popu, ], hw, hwperm, ploidy)
     ind$x <- mat
-    
     names(ind)[length(ind)] <- popu
   }
-  
   return(ind)
 }
 
@@ -302,13 +295,9 @@ getIndicesFromGenind <- function(data,
   )
   
   GD <- GD * N / (N - 1) 
-  
   PIC <- PIC[names(GD)]
-  
   D2 <- genind2loci(data)
-  
   sumloc <- summary(D2)[names(GD)]
-  
   PM1 <- lapply(sumloc, function(x) {
     sum((x$genotype / sum(x$genotype)) ^ 2)
   })
@@ -338,28 +327,21 @@ getIndicesFromGenind <- function(data,
     
     basicstat <- basic.stats(
       data,
-      diploid = switch(
-        ploidy,
-        Diploid = TRUE,
-        Haploid = FALSE
-      ),
+      diploid = switch(ploidy, Diploid = TRUE, Haploid = FALSE),
       digits = 4
-    )
+    )$perloc
+    rownames(basicstat) <- as.character(unique(data@loc.fac))
     
     Fst <- wc(
       data,
-      diploid = switch(
-        ploidy,
-        Diploid = TRUE,
-        Haploid = FALSE
-      )
+      diploid = switch(ploidy, Diploid = TRUE, Haploid = FALSE)
     )$per.loc$FST
-    
     names(Fst) <- as.character(unique(data@loc.fac))
+
     DF$Fst <- Fst[names(GD)]
-    
-    DF$Ht <- basicstat$perloc[names(GD), "Ht"]
-    DF$Fis <- basicstat$perloc[names(GD), "Fis"]
+    # DF$Fst <- basicstat[names(GD), "Fst"]
+    DF$Ht <- basicstat[names(GD), "Ht"]
+    DF$Fis <- basicstat[names(GD), "Fis"]
     
   }
   
@@ -428,8 +410,7 @@ plotPCA <- function(pca, popus, coul, axis) {
   
 }
 
-
-straf2genepop <- function(f.name) {
+straf2genepop <- function(f.name, ploidy = 2) {
   df <- readLines(f.name)
   
   spt <- do.call("rbind", strsplit(df, "\t"))
@@ -448,17 +429,26 @@ straf2genepop <- function(f.name) {
   
   # concatenate
   idx <- seq_len(length(df_tmp2))
-  ids <- idx %% 2
   
-  df_out <- list()
-  for(i in idx[as.logical(ids)]) {
-    nm <- names(df_tmp2[i])
-    nm <- gsub(" ", "", nm)
-    df_out[[nm]] <- paste0(df_tmp2[[i]], df_tmp2[[i + 1]])
+  if(ploidy == 2) {
+    ids <- idx %% 2
+    
+    df_out <- list()
+    for(i in idx[as.logical(ids)]) {
+      nm <- names(df_tmp2[i])
+      nm <- gsub(" ", "", nm)
+      df_out[[nm]] <- paste0(df_tmp2[[i]], df_tmp2[[i + 1]])
+    }
+  } else if (ploidy == 1) {
+    df_out <- list()
+    for(i in idx) {
+      nm <- names(df_tmp2[i])
+      nm <- gsub(" ", "", nm)
+      df_out[[nm]] <- df_tmp2[[i]]
+    }
   }
   
   df_out <- as.data.frame(df_out)
-  
   
   first.line <- "STRAF-generated GENEPOP input file."
   loci <- colnames(df_out)
@@ -483,6 +473,7 @@ straf2genepop <- function(f.name) {
   
   return(output)
 }
+
 
 straf2familias <- function(f.name) {
   

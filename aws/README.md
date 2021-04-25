@@ -23,8 +23,7 @@ sudo cp /srv/shiny-server/straf/aws/shiny-server.conf /etc/shiny-server/shiny-se
 sudo systemctl reload shiny-server
 
 sudo -su shiny
-R -e "install.packages(c('adegenet', 'ade4', 'pegas', 'hierfstat', 'DT', 'car', 'shinythemes', 'colourpicker', 'plotly', 'ggrepel'))"
-R -e "install.packages(c('dbplyr', 'RSQLite'))"
+R -e "install.packages(c('adegenet', 'ade4', 'pegas', 'hierfstat', 'DT', 'car', 'shinythemes', 'colourpicker', 'plotly', 'ggrepel', 'shinyWidgets', 'dbplyr', 'RSQLite'))"
 exit
 
 sudo systemctl reload shiny-server

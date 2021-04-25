@@ -1,5 +1,3 @@
-# UI ---------------------------------------------------------------------------
-
 suppressPackageStartupMessages({
   library(shiny)
   library(shinythemes)
@@ -7,13 +5,23 @@ suppressPackageStartupMessages({
   library(DT)
   library(plotly)
   library(shinyWidgets)
+  library(ade4)
+  library(adegenet)
+  library(pegas)
+  library(hierfstat)
+  library(car)
+  library(openxlsx)
+  library(ggplot2)
+  library(ggrepel)
 })
+
 options(warn = -1)
 strider_pop <- c('Asia', 'AUSTRIA', 'BELGIUM', 'BOSNIA_AND_HERZEGOWINA', 'CZECH_REPUBLIC', 'DENMARK', 'Entire_Database', 'Europe', 'FINLAND', 'FRANCE', 'GERMANY', 'GREECE', 'HUNGARY', 'IRELAND', 'MONTENEGRO', 'NORWAY', 'POLAND', 'SAUDI_ARABIA', 'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'SWEDEN', 'SWITZERLAND', 'THAILAND')
+strider_pop_def <- strider_pop[!strider_pop %in% c('Asia', 'Entire_Database', 'Europe', 'SAUDI_ARABIA', 'THAILAND')]
 
 shinyUI(
   navbarPage(
-    "STRAF 1.4.4: STR Analysis for Forensics",
+    "STRAF 1.4.5: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ---------------------------------------------------------
     tabPanel(
@@ -281,7 +289,7 @@ shinyUI(
                   tags$hr(),
 
                   h3("Pemberton2013 database"),
-                  p("Checkbox input (add current pop to mds)"),
+                  awesomeCheckbox("add_current_p13", "Include uploaded data to the MDS", FALSE),
                   h4("MDS plot"),
                   p("Select input (sample)"),
                   h4("Worldmap with match probabilities"),
@@ -293,12 +301,16 @@ shinyUI(
                   suppressMessages(pickerInput(
                     'location', 'Select populations',
                     choices = strider_pop,
-                    selected = strider_pop,
+                    selected = strider_pop_def,
                     multiple = TRUE,
                     options = list(
                       `actions-box` = TRUE
                     )
                   )),
+                  conditionalPanel(
+                    condition = "input.add_current",
+                    uiOutput("common_all")
+                  ),
                   # checkboxGroupInput(
                   #   'location', 'Select populations',
                   #   choices = strider_pop, select = strider_pop,
@@ -311,13 +323,15 @@ shinyUI(
                 
                 tabPanel(
                   "File conversion",
-                  h4("NB: these new features have not been extensively tested yet."),
-                  h3("Genepop (diploid data only)"),
+                  h3("Genepop"),
                   downloadButton('dlGenepop', 'Download file in the Genepop format'),
+                  tags$br(),
+                  h3("Familias"),
+                  downloadButton('dlFamilias', 'Download file in the Familias format'),
+                  tags$br(),
                   h3("Arlequin (diploid data only)"),
                   downloadButton('dlArlequin', 'Download file in the Arlequin format'),
-                  h3("Familias"),
-                  downloadButton('dlFamilias', 'Download file in the Familias format')
+                  tags$br()
                 )
               )
             )

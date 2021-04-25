@@ -1,5 +1,7 @@
 ### Udpates
 
+* 1.4.5 (25/04/2021) – Genepop conversion now works for haploid data. Common alleles are displayed for MDS.
+* 1.4.4 (24/04/2021) – Various UI improvements (select and checkboxes inputs), code optimisation. MDS now excluding alleles with at least 1 missing value instead of imputing with the mean.
 * 1.4.3 (18/04/2021) – It is now possible to add uploaded population to the STRidER MDS. Minor UI improvements.
 * 1.4.2 (17/04/2021) – MDS on STRidER reference database has been added.
 * 1.4.1 (08/03/2021) – STRAF now accepts point alleles for haploid data. In that case, all allele values are multiplied by 10.
@@ -15,3 +17,10 @@
 * 1.0.2 (20/10/2017) - forensics parameters and population genetics indices can be computed for each population separately; PCA coordinates and eigenvectors can be downloaded
 * 1.0.1 (22/09/2017) - allele frequencies can now be computed and downloaded for each population separately
 * 1.0.0 (02/06/2017) - STRAF 1.0.0 release
+
+### Future improvements
+
+* Genepop call for LD and HW exact tests
+* HGDP database integration to references
+* HGPD matching probabilities
+* Formal testing procedures

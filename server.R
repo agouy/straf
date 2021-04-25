@@ -1,29 +1,9 @@
-# SERVER -----------------------------------------------------------------------
-
-suppressPackageStartupMessages({
-  library(shiny)
-  library(ade4)
-  library(adegenet)
-  library(pegas)
-  library(hierfstat)
-  library(DT)
-  library(car)
-  library(plotly)
-  library(openxlsx)
-  library(ggplot2)
-  library(ggrepel)
-})
-
 options(stringsAsFactors = FALSE)
 source("./scripts/helpers.R")
 load("./www/strider_frequencies.rda")
 
 shinyServer(function(input, output) {
-  
-  observeEvent(input$load_example, {
-    load_ex <- ifelse(is.null(input$file1$datapath), TRUE, FALSE)
-  })
-  
+
   getData <- reactive({
     ### check the input: returns NULL if problem
     ### if NULL, the function checkinputfile will print a message
@@ -48,20 +28,17 @@ shinyServer(function(input, output) {
       }
       
       testGeno <- try(getgenind(), silent = TRUE)
-      testGeno2 <- try(getgenind4ld(), silent = TRUE)
-      
-      if(class(testGeno) == "try-error" | class(testGeno2) == "try-error") {
-        
+
+      if(class(testGeno) == "try-error") {
         warning("Input file error.")
         return(NULL)
-        
       }
       
-      if(length(unique(testGeno2@pop)) > 1 & length(locNames(testGeno2)) > 1) {
+      if(length(unique(testGeno@pop)) > 1 & length(locNames(testGeno)) > 1) {
         
         testGeno3 <- try(
           wc(
-            testGeno2,
+            testGeno,
             diploid = switch(
               input$ploidy,
               Diploid = TRUE,
@@ -70,18 +47,13 @@ shinyServer(function(input, output) {
           ),
           silent = TRUE
         )
-        
         if(class(testGeno3) == "try-error") {
           warning("Input file error.")
           return(NULL)
         }
-        
       }
-      
       return(input$file1)
-      
     }
-    
   })
   
   output$fileUploaded <- reactive({ return(!is.null(getData())) })
@@ -115,18 +87,12 @@ shinyServer(function(input, output) {
       testGeno <- try(getgenind(), silent = TRUE)
       
       if(class(testGeno) == "try-error") {
-        return("Input file error. Wrong number of columns per locus (please check the left tab).")
+        return("Input file error. Wrong number of columns per locus (please check ploidy and number of digits).")
       }
-      
-      testGeno2 <- try(getgenind4ld(), silent = TRUE)
-      
-      if(class(testGeno2) == "try-error") {
-        return("Input file error. Wrong ploidy or number of digits (please check the left tab).")
-      }
-      
+
       testGeno3 <- try(
         wc(
-          testGeno2,
+          testGeno,
           diploid = switch(
             input$ploidy,
             Diploid = TRUE,
@@ -301,7 +267,7 @@ shinyServer(function(input, output) {
     if(is.null(inFile)) return(NULL)
 
     DF <- getIndicesAllPop(
-      getgenind4ld(),
+      getgenind(),
       hw = input$computeHW,
       hwperm = input$hw_nperm,
       ploidy = input$ploidy
@@ -317,7 +283,7 @@ shinyServer(function(input, output) {
     else taB <- reacIndices()[[input$selectPop2]]
     
     if(!is.null(input$selectPop2)) {
-      dat2 <- getgenind4ld()
+      dat2 <- getgenind()
       if(length(unique(dat2@pop)) > 1 & input$selectPop2 == "all") {
         taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")]
       } else {
@@ -342,9 +308,7 @@ shinyServer(function(input, output) {
       
       write.table(
         taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")],
-        file,
-        sep = "\t",
-        row.names = FALSE
+        file, sep = "\t", row.names = FALSE
       )
     }
     
@@ -523,19 +487,19 @@ shinyServer(function(input, output) {
   })
   # create genind function
   
-  getgenind4ld <- reactive({
-    inFile <- input$file1
-    
-    if(is.null(inFile)) return(NULL)
-    
-    df_out <- genind4LD(
-      Ifile = inFile,
-      Imicrovariants = input$microvariants,
-      Incode = input$ncode,
-      Iploidy = input$ploidy
-    )
-    return(df_out)
-  })
+  # getgenind4ld <- reactive({
+  #   inFile <- input$file1
+  #   
+  #   if(is.null(inFile)) return(NULL)
+  #   
+  #   df_out <- genind4LD(
+  #     Ifile = inFile,
+  #     Imicrovariants = input$microvariants,
+  #     Incode = input$ncode,
+  #     Iploidy = input$ploidy
+  #   )
+  #   return(df_out)
+  # })
   # PAIRWISE FST -----------------------------------------------------------------
   
   #reactive function to compute FST matrix
@@ -583,13 +547,13 @@ shinyServer(function(input, output) {
     if (is.null(inFile))
       return(NULL)
     
-    D <- getgenind4ld()
+    D <- getgenind()
     datLD <- genind2loci(D)
     loci <- (unique(D@loc.fac))
     nloc <- length(unique(D@loc.fac))
-    LDmat <- matrix(NA,nrow=nloc,ncol=nloc)
+    LDmat <- matrix(NA, nrow = nloc, ncol = nloc)
     
-    npairs <- nloc*(nloc-1)/2
+    npairs <- nloc * (nloc - 1) / 2
     withProgress(message = 'LD computation', value = 0, {
       for(i in 1:nloc){
         for(ii in 1:nloc){
@@ -785,9 +749,11 @@ shinyServer(function(input, output) {
     if (!input$displayMDS)  return(NULL)
     
     dat2 <- getgenind()
-    obj <- genind2genpop(dat2)
-    dst <- dist.genpop(obj, method = 1)
     
+    if(length(levels(pop(dat2))) < 2) return(NULL)
+    
+    obj <- genind2genpop(dat2, quiet = FALSE)
+    dst <- dist.genpop(obj, method = 1)
     MDS <- cmdscale(dst)
     MDS <- data.frame(ax1 = MDS[, 1], ax2 = MDS[, 2], pop = rownames(MDS))
     
@@ -803,27 +769,40 @@ shinyServer(function(input, output) {
     plotOutput('runMDS_strider', width = paste(input$width,"%",sep = ""), 
                height = input$height)
   })
+  common_alleles <- reactive({
+    X <- strider_frequencies[input$location, ]
+    X <- X[, colSums(is.na(X)) == 0]
+    dat2 <- getgenind()
+    obj <- genind2genpop(dat2, quiet = FALSE)
+    cn <- colnames(obj@tab)
+    cn <- gsub("[.]", "_", cn)
+    cn <- gsub("[-]", ".", cn)
+    colnames(obj@tab) <- cn
+    common_cols <- intersect(colnames(obj@tab), colnames(X))
+    if(length(common_cols) == 0) stop("No alleles in common.") 
+    X <- rbind(
+      subset(obj@tab, select = common_cols), 
+      subset(X, select = common_cols)
+    )
+    return(X)
+  })
+  output$common_all <- renderText({
+    X <- common_alleles()
+    str_out <- paste0(
+      "Alleles in common used to perform MDS: ",
+      paste0(colnames(X), collapse = "; "),
+      collapse = ""
+    )
+    return(str_out)
+  })
   output$runMDS_strider <- renderPlot({
     #if (!input$displayMDS)  return(NULL)
     
     X <- strider_frequencies[input$location, ]
+    X <- X[, colSums(is.na(X)) == 0]
     
     if(input$add_current) {
-      dat2 <- getgenind()
-      obj <- genind2genpop(dat2)
-      
-      cn <- colnames(obj@tab)
-      cn <- gsub("[.]", "_", cn)
-      cn <- gsub("[-]", ".", cn)
-      colnames(obj@tab) <- cn
-      
-      common_cols <- intersect(colnames(obj@tab), colnames(X))
-      print(common_cols)
-      
-      X <- rbind(
-        subset(obj@tab, select = common_cols), 
-        subset(X, select = common_cols)
-      )
+      X <- common_alleles()
     }
     
     d <- X %*% t(X)
@@ -914,7 +893,7 @@ shinyServer(function(input, output) {
       paste('straf2genepop.txt', sep='') 
     },
     content = function(file) {
-      gp <- straf2genepop(input$file1$datapath)
+      gp <- straf2genepop(f.name = input$file1$datapath, ploidy = switch(input$ploidy, Diploid = 2, Haploid = 1))
       cat(gp, file = file)
     }
   )
@@ -942,4 +921,3 @@ shinyServer(function(input, output) {
   )
   
 })
-

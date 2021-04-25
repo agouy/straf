@@ -1,5 +1,5 @@
 library(tidyr)
-fname <- "./STRidER_frequencies_2019-08-02.csv"
+fname <- "./scripts//STRidER_frequencies_2019-08-02.csv"
 
 ln <- readLines(fname)
 ln2 <- lapply(ln, function(x) strsplit(x, ",")[[1]])
@@ -45,7 +45,7 @@ ct <- rownames(tt)
 tt <- tt %>% as_tibble()
 
 library(dplyr)
-df_f <- tt %>% as_tibble() %>% mutate_all(~ifelse(.x == -1, mean(.x[.x != -1], na.rm = TRUE), .x))          
+df_f <- tt %>% as_tibble() %>% mutate_all(~ifelse(.x == -1, NA, .x)) #mean(.x[.x != -1], na.rm = TRUE)
 
 
 df_f
@@ -60,7 +60,20 @@ library(ggplot2)
 library(ggrepel)
 load("./www/strider_frequencies.rda")
 
-X <- strider_frequencies
+
+strider_frequencies <- strider_frequencies[!rownames(strider_frequencies) %in% c("SAUDI_ARABIA"), ]
+
+X_2 <- strider_frequencies[ 10:11,]
+idx_2 <- colSums(is.na(X_2)) == 0
+
+X <- strider_frequencies[-10:-11,]
+idx <- colSums(is.na(X)) == 0
+idx
+
+common_names <- intersect(names(idx[idx]), names(idx_2[idx_2]))
+loci_names <- unique(do.call(rbind, strsplit(common_names, "_"))[, 1])
+print(loci_names)
+
 d <- X %*% t(X)
 vec <- sqrt(diag(d))
 d <- d/vec[col(d)]
