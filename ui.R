@@ -16,6 +16,7 @@ suppressPackageStartupMessages({
 })
 
 options(warn = -1)
+options(shiny.sanitize.errors = FALSE)
 strider_pop <- c('Asia', 'AUSTRIA', 'BELGIUM', 'BOSNIA_AND_HERZEGOWINA', 'CZECH_REPUBLIC', 'DENMARK', 'Entire_Database', 'Europe', 'FINLAND', 'FRANCE', 'GERMANY', 'GREECE', 'HUNGARY', 'IRELAND', 'MONTENEGRO', 'NORWAY', 'POLAND', 'SAUDI_ARABIA', 'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'SWEDEN', 'SWITZERLAND', 'THAILAND')
 strider_pop_def <- strider_pop[!strider_pop %in% c('Asia', 'Entire_Database', 'Europe', 'SAUDI_ARABIA', 'THAILAND')]
 
@@ -37,17 +38,17 @@ shinyUI(
         tags$head(tags$style('h3 {font-family: Arial;}')),
         tags$head(tags$style('h4 {font-family: Arial;}')),
         tags$head(tags$script(type="text/javascript", src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")),
-
+        
         sidebarLayout(
           sidebarPanel(
             width = 3,
             fluidRow(
               column(width = 6,
-              div(tags$img(src='STRAF_logo.png', height = "120"), style="text-align: center;"),
+                     div(tags$img(src='STRAF_logo.png', height = "120"), style="text-align: center;"),
               ), 
               column( width = 6,
-                p(strong('Welcome!'), br(), br(), 'STRAF is an STR data analysis application.'),
-            )),
+                      p(strong('Welcome!'), br(), br(), 'STRAF is an STR data analysis application.'),
+              )),
             h4('Input'),
             p('Please read the documentation for details about input files and analyses.'),
             radioButtons('microvariants', "Number of columns per locus:", c('2', '1'), inline = TRUE),
@@ -60,8 +61,8 @@ shinyUI(
               'file1', 'Choose file to upload:',
               accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv')
             ),
-            tags$hr(),
-            actionButton("load_example", "Download example dataset"),
+            # tags$hr(),
+            # actionButton("load_example", "Download example dataset"),
             tags$hr(),
             
             h4('Graphical parameters'),
@@ -285,15 +286,8 @@ shinyUI(
                   tags$hr()
                 ),
                 tabPanel(
-                  "Reference populations",
+                  "Reference population",
                   tags$hr(),
-
-                  # h3("Pemberton2013 database"),
-                  # awesomeCheckbox("add_current_p13", "Include uploaded data to the MDS", FALSE),
-                  # h4("MDS plot"),
-                  # p("Select input (sample)"),
-                  # h4("Worldmap with match probabilities"),
-                  # tags$hr(),
                   
                   h3("STRidER allele frequency database"),
                   awesomeCheckbox("add_current", "Include uploaded data to the MDS", FALSE),
@@ -311,14 +305,10 @@ shinyUI(
                     condition = "input.add_current",
                     uiOutput("common_all")
                   ),
-                  # checkboxGroupInput(
-                  #   'location', 'Select populations',
-                  #   choices = strider_pop, select = strider_pop,
-                  #   inline = TRUE
-                  # ),
                   tags$hr(),
                   div("This MDS is performed on STRidER allele frequencies. Missing frequencies are imputed per allele as the mean allele frequency of other populations."), 
-                  tags$a(href = "https://strider.online/frequencies", "Link to source data.")
+                  tags$a(href = "https://strider.online/frequencies", "Link to source data."),
+                  tags$hr()
                 ),
                 
                 tabPanel(

@@ -46,3 +46,19 @@ saveRDS(df4, file = "./scripts/pemberton2013.rds")
 write.table(df4, sep = "\t",
             quote=FALSE, row.names = FALSE, col.names = FALSE,
             file="./scripts/pemberton2013_straf.txt")
+
+
+
+source("./scripts/helpers.R")
+Ifile <- list()
+Ifile$datapath <- "./scripts/pemberton2013_straf.txt"
+library(adegenet)
+dat2 <- createGenind(Ifile, 2, 2, "Diploid")
+obj <- genind2genpop(dat2, quiet = FALSE)
+cn <- colnames(obj@tab)
+cn <- gsub("[.]", "_", cn)
+cn <- gsub("[-]", ".", cn)
+colnames(obj@tab) <- cn
+
+mt <- as.matrix(obj@tab)
+saveRDS(mt, "./www/pemberton_frequencies.rds")

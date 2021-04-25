@@ -1,60 +1,58 @@
-library(tidyr)
-fname <- "./scripts//STRidER_frequencies_2019-08-02.csv"
-
-ln <- readLines(fname)
-ln2 <- lapply(ln, function(x) strsplit(x, ",")[[1]])
-hd <- lengths(ln2)
-names_idx <- which(hd == 1)
-st_idx <- names_idx + 1
-en_idx <- names_idx - 1
-en_idx <- c(en_idx[-1], length(ln2))
-
-df <- lapply(seq_along(names_idx), function(i) {
-  loc_id <- names_idx[i]
-  loc_name <- ln2[[loc_id]]
+freq_to_mds <- function(fname) {
+  library(reshape2)
+  library(dplyr)
+  library(tidyr)
+  ln <- readLines(fname)
+  ln2 <- lapply(ln, function(x) strsplit(x, ",")[[1]])
+  hd <- lengths(ln2)
+  names_idx <- which(hd == 1)
+  st_idx <- names_idx + 1
+  en_idx <- names_idx - 1
+  en_idx <- c(en_idx[-1], length(ln2))
   
-  if(en_idx[i] - st_idx[i] > 1) {
-    mat <- do.call(rbind, ln2[st_idx[i]:en_idx[i]])
-    colnames(mat) <- mat[1, ]
-    mat[mat == ""] <- "0"
-    df <- as.data.frame(mat[-1:-2, ])
-    colnames(df) <- gsub(pattern = " ", replacement = "_", colnames(df))
-    colnames(df) <- gsub(pattern = "\"", replacement = "", colnames(df))
+  df <- lapply(seq_along(names_idx), function(i) {
+    loc_id <- names_idx[i]
+    loc_name <- ln2[[loc_id]]
     
-    print(i)
-    print(loc_id)
-    print(df)
-    
-    df_long <- gather(df, location, frequency, -Allele, factor_key=TRUE)
-    df_long$locus <- loc_name
-    return(df_long)
-    
-  } else {
-    return(NULL)
-  }
-})
-df_l <- do.call(rbind, df)
-
-df_l$frequency <- as.numeric(df_l$frequency)
-df_l$location  <- as.character(df_l$location)
-
-library(reshape2)
-tt <- reshape2::acast(df_l, location ~ locus + Allele, value.var = 'frequency', fun.aggregate = mean, fill = -1)
-
-ct <- rownames(tt)
-tt <- tt %>% as_tibble()
-
-library(dplyr)
-df_f <- tt %>% as_tibble() %>% mutate_all(~ifelse(.x == -1, NA, .x)) #mean(.x[.x != -1], na.rm = TRUE)
-
-
-df_f
-matt <- (as.matrix(df_f))
-rownames(matt) <- ct
-
-strider_frequencies <- matt
+    if(en_idx[i] - st_idx[i] > 1) {
+      mat <- do.call(rbind, ln2[st_idx[i]:en_idx[i]])
+      colnames(mat) <- mat[1, ]
+      mat[mat == ""] <- "0"
+      df <- as.data.frame(mat[-1:-2, ])
+      colnames(df) <- gsub(pattern = " ", replacement = "_", colnames(df))
+      colnames(df) <- gsub(pattern = "\"", replacement = "", colnames(df))
+      
+      df_long <- gather(df, location, frequency, -Allele, factor_key=TRUE)
+      df_long$locus <- loc_name
+      return(df_long)
+      
+    } else {
+      return(NULL)
+    }
+  })
+  df_l <- do.call(rbind, df)
+  
+  df_l$frequency <- as.numeric(df_l$frequency)
+  df_l$location  <- as.character(df_l$location)
+  
+  tt <- reshape2::acast(df_l, location ~ locus + Allele, value.var = 'frequency', fun.aggregate = mean, fill = -1)
+  
+  ct <- rownames(tt)
+  tt <- tt %>% as_tibble()
+  
+  df_f <- tt %>% as_tibble() %>% mutate_all(~ifelse(.x == -1, NA, .x)) #mean(.x[.x != -1], na.rm = TRUE)
+  matt <- (as.matrix(df_f))
+  rownames(matt) <- ct
+  return(matt)
+}
+fname <- "./scripts//STRidER_frequencies_2019-08-02.csv"
+strider_frequencies <- freq_to_mds(fname)
 save(strider_frequencies, file="./www/strider_frequencies.rda")
 
+
+fname <- "./scripts/Pemberton_freq.tsv"
+strider_frequencies <- freq_to_mds(fname)
+save(strider_frequencies, file="./www/strider_frequencies.rda")
 
 library(ggplot2)
 library(ggrepel)

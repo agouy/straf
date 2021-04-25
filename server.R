@@ -796,8 +796,7 @@ shinyServer(function(input, output) {
     return(str_out)
   })
   output$runMDS_strider <- renderPlot({
-    #if (!input$displayMDS)  return(NULL)
-    
+
     X <- strider_frequencies[input$location, ]
     X <- X[, colSums(is.na(X)) == 0]
     
@@ -807,8 +806,8 @@ shinyServer(function(input, output) {
     
     d <- X %*% t(X)
     vec <- sqrt(diag(d))
-    d <- d/vec[col(d)]
-    d <- d/vec[row(d)]
+    d <- d / vec[col(d)]
+    d <- d / vec[row(d)]
     d <- -log(d)
     d <- as.dist(d)
     
@@ -823,7 +822,9 @@ shinyServer(function(input, output) {
     plot(p)
     
   })  
-  
+
+
+    
   # DL principal components
   output$dlPCAeigen <- downloadHandler(
     filename = function() {
