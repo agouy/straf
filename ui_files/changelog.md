@@ -1,5 +1,6 @@
 ### Udpates
 
+* 1.4.6 (25/04/2021) – It is now possible to add custome reference frequency data to eprform and MDS.
 * 1.4.5 (25/04/2021) – Genepop conversion now works for haploid data. Common alleles are displayed for MDS.
 * 1.4.4 (24/04/2021) – Various UI improvements (select and checkboxes inputs), code optimisation. MDS now excluding alleles with at least 1 missing value instead of imputing with the mean.
 * 1.4.3 (18/04/2021) – It is now possible to add uploaded population to the STRidER MDS. Minor UI improvements.

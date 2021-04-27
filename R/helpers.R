@@ -68,102 +68,6 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
   return(dat2)
 }
 
-### convert input to genind object adapted to LD computation
-genind4LD <- function(Ifile, Imicrovariants, Incode, Iploidy) {
-  
-  if(Imicrovariants == 2) {
-    mat <- readLines(Ifile$datapath)
-    mat <- strsplit(mat, "[\t]")
-    
-    mat <- matrix(
-      unlist(mat),
-      nrow = length(mat),
-      ncol = length(mat[[1]]),
-      byrow = TRUE
-    )
-    mat[mat=="0"] <- NA
-    
-    colnames(mat) <- mat[1, ]
-    rownames(mat) <- mat[ ,1]
-    
-    mat_tmp <- mat[-1, ]
-    mat_tmp <- mat_tmp[, -1:-2]
-    mat_tmp <- sub("[.]", "", mat_tmp)
-    mat_tmp[nchar(mat_tmp) == 2 & !is.na(mat_tmp)] <- paste(
-      "0", mat_tmp[nchar(mat_tmp) == 2 & !is.na(mat_tmp)],
-      sep=""
-    )
-    mat_tmp[nchar(mat_tmp) == 1 & !is.na(mat_tmp)] <- paste(
-      "00", mat_tmp[nchar(mat_tmp) == 1 & !is.na(mat_tmp)],
-      sep = ""
-    )
-    mat <- cbind(mat[-1, 1:2], mat_tmp)
-    loci <- unique(colnames(mat[, -1:-2]))
-    freqTAB <- NULL
-    
-    for(i in 1:length(loci)) {
-      ids <- which(colnames(mat)==loci[i])
-      alleles <- unique(c(mat[,ids]))
-      alleles <- alleles[!is.na(alleles)] ###
-      
-      nameCol <- paste(loci[i],".",alleles,sep="")
-      
-      newmat <- matrix(NA,ncol=length(nameCol),nrow=dim(mat)[1])
-      for(ii in 1:length(alleles)){
-        newmat[,ii] <- apply(mat[,ids]==alleles[ii],1,sum)
-        colnames(newmat) <- nameCol
-      }
-      freqTAB <- cbind(freqTAB,newmat)
-    }
-    rownames(freqTAB) <- mat[, 1]
-    colnames(freqTAB) <- sub(" ", "", colnames(freqTAB))
-    
-    D <- genind(tab = freqTAB, pop = mat[, "pop"])
-    
-  } else {
-    
-    dat <- read.table(
-      Ifile$datapath,
-      header = TRUE,
-      sep = "\t",
-      colClasses = "character"
-    )
-    rownames(dat) <- dat$ind
-    
-    if(Iploidy == "Haploid") {
-      dat_tmp <- dat[, -1:-2]
-      if(length(grep("[.]", unlist(dat_tmp))) > 0) {
-        new_dat <- apply(dat_tmp, MARGIN = 2, function(x) {
-          x <- gsub("[.]", "", x)
-          x[nchar(x) == 1] <- paste0("0", x[nchar(x) == 1], "0")
-          x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
-          if(any(nchar(x) != 3)) stop("Allele encoding error.")
-          return(x)
-        })
-        dat[, -1:-2] <- new_dat
-      }
-    }
-    
-    D <- df2genind(
-      dat[, -1:-2],
-      ncode = switch(
-        Incode,
-        "2" = 2,
-        "3" = 3
-      ),
-      ploidy = switch(
-        Iploidy,
-        Diploid = 2,
-        Haploid = 1
-      )
-    )
-    pop(D) <- dat$pop
-  }
-  
-  return(D)
-}
-
-
 ## getFreqAllPop
 ## returns allele frequencies for each population
 # input: genind object
@@ -570,4 +474,47 @@ GenotypicData=1\nGameticPhase=0\nMissingData="?"\nLocusSeparator=WHITESPACE\n\n[
   output <- paste(output, "\n", collapse = "")
   
   return(output)
+}
+
+freq_to_mds <- function(fname) {
+  ln <- readLines(fname)
+  ln2 <- lapply(ln, function(x) strsplit(x, ",")[[1]])
+  ln3 <- lapply(ln2, function(x) {
+    if(sum(nchar(x[-1]) == 0) == length(x[-1])) return(x[1])
+    else return(x)
+  })
+  hd <- lengths(ln3)
+  names_idx <- which(hd == 1)
+  st_idx <- names_idx + 1
+  en_idx <- names_idx - 1
+  en_idx <- c(en_idx[-1], length(ln2))
+  df <- lapply(seq_along(names_idx), function(i) {
+    loc_id <- names_idx[i]
+    loc_name <- ln3[[loc_id]]
+    if(en_idx[i] - st_idx[i] > 1) {
+      mat <- do.call(rbind, ln2[st_idx[i]:en_idx[i]])
+      colnames(mat) <- mat[1, ]
+      mat[mat == ""] <- "0"
+      df <- as.data.frame(mat[-1:-2, ])
+      colnames(df) <- gsub(pattern = " ", replacement = "_", colnames(df))
+      colnames(df) <- gsub(pattern = "\"", replacement = "", colnames(df))
+      
+      df_long <- gather(df, location, frequency, -Allele, factor_key=TRUE)
+      df_long$locus <- loc_name
+      return(df_long)
+      
+    } else {
+      return(NULL)
+    }
+  })
+  df_l <- do.call(rbind, df)
+  df_l$frequency <- as.numeric(df_l$frequency)
+  df_l$location  <- as.character(df_l$location)
+  tt <- reshape2::acast(df_l, location ~ locus + Allele, value.var = 'frequency', fun.aggregate = mean, fill = -1)
+  ct <- rownames(tt)
+  tt <- tt %>% as_tibble()
+  df_f <- tt %>% as_tibble() %>% mutate_all(~ifelse(.x == -1, NA, .x)) #mean(.x[.x != -1], na.rm = TRUE)
+  matt <- (as.matrix(df_f))
+  rownames(matt) <- ct
+  return(matt)
 }

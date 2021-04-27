@@ -1,9 +1,20 @@
-options(stringsAsFactors = FALSE)
-source("./scripts/helpers.R")
 load("./www/strider_frequencies.rda")
 
 shinyServer(function(input, output) {
 
+  getRefData <- reactive({
+    if(is.null(input$refdata)) { 
+      return(NULL) 
+    } else { 
+      fr <- freq_to_mds(input$refdata$datapath)
+      # exclude populations with too many missing data
+      # exclude alleles with missing data
+      idx_in <- colSums(is.na(fr)) == 0
+      fr <- fr[, idx_in]
+      return(fr)
+    }
+  })
+    
   getData <- reactive({
     ### check the input: returns NULL if problem
     ### if NULL, the function checkinputfile will print a message
@@ -823,8 +834,64 @@ shinyServer(function(input, output) {
     
   })  
 
-
+  output$plotMDS_ref <- renderUI({
+    plotOutput('runMDS_ref', width = paste(input$width,"%",sep = ""), 
+               height = input$height)
+  })
+  ref_pops <- reactive({rownames(getRefData())})
+  output$select_ref_pops <- renderUI({
+    all <- ref_pops()
+    suppressMessages(pickerInput(
+      'refpops', 'Select populations',
+      choices = all,
+      selected = all,
+      multiple = TRUE,
+      width = "100%",
+      options = list(
+        `actions-box` = TRUE
+      )
+    ))
+  })
+  output$runMDS_ref <- renderPlot({
     
+    X <- getRefData()[input$refpops, ]
+    if(is.null(X)) return(NULL)
+    X <- X[, colSums(is.na(X)) == 0]
+    
+    if(input$add_current_ref) {
+      dat2 <- getgenind()
+      obj <- genind2genpop(dat2, quiet = FALSE)
+      cn <- colnames(obj@tab)
+      cn <- gsub("[.]", "_", cn)
+      cn <- gsub("[-]", ".", cn)
+      colnames(obj@tab) <- cn
+      common_cols <- intersect(colnames(obj@tab), colnames(X))
+      if(length(common_cols) == 0) stop("No alleles in common.") 
+      X <- rbind(
+        subset(obj@tab, select = common_cols), 
+        subset(X, select = common_cols)
+      )
+    }
+    
+    d <- X %*% t(X)
+    vec <- sqrt(diag(d))
+    d <- d / vec[col(d)]
+    d <- d / vec[row(d)]
+    d <- -log(d)
+    d <- as.dist(d)
+    
+    mds <- cmdscale(d)
+    MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
+    
+    p <- ggplot(MDS, aes(x=ax1, y=ax2, color = pop, label = pop)) +
+      geom_point() +
+      geom_text_repel(max.overlaps = 50) + 
+      labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
+      theme_minimal()
+    plot(p)
+    
+  })  
+
   # DL principal components
   output$dlPCAeigen <- downloadHandler(
     filename = function() {

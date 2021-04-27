@@ -11,18 +11,28 @@ suppressPackageStartupMessages({
   library(hierfstat)
   library(car)
   library(openxlsx)
+  library(reshape2)
+  library(dplyr)
+  library(tidyr)
   library(ggplot2)
   library(ggrepel)
 })
 
-options(warn = -1)
-options(shiny.sanitize.errors = FALSE)
+source("./R/sidebar.R")
+source("./R/helpers.R")
+source("./R/doc_tabs.R")
+
+options(
+  warn = -1,
+  shiny.sanitize.errors = FALSE,
+  stringsAsFactors = FALSE
+)
 strider_pop <- c('Asia', 'AUSTRIA', 'BELGIUM', 'BOSNIA_AND_HERZEGOWINA', 'CZECH_REPUBLIC', 'DENMARK', 'Entire_Database', 'Europe', 'FINLAND', 'FRANCE', 'GERMANY', 'GREECE', 'HUNGARY', 'IRELAND', 'MONTENEGRO', 'NORWAY', 'POLAND', 'SAUDI_ARABIA', 'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'SWEDEN', 'SWITZERLAND', 'THAILAND')
 strider_pop_def <- strider_pop[!strider_pop %in% c('Asia', 'Entire_Database', 'Europe', 'SAUDI_ARABIA', 'THAILAND')]
 
 shinyUI(
   navbarPage(
-    "STRAF 1.4.5: STR Analysis for Forensics",
+    "STRAF 1.4.6: STR Analysis for Forensics",
     
     ##### ANALYSIS TAB ---------------------------------------------------------
     tabPanel(
@@ -37,58 +47,9 @@ shinyUI(
         tags$head(tags$style('h2 {font-family: Arial;}')),
         tags$head(tags$style('h3 {font-family: Arial;}')),
         tags$head(tags$style('h4 {font-family: Arial;}')),
-        tags$head(tags$script(type="text/javascript", src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")),
-        
+
         sidebarLayout(
-          sidebarPanel(
-            width = 3,
-            fluidRow(
-              column(width = 6,
-                     div(tags$img(src='STRAF_logo.png', height = "120"), style="text-align: center;"),
-              ), 
-              column( width = 6,
-                      p(strong('Welcome!'), br(), br(), 'STRAF is an STR data analysis application.'),
-              )),
-            h4('Input'),
-            p('Please read the documentation for details about input files and analyses.'),
-            radioButtons('microvariants', "Number of columns per locus:", c('2', '1'), inline = TRUE),
-            radioButtons('ploidy', "Ploidy:", c('Diploid', 'Haploid'), inline = TRUE),
-            conditionalPanel(
-              condition="input.microvariants == 1",
-              radioButtons('ncode', 'Number of digits for allele sizes:', c('2', '3'), inline = TRUE)
-            ),
-            fileInput(
-              'file1', 'Choose file to upload:',
-              accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv')
-            ),
-            # tags$hr(),
-            # actionButton("load_example", "Download example dataset"),
-            tags$hr(),
-            
-            h4('Graphical parameters'),
-            awesomeCheckbox("hidegraph", "Display graphical parameters", FALSE),
-            conditionalPanel(
-              condition = "input.hidegraph",
-              p("Barplot color"),
-              colourInput("barplotcolor", NULL, "#36648B", showColour = "background"),
-              awesomeCheckbox("borderbarplot", "Bar border", FALSE),
-              sliderInput("transparency", "Tranparency", 0, 1, 0.8, ticks = FALSE),
-              sliderInput("width", "Plot width", 40, 100, 100, ticks = FALSE, post = "%"),
-              sliderInput("height", "Plot height", 300, 800, 500, ticks = FALSE, post = "px"),
-              sliderInput("cexaxis", "Axis label size", 0.2, 1.5, 1, ticks = FALSE),
-              sliderInput("margin", "Margin", 1, 10, 7, ticks = FALSE)
-            ),
-            
-            tags$hr(),
-            h4('Contact'),
-            p('Please address your questions and bug reports to Alexandre Gouy
-              (alexandre.gouy [at] protonmail.com). Any suggestions are welcome!'),
-            
-            tags$hr(),
-            h4('Citation'),
-            p("Gouy, A., & Zieger, M. (2017). STRAF - A convenient online tool for STR data evaluation in forensic genetics. Forensic Science International: Genetics, 30, 148-151.")
-          ),
-          
+          sidebarUI(),
           mainPanel(
             width = 9,
             conditionalPanel(
@@ -297,6 +258,7 @@ shinyUI(
                     choices = strider_pop,
                     selected = strider_pop_def,
                     multiple = TRUE,
+                    width = "100%",
                     options = list(
                       `actions-box` = TRUE
                     )
@@ -306,8 +268,16 @@ shinyUI(
                     uiOutput("common_all")
                   ),
                   tags$hr(),
-                  div("This MDS is performed on STRidER allele frequencies. Missing frequencies are imputed per allele as the mean allele frequency of other populations."), 
-                  tags$a(href = "https://strider.online/frequencies", "Link to source data."),
+                  div(
+                    "This MDS is performed on STRidER allele frequencies. Missing frequencies are imputed per allele as the mean allele frequency of other populations.", 
+                    tags$a(href = "https://strider.online/frequencies", "Link to source data.")
+                  ),
+                  tags$hr(),
+                  h3("Custom allele frequency database"),
+                  fileInput("refdata", "Import allele frequencies"),
+                  awesomeCheckbox("add_current_ref", "Include uploaded data to the MDS", FALSE),
+                  uiOutput('plotMDS_ref'),
+                  uiOutput('select_ref_pops'),
                   tags$hr()
                 ),
                 
@@ -329,32 +299,7 @@ shinyUI(
         )
       )
     ),
-    
-    ##### DOCUMENTATION TAB ----------------------------------------------------
-    tabPanel(
-      "Documentation",
-      fluidRow(
-        column(width = 3),
-        column(width = 6, includeMarkdown("./ui_files/doc.md")),
-        column(width = 3)
-      )
-    ),
-    
-    ##### ABOUT STRAF TAB ------------------------------------------------------
-    tabPanel(
-      "About STRAF",
-      fluidRow(
-        column(width = 3),
-        column(
-          width = 6,
-          p('STRAF is a browser-based application that allows to perform forensics 
-  and population genetics analysis of STR data.'),
-          includeMarkdown("./ui_files/changelog.md"),
-          includeMarkdown("./ui_files/license.md"),
-          includeMarkdown("./ui_files/acknowledgments.md"),
-        ),
-        column(width = 3)
-      )
-    )
+    documentation_tab(),
+    about_tab()
   )
 )
