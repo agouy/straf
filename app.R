@@ -1,2 +1,5 @@
-pkgload::load_all()
-runStraf()
+# remotes::install_github("https://github.com/agouy/straf")
+library(straf)
+dir <- system.file("application", package = "straf")
+setwd(dir)
+shiny::shinyAppDir(".")
