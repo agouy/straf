@@ -18,5 +18,5 @@ runStraf <- function() {
     shiny.sanitize.errors = FALSE,
     stringsAsFactors = FALSE
   )
-  shiny::runApp(appDir = system.file("application", package = "straf"), port = 80)
+  shiny::runApp(appDir = system.file("application", package = "straf"), display.mode = "normal")
 }
