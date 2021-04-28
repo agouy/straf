@@ -1,5 +1,6 @@
 # remotes::install_github("https://github.com/agouy/straf")
 library(straf)
+pkgload::load_all()
 dir <- system.file("application", package = "straf")
 setwd(dir)
 shiny::shinyAppDir(".")
