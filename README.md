@@ -1,4 +1,4 @@
-# STRAF - STR Analysis for Forensics <a href='http://straf-app.com'><img src='inst7application/www/STRAF_logo.png' align="right" height="139" /></a>
+# STRAF - STR Analysis for Forensics <a href='http://straf-app.com'><img src='inst/application/www/STRAF_logo.png' align="right" height="139" /></a>
 
 ### What is STRAF?
 
