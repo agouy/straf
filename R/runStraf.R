@@ -12,11 +12,16 @@
 #' @importFrom graphics abline axis barplot hist image legend par
 #' @importFrom stats as.dist cmdscale cov frequency ks.test qqplot qunif
 #' @importFrom utils read.table write.table
-runStraf <- function() {
+runStraf <- function(port = 3838, host = "0.0.0.0") {
   options(
     warn = -1,
     shiny.sanitize.errors = FALSE,
     stringsAsFactors = FALSE
   )
-  shiny::runApp(appDir = system.file("application", package = "straf"), display.mode = "normal")
+  shiny::runApp(
+    appDir = system.file("application", package = "straf"),
+    port = port,
+    host = host,
+    display.mode = "normal"
+  )
 }
