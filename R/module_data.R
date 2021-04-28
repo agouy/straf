@@ -1,4 +1,7 @@
 ### Input data module
+#' @importFrom shinyWidgets awesomeCheckbox
+#' @importFrom DT dataTableOutput renderDataTable datatable
+#' @importFrom openxlsx write.xlsx
 data_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -8,7 +11,7 @@ data_UI <- function(id) {
     
     tags$hr(),
     h3("Allele frequencies per locus"),
-    awesomeCheckbox(
+    shinyWidgets::awesomeCheckbox(
       ns('displayAlleleFreq'), 'Plot the distribution of allele frequencies',
       FALSE
     ),
@@ -19,7 +22,7 @@ data_UI <- function(id) {
     ),
     
     tags$hr(),
-    awesomeCheckbox(
+    shinyWidgets::awesomeCheckbox(
       ns('displayAlleleTable'),
       'Display a table of allele frequencies',
       FALSE
@@ -81,7 +84,7 @@ data_Server <- function(id, getgenind, getData, barplotcolor, transparency, widt
             DAT$freq[DAT$loc == i],
             names.arg = DAT$alle[DAT$loc == i],
             main = i,
-            col = transp(barplotcolor(), transparency()),
+            col = adegenet::transp(barplotcolor(), transparency()),
             border = 0
           )
         }

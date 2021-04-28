@@ -1,4 +1,3 @@
-### documentation tab
 documentation_tab <- function() {
   tabPanel(
     "Documentation",
@@ -9,7 +8,6 @@ documentation_tab <- function() {
     )
   )
 }
-
 
 about_tab <- function() {
   tabPanel(

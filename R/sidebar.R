@@ -1,4 +1,7 @@
-### Sidebar UI code
+#' Generate the sidebar UI.
+#' @noRd
+#' @importFrom shinyWidgets awesomeCheckbox pickerInput
+#' @importFrom colourpicker colourInput
 sidebarUI <- function() {
   sidebarPanel(
     width = 3,

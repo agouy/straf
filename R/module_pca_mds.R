@@ -1,5 +1,5 @@
 ### PCA and MDS module
-
+#' @importFrom shinyWidgets awesomeCheckbox
 pca_mds_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -45,7 +45,9 @@ pca_mds_UI <- function(id) {
   )
 }
 
-
+#' @importFrom adegenet genind2genpop transp funky dist.genpop loadingplot makefreq pop
+#' @importFrom ggrepel geom_text_repel
+#' @importFrom ade4 dudi.pca
 pca_mds_Server <- function(id, getgenind) {
   moduleServer(
     id,
@@ -100,8 +102,8 @@ pca_mds_Server <- function(id, getgenind) {
         dst <- dist.genpop(obj, method = 1)
         MDS <- cmdscale(dst)
         MDS <- data.frame(ax1 = MDS[, 1], ax2 = MDS[, 2], pop = rownames(MDS))
-        
-        p <- ggplot(MDS, aes(x=ax1, y=ax2, color = pop, label = pop)) +
+
+        p <- ggplot(MDS, aes(x = .data$ax1, y = .data$ax2, color = pop, label = pop)) +
           geom_point() +
           geom_text_repel() + 
           labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +

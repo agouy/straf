@@ -1,19 +1,17 @@
-#' @import shiny
-#' @import colourpicker
-#' @import plotly
-#' @import shinyWidgets
-#' @import ade4
-#' @import adegenet
-#' @import pegas
-#' @import hierfstat
-#' @import car
-#' @import openxlsx
-#' @import reshape2
+#' Run the STRAF application
+#' @description Main function to be called in order to start STRAF,
+#' @return Runs the shiny application.
+#' @examples
+#' # runStraf()
+#' 
+#' @export
+#' 
+#' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
 #' @import dplyr
-#' @import tidyr
 #' @import ggplot2
-#' @import ggrepel
-
+#' @importFrom graphics abline axis barplot hist image legend par
+#' @importFrom stats as.dist cmdscale cov frequency ks.test qqplot qunif
+#' @importFrom utils read.table write.table
 runStraf <- function() {
   options(
     warn = -1,

@@ -1,4 +1,5 @@
 ## Reference population MDS module
+#' @importFrom shinyWidgets awesomeCheckbox 
 ref_mds_UI <- function(id) {
   ns <- NS(id)
   
@@ -17,8 +18,7 @@ ref_mds_UI <- function(id) {
   )
 }
 
-
-
+#' @importFrom adegenet genind2genpop
 ref_mds_Server <- function(id, getgenind) {
   moduleServer(
     id,
@@ -101,7 +101,7 @@ ref_mds_Server <- function(id, getgenind) {
         mds <- cmdscale(d)
         MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
         
-        p <- ggplot(MDS, aes(x=ax1, y=ax2, color = pop, label = pop)) +
+        p <- ggplot(MDS, aes(x=.data$ax1, y=.data$ax2, color = pop, label = pop)) +
           geom_point() +
           geom_text_repel(max.overlaps = 50) + 
           labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +

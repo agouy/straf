@@ -1,4 +1,5 @@
 ### Module
+#' @importFrom shinyWidgets awesomeCheckbox
 for_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -122,7 +123,8 @@ popgen_UI <- function(id) {
     tags$hr()
   )
 }
-for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
+#' @importFrom  hierfstat pairwise.WCfst genind2hierfstat
+for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, transparency, cexaxis) {
   moduleServer(
     id,
     function(input, output, session) { 
@@ -172,7 +174,7 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
           if(is.null(input$selectPop2)) taB <- reacIndices()[[1]]
           else taB <- reacIndices()[[input$selectPop2]]
           write.table(
-            taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")],
+            taB[, !colnames(taB) %in% c("Ht", "Fis", "Fst")],
             file, sep = "\t", row.names = FALSE
           )
         }
@@ -244,7 +246,7 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
       })
       
       # plot in the reactive UI
-      output$plotIndices <-  renderPlotly({
+      output$plotIndices <-  plotly::renderPlotly({
         
         if(is.null(input$selectPop2)) return(NULL)
         else taB <- reacIndices()[[input$selectPop2]]
@@ -254,7 +256,7 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
         
         if(is.null(input$plotIndicesFOR)) return(NULL)
         
-        fig <- plot_ly(
+        fig <- plotly::plot_ly(
           x = dat[, input$plotIndicesFOR],
           y = dat[, "locus"],
           name = "bp_for",
@@ -264,8 +266,8 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
             "\nValue: ", round(dat[, input$plotIndicesFOR], 4)
           ),
           hoverinfo = 'text',
-          marker = list(color = transp(input$barplotcolor, input$transparency))
-        ) %>% layout(
+          marker = list(color = adegenet::transp(barplotcolor(), transparency()))
+        ) %>% plotly::layout(
           xaxis = list(title = input$plotIndicesFOR, zeroline = FALSE),
           yaxis = list(title = "Locus")
         )
@@ -274,7 +276,7 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
       })
       
       output$plotFOR <- renderUI({
-        plotlyOutput(ns('plotIndices'))
+        plotly::plotlyOutput(ns('plotIndices'))
       })
       
       output$plotIndicesPopgen <-  renderPlot({
@@ -293,10 +295,10 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
           names.arg = datpl[, "locus"],
           horiz = TRUE,
           las = 1,
-          col = transp(input$barplotcolor, input$transparency),
-          border = as.numeric(input$borderbarplot),
-          cex.axis = input$cexaxis, 
-          cex.names = input$cexaxis,
+          col = transp(barplotcolor(), transparency()),
+          border = 0,
+          cex.axis = cexaxis(), 
+          cex.names = cexaxis(),
           xlab = input$plotIndicesPG
         )
       })
@@ -314,7 +316,7 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
         
         if (length(unique(dat2@pop)) == 1)
           stop("Multiple populations are required to perform this analysis")
-        matFST <- pairwise.WCfst(genind2hierfstat(dat2))
+        matFST <- hierfstat::pairwise.WCfst(hierfstat::genind2hierfstat(dat2))
         matFST[lower.tri(matFST)] <- NA
         matFST
       })
@@ -361,9 +363,9 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
           for(i in 1:nloc){
             for(ii in 1:nloc){
               if(i<ii){
-                if(ploidy()=="Diploid") lx <- LD2(datLD,
+                if(ploidy()=="Diploid") lx <- pegas::LD2(datLD,
                                                       locus=c(loci[i],loci[ii]))$T2
-                if(ploidy()=="Haploid") lx <- LD(datLD,
+                if(ploidy()=="Haploid") lx <- pegas::LD(datLD,
                                                      locus=c(loci[i],loci[ii]))$T2
                 LDmat[i,ii] <- lx[3]
                 LDmat[ii,i] <- lx[1]
@@ -383,12 +385,12 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
         M <- reacLDtable()
         M[lower.tri(M)] <- NA
         M <- apply(M,1,rev)
-      }, digits = 4,include.rownames =TRUE,na="")
+      }, digits = 4, include.rownames =TRUE,na="")
       
       output$LD30 <- reactive({
         if (is.null(getgenind()) | !input$displayLDtable) return(FALSE)
         M <- reacLDtable()
-        return(length(M)>30)
+        return(length(M) > 30)
       })
       outputOptions(output, 'LD30', suspendWhenHidden=FALSE)
       
@@ -398,15 +400,9 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
         
         M <-  -log10(reacLDtable())
         M[lower.tri(M)] <- NA
-        col <- redpal(100)
+        col <- adegenet::redpal(100)
         
-        image(
-          M,
-          col = col,
-          frame = F,
-          xaxt = "n",
-          yaxt = "n"
-        )
+        image(M, col = col, frame = F, xaxt = "n", yaxt = "n")
         axis(
           2,
           at = seq(0, 1, length.out = ncol(M)),
@@ -424,9 +420,7 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
         
       })
       
-      output$plotLD2 <- renderUI({
-        plotOutput(ns('plotLD'))
-      })
+      output$plotLD2 <- renderUI({plotOutput(ns('plotLD'))})
       
       #plot p-values distribution
       output$plotLDpval <- renderPlot({
@@ -489,3 +483,125 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy) {
     }
   )
 }
+
+
+## getIndicesAllPop
+## returns indices for each population
+# input: genind object
+# output: a list of indices tables
+getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = "Diploid") {
+  ind <- list()
+  ind$all <- getIndicesFromGenind(data, hw, hwperm, ploidy)
+  for(popu in unique(data$pop)) {
+    ind <- c(ind, x = NA)
+    mat <- getIndicesFromGenind(data[data@pop == popu, ], hw, hwperm, ploidy)
+    ind$x <- mat
+    names(ind)[length(ind)] <- popu
+  }
+  return(ind)
+}
+
+## getIndicesFromGenind
+## returns indices for a given population
+# input: genind object
+# output: an indices table
+#' @importFrom pegas genind2loci
+getIndicesFromGenind <- function(data,
+                                 hw = FALSE,
+                                 hwperm = 1000,
+                                 ploidy = "Diploid") {
+  
+  freq <- apply(data@tab, 2, sum, na.rm = TRUE)
+  
+  nam <- strsplit(
+    names(freq),
+    split="[.]"
+  )
+  
+  loc <- as.factor(unlist(
+    lapply(nam, function(x) x[1])
+  ))
+  
+  alle <- as.numeric(unlist(
+    lapply(nam, function(x) sub("-", ".", x[2]))
+  ))
+  DAT <- data.frame(freq, loc, alle)
+  N <- tapply(DAT$freq, DAT$loc, sum)
+  DAT$frequency <- DAT$freq / N[DAT$loc]
+  
+  PIC <- NULL
+  for(i in unique(loc)) {
+    
+    #FR <- c(DAT$frequency[names(DAT$frequency) == i])
+    FR <- c(DAT$frequency[DAT$loc == i])
+    
+    xu <- outer(FR, FR, "fu")
+    som <- sum(xu[lower.tri(xu)])
+    PIC[i] <-  1 - sum(FR ^ 2) - som
+    
+  } 
+  Nall <- tapply(
+    DAT[DAT$freq > 0, ]$freq,
+    DAT[DAT$freq > 0, ]$loc,
+    length
+  )
+  
+  GD <- tapply(DAT$frequency, DAT$loc, function(x) 1 - sum(x ^ 2))
+  
+  GD <- GD * N / (N - 1) 
+  PIC <- PIC[names(GD)]
+  D2 <- pegas::genind2loci(data)
+  sumloc <- summary(D2)[names(GD)]
+  PM1 <- lapply(sumloc, function(x) {
+    sum((x$genotype / sum(x$genotype)) ^ 2)
+  })
+  
+  PM <- unlist(PM1)
+  
+  DF <- data.frame(
+    locus = names(GD),
+    N = N,
+    Nall = Nall,
+    GD = GD,
+    PIC = PIC,
+    PM = PM,
+    PD = 1 - PM
+  )
+  
+  if(ploidy == "Diploid") {
+    DF$Hobs <- adegenet::summary(data)$Hobs[names(GD)]
+    DF$PE <- (DF$Hobs ^ 2) * (1 - 2 * (DF$Hobs) * ((1 - DF$Hobs) ^ 2))
+    DF$TPI <- 1 / (2 * (1 - DF$Hobs))
+  }
+  
+  
+  if(length(unique(data@pop)) > 1 & length(locNames(data)) > 1) {
+    basicstat <- hierfstat::basic.stats(
+      data,
+      diploid = switch(ploidy, Diploid = TRUE, Haploid = FALSE),
+      digits = 4
+    )$perloc
+    rownames(basicstat) <- as.character(unique(data@loc.fac))
+    Fst <- hierfstat::wc(
+      data,
+      diploid = switch(ploidy, Diploid = TRUE, Haploid = FALSE)
+    )$per.loc$FST
+    names(Fst) <- as.character(unique(data@loc.fac))
+    
+    DF$Fst <- Fst[names(GD)]
+    # DF$Fst <- basicstat[names(GD), "Fst"]
+    DF$Ht <- basicstat[names(GD), "Ht"]
+    DF$Fis <- basicstat[names(GD), "Fis"]
+    
+  }
+  
+  if(ploidy == "Diploid" & hw) {
+    withProgress(message = 'Performing HW test...', value = 0, {
+      DF$pHW <- pegas::hw.test(data, B = hwperm)[names(GD), 4]
+    })
+  } 
+  return(DF)
+}
+
+
+fu <- function(a, b) {2 * (a ^ 2) * (b ^ 2)}

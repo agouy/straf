@@ -33,7 +33,7 @@ shinyServer(function(input, output) {
       if(length(unique(testGeno@pop)) > 1 & length(locNames(testGeno)) > 1) {
         
         testGeno3 <- try(
-          wc(
+          hierfstat::wc(
             testGeno,
             diploid = switch(
               input$ploidy,
@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
   
   output$checkInputFile <- renderText({
     
-    if(is.null(input$file1)) { return("Please import a data set.") } 
+    if(is.null(input$file1)) { return("Please import a data set.") }
     else {
       X <- read.table(input$file1$datapath,
                       header = TRUE,
@@ -83,7 +83,7 @@ shinyServer(function(input, output) {
       }
       
       testGeno3 <- try(
-        wc(
+        hierfstat::wc(
           testGeno,
           diploid = switch(
             input$ploidy,
@@ -136,11 +136,12 @@ shinyServer(function(input, output) {
   ploidy <- reactive({input$ploidy})
   barplotcolor <- reactive({input$barplotcolor})
   transparency <- reactive({input$transparency})
+  cexaxis <- reactive({input$cexaxis})
   width <- reactive({input$width})
   height <- reactive({input$height})
   
   data_Server("data_ns", getgenind, getData, barplotcolor, transparency, width, height,popnames)
-  for_popgen_Server("for_popgen", getgenind, popnames, ploidy)
+  for_popgen_Server("for_popgen", getgenind, popnames, ploidy, barplotcolor, transparency, cexaxis)
   pca_mds_Server("pca_mds", getgenind)
   ref_mds_Server("ref_mds", getgenind)
   file_conv_Server("file_conv", reactive({input$file1$datapath}), reactive({input$ploidy}))

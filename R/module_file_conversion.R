@@ -52,3 +52,213 @@ file_conv_Server <- function(id, fpath, ploidy) {
       )
     }
   )}
+
+
+
+
+straf2genepop <- function(f.name, ploidy = 2) {
+  df <- readLines(f.name)
+  
+  spt <- do.call("rbind", strsplit(df, "\t"))
+  colnames(spt) <- spt[1, ]
+  df <- as.data.frame(spt[-1, ])
+  
+  df_tmp <- lapply(df[, -1:-2], function(x) gsub("[.]", "", x))
+  
+  # add leading zeros
+  df_tmp2 <- lapply(df_tmp, function(x) {
+    x[nchar(x) == 1] <- paste0(x[nchar(x) == 1], "00")
+    x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
+    if(any(nchar(x) != 3)) stop("Error while converting allele labels.")
+    return(x)
+  })
+  
+  # concatenate
+  idx <- seq_len(length(df_tmp2))
+  
+  if(ploidy == 2) {
+    ids <- idx %% 2
+    
+    df_out <- list()
+    for(i in idx[as.logical(ids)]) {
+      nm <- names(df_tmp2[i])
+      nm <- gsub(" ", "", nm)
+      df_out[[nm]] <- paste0(df_tmp2[[i]], df_tmp2[[i + 1]])
+    }
+  } else if (ploidy == 1) {
+    df_out <- list()
+    for(i in idx) {
+      nm <- names(df_tmp2[i])
+      nm <- gsub(" ", "", nm)
+      df_out[[nm]] <- df_tmp2[[i]]
+    }
+  }
+  
+  df_out <- as.data.frame(df_out)
+  
+  first.line <- "STRAF-generated GENEPOP input file."
+  loci <- colnames(df_out)
+  
+  str_out <- apply(df_out, 1, paste0, collapse = "\t")
+  
+  ## get pops
+  populations <- unique(df$pop)
+  vec_out <- c()
+  for(i in populations) {
+    idx <- df$pop %in% i
+    vec_out <- c(
+      vec_out,
+      "Pop",
+      paste(df[idx, ]$ind, str_out[idx], sep = "\t,\t")
+    )
+  }
+  
+  ## write file
+  output <- c(first.line, loci, vec_out)
+  output <- paste(output, "\n", collapse = "")
+  
+  return(output)
+}
+
+
+straf2familias <- function(f.name) {
+  
+  df <- readLines(f.name)
+  
+  spt <- do.call("rbind", strsplit(df, "\t"))
+  colnames(spt) <- spt[1, ]
+  df <- as.data.frame(spt[-1, ])
+  
+  df_tmp <- df[, -1:-2]
+  
+  # add leading zeros
+  # concatenate
+  idx <- seq_len(length(df_tmp))
+  ids <- as.logical(idx %% 2)
+  
+  df_out <- list()
+  for(i in idx[ids]) {
+    nm <- names(df_tmp[i])
+    nm <- gsub(" ", "", nm)
+    df_out[[nm]] <- c(df_tmp[[i]], df_tmp[[i + 1]])
+  }
+  
+  
+  tbs <- lapply(df_out, table)
+  prop.tb <- lapply(tbs, prop.table)
+  
+  str.list <- lapply(prop.tb, function(x) {
+    vec <- x
+    str_loc <- paste0(names(vec), "\t", unname(vec), collapse = "\n")
+    return(str_loc)
+  })
+  
+  output <- paste(names(prop.tb), str.list, sep = "\n")
+  out <- paste(output, collapse = "\n\n")
+  out <- paste0(out, "\n")
+  return(out)
+}
+
+straf2arlequin <- function(f.name) {
+  df <- readLines(f.name)
+  
+  spt <- do.call("rbind", strsplit(df, "\t"))
+  colnames(spt) <- spt[1, ]
+  df <- as.data.frame(spt[-1, ])
+  
+  df_tmp2 <- list()
+  
+  for(i in seq_len(ncol(df[, -1:-2]))) {
+    x <- df[, -1:-2][, i]
+    if(i %% 2 != 0) {
+      x2 <- df[, -1:-2][, i + 1]
+      dot_idx <- grep("[.]", x)
+      dot_idx2 <- grep("[.]", x2)
+      if(length(dot_idx) > 0 | length(dot_idx2) > 0) {
+        x <- gsub("[.]", "", x)
+        x[-dot_idx] <- paste0(x[-dot_idx], "0")
+        x2 <- gsub("[.]", "", x2)
+        x2[-dot_idx2] <- paste0(x2[-dot_idx2], "0")
+        if(length(dot_idx) == 0) x <- paste0(x, "0")
+        if(length(dot_idx2) == 0) x2 <- paste0(x2, "0")
+      }
+      df_tmp2[[i]] <- x
+      df_tmp2[[i+1]] <- x2
+      
+    } 
+    
+  }
+  df_tmp2 <- as.data.frame(df_tmp2)
+  
+  # concatenate
+  idx <- seq_len(length(df_tmp2))
+  ids <- as.logical(idx %% 2)
+  
+  out_str <- c()
+  for(pp in unique(df$pop)) {
+    df_pop <- df[df$pop == pp, ]
+    out_str <- c(out_str, paste0('SampleName="', pp, '"\nSampleSize=',nrow(df_pop),'\nSampleData={\n'))
+    
+    for(i in which(df$pop == pp)) {
+      samp_nm <- df[i, 1]
+      l1 <- paste0(c(samp_nm, "1", unname(unlist(df_tmp2[i, c(idx[ids])]))), collapse = "\t")
+      l2 <- paste0(c("", "", unname(unlist(df_tmp2[i, c(idx[!ids])]))), collapse = "\t")
+      out_str <- c(out_str, l1, l2)
+    }
+    out_str <- c(out_str, "}\n\n")
+  }
+  npop <- length(unique(df$pop))
+  header <- paste0('[Profile]\nTitle="STRAF-generated Arlequin file."\nNbSamples=',npop,'\nDataType=MICROSAT\n
+GenotypicData=1\nGameticPhase=0\nMissingData="?"\nLocusSeparator=WHITESPACE\n\n[Data]\n\n[[Samples]]\n\n')
+  
+  output <- c(header, out_str)
+  ## write file
+  output <- paste(output, "\n", collapse = "")
+  
+  return(output)
+}
+
+#' @importFrom reshape2 acast
+#' @importFrom tidyr gather
+freq_to_mds <- function(fname) {
+  ln <- readLines(fname)
+  ln2 <- lapply(ln, function(x) strsplit(x, ",")[[1]])
+  ln3 <- lapply(ln2, function(x) {
+    if(sum(nchar(x[-1]) == 0) == length(x[-1])) return(x[1])
+    else return(x)
+  })
+  hd <- lengths(ln3)
+  names_idx <- which(hd == 1)
+  st_idx <- names_idx + 1
+  en_idx <- names_idx - 1
+  en_idx <- c(en_idx[-1], length(ln2))
+  df <- lapply(seq_along(names_idx), function(i) {
+    loc_id <- names_idx[i]
+    loc_name <- ln3[[loc_id]]
+    if(en_idx[i] - st_idx[i] > 1) {
+      mat <- do.call(rbind, ln2[st_idx[i]:en_idx[i]])
+      colnames(mat) <- mat[1, ]
+      mat[mat == ""] <- "0"
+      df <- as.data.frame(mat[-1:-2, ])
+      colnames(df) <- gsub(pattern = " ", replacement = "_", colnames(df))
+      colnames(df) <- gsub(pattern = "\"", replacement = "", colnames(df))
+      Allele <- NA
+      df_long <- tidyr::gather(df, location, frequency, -Allele, factor_key=TRUE)
+      df_long$locus <- loc_name
+      return(df_long)
+      
+    } else {
+      return(NULL)
+    }
+  })
+  df_l <- do.call(rbind, df)
+  df_l$frequency <- as.numeric(df_l$frequency)
+  df_l$location  <- as.character(df_l$location)
+  tt <- reshape2::acast(df_l, location ~ locus + Allele, value.var = 'frequency', fun.aggregate = mean, fill = -1)
+  ct <- rownames(tt)
+  tt <- tt %>% as_tibble()
+  df_f <- tt %>% as_tibble() %>% mutate_all(~ifelse(.x == -1, NA, .x)) #mean(.x[.x != -1], na.rm = TRUE)
+  matt <- (as.matrix(df_f))
+  rownames(matt) <- ct
+  return(matt)
+}

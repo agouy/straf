@@ -1,2 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+.github
+aws
+docs
+scripts
+app.R
+LICENSE
+^LICENSE\.md$

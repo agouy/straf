@@ -1,31 +1,37 @@
 Package: straf
-Title: STR Analysis For Forensics
-Version: 1.5.0
+Title: STR Analysis for Forensics
+Version: 2.0.0
 Authors@R: 
     person(given = "Alexandre",
            family = "Gouy",
            role = c("aut", "cre"),
-           email = "alexandre.gouy@protonmail.com")
-Description: straf is a Shiny application to perform STR / microsatellite data analysis.
-License: `use_gpl3_license()`
+           email = "alexandre.gouy@protonmail.com", 
+           comment = c(ORCID = "0000-0002-2478-8475"))
+Description: A 'shiny' application to perform Short Tandem Repeats (STRs, also 
+    known as microsatellites) data analysis. The application allows one to 
+    compute forensic parameters, population genetics indices, and investigate 
+    population structure through various methods and generate relevant data 
+    visualisations. It also implements file conversion to other popular formats.
+Depends: R (>= 3.5.0)
+License: GPL-3
 Encoding: UTF-8
-LazyData: true
+BugReports: https://github.com/agouy/straf/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1.9000
 Imports:
   shiny (>= 1.5.0),
+  shinyWidgets,
   colourpicker,
   DT,
   plotly,
-  shinyWidgets,
-  ade4,
-  adegenet,
-  pegas,
-  hierfstat,
-  car,
   openxlsx,
   reshape2,
   dplyr,
   tidyr,
   ggplot2,
-  ggrepel
+  ggrepel,
+  car,
+  ade4,
+  adegenet,
+  pegas,
+  hierfstat
