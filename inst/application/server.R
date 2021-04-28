@@ -30,7 +30,7 @@ shinyServer(function(input, output) {
         return(NULL)
       }
       
-      if(length(unique(testGeno@pop)) > 1 & length(locNames(testGeno)) > 1) {
+      if(length(unique(testGeno@pop)) > 1 & length(adegenet::locNames(testGeno)) > 1) {
         
         testGeno3 <- try(
           hierfstat::wc(
