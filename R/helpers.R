@@ -174,7 +174,7 @@ getIndicesFromGenind <- function(data,
   DAT <- data.frame(freq, loc, alle)
   N <- tapply(DAT$freq, DAT$loc, sum)
   DAT$frequency <- DAT$freq / N[DAT$loc]
-  
+
   PIC <- NULL
   for(i in unique(loc)) {
     
@@ -217,25 +217,21 @@ getIndicesFromGenind <- function(data,
     PM = PM,
     PD = 1 - PM
   )
-  
+
   if(ploidy == "Diploid") {
-    
-    DF$Hobs <- summary(data)$Hobs[names(GD)]
+    DF$Hobs <- adegenet::summary(data)$Hobs[names(GD)]
     DF$PE <- (DF$Hobs ^ 2) * (1 - 2 * (DF$Hobs) * ((1 - DF$Hobs) ^ 2))
     DF$TPI <- 1 / (2 * (1 - DF$Hobs))
-    
   }
   
   
   if(length(unique(data@pop)) > 1 & length(locNames(data)) > 1) {
-    
     basicstat <- basic.stats(
       data,
       diploid = switch(ploidy, Diploid = TRUE, Haploid = FALSE),
       digits = 4
     )$perloc
     rownames(basicstat) <- as.character(unique(data@loc.fac))
-    
     Fst <- wc(
       data,
       diploid = switch(ploidy, Diploid = TRUE, Haploid = FALSE)

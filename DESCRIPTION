@@ -1,0 +1,31 @@
+Package: straf
+Title: STR Analysis For Forensics
+Version: 1.4.7
+Authors@R: 
+    person(given = "Alexandre",
+           family = "Gouy",
+           role = c("aut", "cre"),
+           email = "alexandre.gouy@protonmail.com")
+Description: straf is a Shiny application to perform STR / microsatellite data analysis.
+License: `use_gpl3_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1.9000
+Imports:
+  shiny (>= 1.5.0),
+  colourpicker,
+  DT,
+  plotly,
+  shinyWidgets,
+  ade4,
+  adegenet,
+  pegas,
+  hierfstat,
+  car,
+  openxlsx,
+  reshape2,
+  dplyr,
+  tidyr,
+  ggplot2,
+  ggrepel

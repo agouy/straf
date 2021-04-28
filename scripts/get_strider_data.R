@@ -1,15 +1,9 @@
+library(ggplot2)
+library(ggrepel)
 
 fname <- "./scripts//STRidER_frequencies_2019-08-02.csv"
 strider_frequencies <- freq_to_mds(fname)
 save(strider_frequencies, file="./www/strider_frequencies.rda")
-
-
-fname <- "./scripts/Pemberton_freq.tsv"
-strider_frequencies <- freq_to_mds(fname)
-save(strider_frequencies, file="./www/strider_frequencies.rda")
-
-library(ggplot2)
-library(ggrepel)
 load("./www/strider_frequencies.rda")
 
 
