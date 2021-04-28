@@ -1,3 +1,6 @@
+#' Generate "Documentation" panel.
+#' @export
+#' @noRd
 documentation_tab <- function() {
   tabPanel(
     "Documentation",
@@ -9,6 +12,9 @@ documentation_tab <- function() {
   )
 }
 
+#' Generate "About" panel.
+#' @export
+#' @noRd
 about_tab <- function() {
   tabPanel(
     "About STRAF",

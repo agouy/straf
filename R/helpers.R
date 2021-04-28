@@ -1,6 +1,11 @@
-### straf helpers
-# EXTERNAL FUNCTIONS -----------------------------------------------------------
-### convert input to genind object
+#' Convert input file to genind object
+#' @param Ifile Input file object.
+#' @param Imicrovariants Number of microvariants.
+#' @param Incode Number of digits encoding allele size.
+#' @param Iploidy Ploidy ("Haploid" or "Diploid").
+#' @return An object of class genind.
+#' @export
+#' @noRd
 #' @importFrom adegenet as.genind df2genind pop<- locNames
 #' @importClassesFrom adegenet genind
 createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
@@ -68,10 +73,11 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
   return(dat2)
 }
 
-## getFreqAllPop
-## returns allele frequencies for each population
-# input: genind object
-# output: a list of allele frequencies tables
+#' Get allele frequencies for each population.
+#' @param data a genind object
+#' @return an allele frequency table
+#' @export
+#' @noRd
 getFreqAllPop <- function(data) {
   freq <- list()
   freq$all <- getFreqFromGenind(data)
@@ -84,10 +90,11 @@ getFreqAllPop <- function(data) {
   return(freq)
 }
 
-## getFreqFromGenind
-## returns allele frequencies for a given population
-# input: genind object
-# output: an allele frequencies tables
+#' Get allele frequencies for a given population.
+#' @param data a genind object
+#' @return an allele frequency table
+#' @export
+#' @noRd
 getFreqFromGenind <- function(data) {
   freq <- apply(data@tab, 2, sum, na.rm = TRUE)
   nam <- strsplit(names(freq), split = "[.]")
@@ -121,8 +128,9 @@ getFreqFromGenind <- function(data) {
   return(matr)
 }
 
-
-
+#' Plot PCA.
+#' @export
+#' @noRd
 plotPCA <- function(pca, popus, coul, axis) {
   
   var1 <- round(100 * (pca$eig / sum(pca$eig))[axis[1]], 2)

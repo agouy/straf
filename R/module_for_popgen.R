@@ -1,4 +1,6 @@
-### Module
+#' Generate the forensic parameters UI.
+#' @export
+#' @noRd
 #' @importFrom shinyWidgets awesomeCheckbox
 for_UI <- function(id) {
   ns <- NS(id)
@@ -25,6 +27,10 @@ for_UI <- function(id) {
     tags$hr()
   )
 }
+
+#' Generate the population genetics indices UI.
+#' @export
+#' @noRd
 popgen_UI <- function(id) {
   ns <- NS(id)    
   tabPanel(
@@ -123,6 +129,10 @@ popgen_UI <- function(id) {
     tags$hr()
   )
 }
+
+#' Generate the forensic parameters and population genetics tabs Server.
+#' @export
+#' @noRd
 #' @importFrom  hierfstat pairwise.WCfst genind2hierfstat
 for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, transparency, cexaxis) {
   moduleServer(
@@ -484,11 +494,10 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
   )
 }
 
-
-## getIndicesAllPop
-## returns indices for each population
-# input: genind object
-# output: a list of indices tables
+#' Get forensics and popgen indices for all populations
+#' @inheritParams getIndicesFromGenind
+#' @export
+#' @noRd
 getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = "Diploid") {
   ind <- list()
   ind$all <- getIndicesFromGenind(data, hw, hwperm, ploidy)
@@ -501,10 +510,13 @@ getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = "Diploid"
   return(ind)
 }
 
-## getIndicesFromGenind
-## returns indices for a given population
-# input: genind object
-# output: an indices table
+#' Get forensics and popgen indices for a given population
+#' @param data A genind object.
+#' @param hw boolean, whether to compute Hardy-Weinberg test p-values (default = FALSE).
+#' @param hwperm numeric, number of permutations for Hardy-Weinberg test.
+#' @param ploidy character, ploidy, either "Diploid" or "Haploid".
+#' @export
+#' @noRd
 #' @importFrom pegas genind2loci
 getIndicesFromGenind <- function(data,
                                  hw = FALSE,
@@ -529,16 +541,12 @@ getIndicesFromGenind <- function(data,
   N <- tapply(DAT$freq, DAT$loc, sum)
   DAT$frequency <- DAT$freq / N[DAT$loc]
   
-  PIC <- NULL
+  PIC <- rep(NA, length(unique(loc)))
   for(i in unique(loc)) {
-    
-    #FR <- c(DAT$frequency[names(DAT$frequency) == i])
     FR <- c(DAT$frequency[DAT$loc == i])
-    
-    xu <- outer(FR, FR, "fu")
-    som <- sum(xu[lower.tri(xu)])
-    PIC[i] <-  1 - sum(FR ^ 2) - som
-    
+    p2q2 <- outer(FR, FR, get_2p2q2)
+    sum_2p2q2 <- sum(p2q2[lower.tri(p2q2)])
+    PIC[i] <-  1 - sum(FR ^ 2) - sum_2p2q2
   } 
   Nall <- tapply(
     DAT[DAT$freq > 0, ]$freq,
@@ -555,7 +563,6 @@ getIndicesFromGenind <- function(data,
   PM1 <- lapply(sumloc, function(x) {
     sum((x$genotype / sum(x$genotype)) ^ 2)
   })
-  
   PM <- unlist(PM1)
   
   DF <- data.frame(
@@ -574,7 +581,6 @@ getIndicesFromGenind <- function(data,
     DF$TPI <- 1 / (2 * (1 - DF$Hobs))
   }
   
-  
   if(length(unique(data@pop)) > 1 & length(locNames(data)) > 1) {
     basicstat <- hierfstat::basic.stats(
       data,
@@ -589,10 +595,8 @@ getIndicesFromGenind <- function(data,
     names(Fst) <- as.character(unique(data@loc.fac))
     
     DF$Fst <- Fst[names(GD)]
-    # DF$Fst <- basicstat[names(GD), "Fst"]
     DF$Ht <- basicstat[names(GD), "Ht"]
     DF$Fis <- basicstat[names(GD), "Fis"]
-    
   }
   
   if(ploidy == "Diploid" & hw) {
@@ -603,5 +607,11 @@ getIndicesFromGenind <- function(data,
   return(DF)
 }
 
+#' 2p2q2
+#' @param a first value
+#' @param b second value
+#' @return Computes 2 * a^2 * b^2
+#' @export
+#' @noRd
+get_2p2q2 <- function(a, b) {2 * (a ^ 2) * (b ^ 2)}
 
-fu <- function(a, b) {2 * (a ^ 2) * (b ^ 2)}

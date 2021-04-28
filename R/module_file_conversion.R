@@ -1,4 +1,6 @@
-## File conversion module
+#' Generate file conversion tab UI.
+#' @export
+#' @noRd
 file_conv_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -15,6 +17,9 @@ file_conv_UI <- function(id) {
   )
 }
 
+#' Generate file conversion tab Server
+#' @export
+#' @noRd
 file_conv_Server <- function(id, fpath, ploidy) {
   moduleServer(
     id,
@@ -53,9 +58,9 @@ file_conv_Server <- function(id, fpath, ploidy) {
     }
   )}
 
-
-
-
+#' Convert STRAF file to the Genepop format.
+#' @export
+#' @noRd
 straf2genepop <- function(f.name, ploidy = 2) {
   df <- readLines(f.name)
   
@@ -120,7 +125,9 @@ straf2genepop <- function(f.name, ploidy = 2) {
   return(output)
 }
 
-
+#' Convert STRAF file to the Familias format.
+#' @export
+#' @noRd
 straf2familias <- function(f.name) {
   
   df <- readLines(f.name)
@@ -159,6 +166,9 @@ straf2familias <- function(f.name) {
   return(out)
 }
 
+#' Convert STRAF file to the Arlequin format.
+#' @export
+#' @noRd
 straf2arlequin <- function(f.name) {
   df <- readLines(f.name)
   
@@ -218,6 +228,9 @@ GenotypicData=1\nGameticPhase=0\nMissingData="?"\nLocusSeparator=WHITESPACE\n\n[
   return(output)
 }
 
+#' Convert allele frequencies to a format suitable for MDS analysis.
+#' @export
+#' @noRd
 #' @importFrom reshape2 acast
 #' @importFrom tidyr gather
 freq_to_mds <- function(fname) {

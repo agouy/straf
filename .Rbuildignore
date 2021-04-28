@@ -7,3 +7,5 @@ scripts
 app.R
 LICENSE
 ^LICENSE\.md$
+^app\.R$
+^rsconnect$

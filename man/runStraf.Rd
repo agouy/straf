@@ -4,7 +4,7 @@
 \alias{runStraf}
 \title{Run the STRAF application}
 \usage{
-runStraf()
+runStraf(port = 3838, host = "0.0.0.0")
 }
 \value{
 Runs the shiny application.

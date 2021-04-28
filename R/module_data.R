@@ -1,4 +1,6 @@
-### Input data module
+#' Generate input data tab UI.
+#' @export
+#' @noRd
 #' @importFrom shinyWidgets awesomeCheckbox
 #' @importFrom DT dataTableOutput renderDataTable datatable
 #' @importFrom openxlsx write.xlsx
@@ -40,6 +42,9 @@ data_UI <- function(id) {
   )
 }
 
+#' Generate input data tab Server.
+#' @export
+#' @noRd
 data_Server <- function(id, getgenind, getData, barplotcolor, transparency, width, height, popnames) {
   moduleServer(
     id,

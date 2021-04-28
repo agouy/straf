@@ -1,4 +1,6 @@
-## Reference population MDS module
+#' Generate the referecne population tab UI.
+#' @export
+#' @noRd
 #' @importFrom shinyWidgets awesomeCheckbox 
 ref_mds_UI <- function(id) {
   ns <- NS(id)
@@ -18,6 +20,9 @@ ref_mds_UI <- function(id) {
   )
 }
 
+#' Generate the referecne population tab Server.
+#' @export
+#' @noRd
 #' @importFrom adegenet genind2genpop
 ref_mds_Server <- function(id, getgenind) {
   moduleServer(

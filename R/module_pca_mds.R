@@ -1,4 +1,6 @@
-### PCA and MDS module
+#' Generate the PCA UI.
+#' @export
+#' @noRd
 #' @importFrom shinyWidgets awesomeCheckbox
 pca_mds_UI <- function(id) {
   ns <- NS(id)
@@ -45,6 +47,9 @@ pca_mds_UI <- function(id) {
   )
 }
 
+#' Generate the PCA server.
+#' @export
+#' @noRd
 #' @importFrom adegenet genind2genpop transp funky dist.genpop loadingplot makefreq pop
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom ade4 dudi.pca

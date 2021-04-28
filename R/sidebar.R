@@ -1,4 +1,5 @@
 #' Generate the sidebar UI.
+#' @export
 #' @noRd
 #' @importFrom shinyWidgets awesomeCheckbox pickerInput
 #' @importFrom colourpicker colourInput
