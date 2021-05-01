@@ -1,15 +1,21 @@
 STRAF is a browser-based application that allows to perform forensics and population genetics analysis of STR data.
 
+
+### The STRAF Book
+
+Click on the image below to access our online book with a lot more details about the software!
+
+<div align='center'><a href='https://agouy.github.io/straf/' target='_blank'><img src='cover.png' align='center' width='269' /></a></div>
+
 ### Input file format
 
-STRAF accepts tab delimited txt-tables of different content. 
-The first column needs to contain the sample ID and the second the population 
-ID (if several populations are studied). Most convenient for the analysis of 
-forensically relevant autosomal STR data, STRAF accepts point alleles. Allele 
-data for haploid samples is entered with one column per locus and for diploid 
-data with two columns per locus. Missing data (e.g. null alleles) must be 
-indicated with a “0”. An example of a diploid input file is provided in the 
-supplementary data for this article.
+STRAF accepts tab delimited txt-tables containing genotypes.
+
+* The first column, named __ind__, needs to contain the sample ID 
+* The second column, , named __pop__, contains the population ID (this column must exist even if a single population is studied)
+* The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)
+* Genotypes must be encoded as numbers (STRAF accepts point alleles)
+* Missing data (e.g. null alleles) must be indicated with a “0”.
 
 This format is designed to facilitate the input file generation from
 a typical Excel file (Save as > Text (Tab-delimited) (*.txt)).
@@ -20,13 +26,6 @@ following links:
 <a id="raw-url" href="exampleSTRAFdiplo.txt" download="exampleSTRAFdiplo.txt" target="_blank">Download STRAF diploid example file.</a>
 
 <a id="raw-url" href="exampleSTRAFhaplo.txt" download="exampleSTRAFhaplo.txt" target="_blank">Download STRAF haploid example file.</a>
-
-It is also possible to use a format similar to the Genepopinput format, 
-with both alleles (for diploid data) coded in one column, either with 2 or 3 
-digits. Note that in order to use this format, no point alleles should be 
-present in the data set. Here is an example input file:
-
-<a id="raw-url" href="exampleGenepop.txt" download="exampleGenepop.txt" target="_blank">Download Genepop-like example file.</a>
 
 ### Using STRAF
 

@@ -11,11 +11,13 @@ Work in progress.
 
 ## Input data format {-}
 
-* Tab separated values
-* 1 or two columns per locus depending on ploidy
-* 1 row per individual
-* 1 column with sample name
-* 1 column with sample population (even if a single population)
+STRAF's input file is a text file containing the genotypes of each sample:
+
+* The first column, named __ind__, needs to contain the sample ID 
+* The second column, , named __pop__, contains the population ID (this column must exist even if a single population is studied)
+* The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)
+* Genotypes must be encoded as numbers (STRAF accepts point alleles)
+* Missing data (e.g. null alleles) must be indicated with a “0”.
 
 For diploid data, the table should look like this:
 
@@ -42,7 +44,7 @@ like this:
 * Screen capture Excel
 
 Then, one simply needs to save this table as a tab-delimited text file. This can be
-achieved by clicking on `Save As` (...)
+achieved by clicking on `Save As` > `Text (Tab-delimited) (*.txt)`
 
 * Screen capture Save As
 

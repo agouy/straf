@@ -63,12 +63,13 @@
 <div id="input-data-format" class="section level2 unnumbered">
 <h2>Input data format<a class="anchor" aria-label="anchor" href="#input-data-format"><i class="fas fa-link"></i></a>
 </h2>
+<p>STRAF’s input file is a text file containing the genotypes of each sample:</p>
 <ul>
-<li>Tab separated values</li>
-<li>1 or two columns per locus depending on ploidy</li>
-<li>1 row per individual</li>
-<li>1 column with sample name</li>
-<li>1 column with sample population (even if a single population)</li>
+<li>The first column, named <strong>ind</strong>, needs to contain the sample ID</li>
+<li>The second column, , named <strong>pop</strong>, contains the population ID (this column must exist even if a single population is studied)</li>
+<li>The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)</li>
+<li>Genotypes must be encoded as numbers (STRAF accepts point alleles)</li>
+<li>Missing data (e.g. null alleles) must be indicated with a “0”.</li>
 </ul>
 <p>For diploid data, the table should look like this:</p>
 <div class="inline-table"><table class="table table-sm">
@@ -147,7 +148,7 @@ like this:</p>
 <li>Screen capture Excel</li>
 </ul>
 <p>Then, one simply needs to save this table as a tab-delimited text file. This can be
-achieved by clicking on <code>Save As</code> (…)</p>
+achieved by clicking on <code>Save As</code> &gt; <code>Text (Tab-delimited) (*.txt)</code></p>
 <ul>
 <li>Screen capture Save As</li>
 </ul>
@@ -163,7 +164,7 @@ achieved by clicking on <code>Save As</code> (…)</p>
 <p>Even though you’ve been very careful in the generation of STRAF’s input file,
 it is possible that you still run into an error after uploading the file to STRAF.</p>
 <div class="interpretation">
-<p><strong>Inut file checklist</strong></p>
+<p><strong>Input file checklist</strong></p>
 <ul>
 <li>Check input parameters in the sidebar: do they actually correspond to the input data?</li>
 <li>Check locus names: are they all different for haploid data? Do both columns for a single locus for diploid data have the exact same name?</li>

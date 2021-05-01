@@ -28,20 +28,6 @@ shinyServer(function(input, output) {
         return(NULL)
       }
       
-      if(length(unique(testGeno@pop)) > 1 & length(adegenet::locNames(testGeno)) > 1) {
-        
-        testGeno3 <- try(
-          hierfstat::wc(
-            testGeno,
-            diploid = (input$ploidy == 2)
-          ),
-          silent = TRUE
-        )
-        if(class(testGeno3) == "try-error") {
-          warning("Input file error.")
-          return(NULL)
-        }
-      }
       return(input$file1)
     }
   })
@@ -74,18 +60,6 @@ shinyServer(function(input, output) {
       
       if(class(testGeno) == "try-error") {
         return("Input file error. Wrong number of columns per locus (please check ploidy).")
-      }
-      
-      testGeno3 <- try(
-        hierfstat::wc(
-          testGeno,
-          diploid = (input$ploidy == 2)
-        ),
-        silent = TRUE
-      )
-      
-      if(class(testGeno3) == "try-error") {
-        return("Input file error. Wrong ploidy (please check the left tab).")
       }
       
     }
