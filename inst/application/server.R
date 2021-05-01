@@ -33,11 +33,7 @@ shinyServer(function(input, output) {
         testGeno3 <- try(
           hierfstat::wc(
             testGeno,
-            diploid = switch(
-              input$ploidy,
-              Diploid = TRUE,
-              Haploid = FALSE
-            )
+            diploid = (input$ploidy == 2)
           ),
           silent = TRUE
         )
@@ -72,22 +68,18 @@ shinyServer(function(input, output) {
       }
       if(dim(X)[2] < 3) {
         return("Input file error: incorrect number of columns. Please read the documentation for more information.")
-      } 
+      }
       
       testGeno <- try(getgenind(), silent = TRUE)
       
       if(class(testGeno) == "try-error") {
-        return("Input file error. Wrong number of columns per locus (please check ploidy and number of digits).")
+        return("Input file error. Wrong number of columns per locus (please check ploidy).")
       }
       
       testGeno3 <- try(
         hierfstat::wc(
           testGeno,
-          diploid = switch(
-            input$ploidy,
-            Diploid = TRUE,
-            Haploid = FALSE
-          )
+          diploid = (input$ploidy == 2)
         ),
         silent = TRUE
       )
@@ -124,9 +116,7 @@ shinyServer(function(input, output) {
     if(is.null(inFile)) return(NULL)
     df_out <- createGenind(
       Ifile = inFile,
-      Imicrovariants = input$microvariants,
-      Incode = input$ncode,
-      Iploidy = input$ploidy
+      ploidy = input$ploidy
     )
     return(df_out)
   })
@@ -142,5 +132,5 @@ shinyServer(function(input, output) {
   for_popgen_Server("for_popgen", getgenind, popnames, ploidy, barplotcolor, transparency, cexaxis)
   pca_mds_Server("pca_mds", getgenind)
   ref_mds_Server("ref_mds", getgenind)
-  file_conv_Server("file_conv", reactive({input$file1$datapath}), reactive({input$ploidy}))
+  file_conv_Server("file_conv", reactive({input$file1$datapath}), ploidy)
 })

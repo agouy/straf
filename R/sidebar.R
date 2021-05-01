@@ -15,12 +15,17 @@ sidebarUI <- function() {
       )),
     h4('Input'),
     p('Please read the documentation for details about input files and analyses.'),
-    radioButtons('microvariants', "Number of columns per locus:", c('2', '1'), inline = TRUE),
-    radioButtons('ploidy', "Ploidy:", c('Diploid', 'Haploid'), inline = TRUE),
-    conditionalPanel(
-      condition="input.microvariants == 1",
-      radioButtons('ncode', 'Number of digits for allele sizes:', c('2', '3'), inline = TRUE)
+    # radioButtons('microvariants', "Number of columns per locus:", c('2', '1'), inline = TRUE),
+    radioButtons(
+      inputId = 'ploidy', label =  "Ploidy:",
+      choiceNames = c('Diploid', 'Haploid'),
+      choiceValues = c(2, 1),
+      inline = TRUE
     ),
+    # conditionalPanel(
+    #   condition="input.microvariants == 1",
+    #   radioButtons('ncode', 'Number of digits for allele sizes:', c('2', '3'), inline = TRUE)
+    # ),
     fileInput(
       'file1', 'Choose file to upload:',
       accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv')

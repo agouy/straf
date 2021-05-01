@@ -31,8 +31,7 @@ file_conv_Server <- function(id, fpath, ploidy) {
           paste('straf2genepop.txt', sep='') 
         },
         content = function(file) {
-          ploidy <- switch(ploidy(), Diploid = 2, Haploid = 1)
-          straf2genepop(input_file = fpath(), output_file = file, ploidy = ploidy)
+          straf2genepop(input_file = fpath(), output_file = file, ploidy = ploidy())
         }
       )
       

@@ -25,6 +25,8 @@ axes.
 
 :::interpretation
 __Interpreting PCA results__
+
+* Beware of the influence of sample size on the results.
 :::
 
 

@@ -49,7 +49,7 @@ popgen_UI <- function(id) {
     ),
     
     conditionalPanel(
-      condition = "input.ploidy == 'Diploid'",
+      condition = "input.ploidy == 2",
       ns = ns,
       awesomeCheckbox(
         ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
@@ -373,9 +373,9 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
           for(i in 1:nloc){
             for(ii in 1:nloc){
               if(i<ii){
-                if(ploidy()=="Diploid") lx <- pegas::LD2(datLD,
+                if(ploidy() == 2) lx <- pegas::LD2(datLD,
                                                       locus=c(loci[i],loci[ii]))$T2
-                if(ploidy()=="Haploid") lx <- pegas::LD(datLD,
+                if(ploidy() == 1) lx <- pegas::LD(datLD,
                                                      locus=c(loci[i],loci[ii]))$T2
                 LDmat[i,ii] <- lx[3]
                 LDmat[ii,i] <- lx[1]
@@ -498,7 +498,7 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
 #' @inheritParams getIndicesFromGenind
 #' @export
 #' @noRd
-getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = "Diploid") {
+getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = 2) {
   ind <- list()
   ind$all <- getIndicesFromGenind(data, hw, hwperm, ploidy)
   for(popu in unique(data$pop)) {
@@ -574,7 +574,7 @@ getIndicesFromGenind <- function(data,
     PD = 1 - PM
   )
   
-  if(ploidy == "Diploid") {
+  if(ploidy == 2) {
     DF$Hobs <- adegenet::summary(data)$Hobs[names(GD)]
     DF$PE <- (DF$Hobs ^ 2) * (1 - 2 * (DF$Hobs) * ((1 - DF$Hobs) ^ 2))
     DF$TPI <- 1 / (2 * (1 - DF$Hobs))
@@ -583,13 +583,13 @@ getIndicesFromGenind <- function(data,
   if(length(unique(data@pop)) > 1 & length(locNames(data)) > 1) {
     basicstat <- hierfstat::basic.stats(
       data,
-      diploid = switch(ploidy, Diploid = TRUE, Haploid = FALSE),
+      diploid = (ploidy == 2),
       digits = 4
     )$perloc
     rownames(basicstat) <- as.character(unique(data@loc.fac))
     Fst <- hierfstat::wc(
       data,
-      diploid = switch(ploidy, Diploid = TRUE, Haploid = FALSE)
+      diploid = (ploidy == 2)
     )$per.loc$FST
     names(Fst) <- as.character(unique(data@loc.fac))
     
@@ -598,7 +598,7 @@ getIndicesFromGenind <- function(data,
     DF$Fis <- basicstat[names(GD), "Fis"]
   }
   
-  if(ploidy == "Diploid" & hw) {
+  if(ploidy == 2 & hw) {
     withProgress(message = 'Performing HW test...', value = 0, {
       DF$pHW <- pegas::hw.test(data, B = hwperm)[names(GD), 4]
     })

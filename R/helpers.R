@@ -1,16 +1,14 @@
 #' Convert input file to genind object
 #' @param Ifile Input file object.
-#' @param Imicrovariants Number of microvariants.
-#' @param Incode Number of digits encoding allele size.
-#' @param Iploidy Ploidy ("Haploid" or "Diploid").
+#' @param ploidy Ploidy ("Haploid" or "Diploid").
 #' @return An object of class genind.
 #' @export
 #' @noRd
 #' @importFrom adegenet as.genind df2genind pop<- locNames
 #' @importClassesFrom adegenet genind
-createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
+createGenind <- function(Ifile, ploidy) {
   
-  if(Imicrovariants == 2) {
+  if(ploidy == 2) {
     
     mat <- readLines(Ifile$datapath)
     mat <- strsplit(mat, "[\t]")
@@ -50,24 +48,19 @@ createGenind <- function(Ifile, Imicrovariants, Incode, Iploidy) {
     dat <- read.table(Ifile$datapath, header = TRUE,
                       sep = "\t", colClasses = "character")
     rownames(dat) <- dat$ind
-    
-    if(Iploidy == "Haploid") {
-      dat_tmp <- dat[, -1:-2]
-      if(length(grep("[.]", unlist(dat_tmp))) > 0) {
-        new_dat <- apply(dat_tmp, MARGIN = 2, function(x) {
-          x <- gsub("[.]", "", x)
-          x[nchar(x) == 1] <- paste0("0", x[nchar(x) == 1], "0")
-          x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
-          if(any(nchar(x) != 3)) stop("Allele encoding error.")
-          return(x)
-        })
-        dat[, -1:-2] <- new_dat
-      }
+    dat_tmp <- dat[, -1:-2]
+    if(length(grep("[.]", unlist(dat_tmp))) > 0) {
+      new_dat <- apply(dat_tmp, MARGIN = 2, function(x) {
+        x <- gsub("[.]", "", x)
+        x[nchar(x) == 1] <- paste0("0", x[nchar(x) == 1], "0")
+        x[nchar(x) == 2] <- paste0(x[nchar(x) == 2], "0")
+        if(any(nchar(x) != 3)) stop("Allele encoding error.")
+        return(x)
+      })
+      dat[, -1:-2] <- new_dat
     }
     
-    dat2 <- df2genind(dat[, -1:-2],ncode = switch(
-      Incode, "2" = 2, "3" = 3), ploidy = switch(
-        Iploidy, Diploid = 2, Haploid = 1))
+    dat2 <- df2genind(dat[, -1:-2], ncode = 3, ploidy = ploidy)
     pop(dat2) <- dat$pop
   }
   return(dat2)
