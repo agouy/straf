@@ -1,0 +1,7 @@
+bookdown::bs4_book:
+  css: style.css
+  language:
+    ui:
+      chapter_name: "Chapter "
+  theme:
+    primary:  "#2C4443"

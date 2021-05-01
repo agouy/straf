@@ -1,11 +1,5 @@
 intro
-what-is-straf
-how-to-use-straf
 importing-data
-str-data
-input-data-format
-generating-the-input-data-from-excel
-common-issues
 forensic-parameters
 gene-diversity
 random-match-probability-pm

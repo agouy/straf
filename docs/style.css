@@ -1,0 +1,23 @@
+  div.digression, div.note, div.interpretation {
+    padding: 1em;
+    margin: 1em 0;
+    padding-left: 100px;
+    background-size: 70px;
+    background-repeat: no-repeat;
+    background-position: 15px center;
+    min-height: 120px;
+    color: #2C4443;
+    background-color: #c7e0df;
+    border: solid 5px #2C4443;
+  }
+  
+  
+div.digression {
+  background-image: url("img/ink3.png");
+}
+div.note {
+  background-image: url("img/key3.png");
+}
+div.interpretation {
+  background-image: url("img/key3.png");
+}

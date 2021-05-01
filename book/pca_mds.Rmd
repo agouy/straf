@@ -1,0 +1,41 @@
+# Multivariate statistics
+
+## Principal Component Analysis (PCA)
+
+PCA is a method of dimentionality reduction. What is does it that it captures most 
+of the variation in our data and tries to project it onto a small number of new 
+variables called components.
+
+This is a useful method to capture variation from a large number of variables and
+allows to discover hidden pattern by increasing interpretability.
+
+In our case, if we consider that each allele at each locus is a variable, and that
+our individual observations are the presence / absence of each allele for each sample,
+we end up with a highly dimensional dataset (we have as many variables as we have
+alleles!). It gets even worse if you analyse genome sequences, where you can have millions
+of variables in your dataset! This is definitely not an interpretable dataset.
+
+PCA allows to bring most of the variation existing between our samples onto a few
+axes.
+
+* PCA plot on Pemberton data.
+
+
+* PCA plot on Y haplogroups.
+
+:::interpretation
+__Interpreting PCA results__
+:::
+
+
+## Multidimensional Scaling (MDS)
+
+MDS is conceptually similar to PCA. One of the main differences is that it takes 
+different types of data as input. Pairwise distances between data points. In forensics practice, it is often used to compare populations and not individuals.
+It could be run on a pairwise FSTs or other genetic distances.
+
+* MDS plot on Pemberton data.
+
+:::interpretation
+__Interpreting MDS results__
+:::

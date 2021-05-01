@@ -1,0 +1,37 @@
+# Importing data
+
+Coming soon.
+
+## STR data {-}
+
+Coming soon.
+
+## Input data format {-}
+
+Coming soon.
+
+## Generating the input data from Excel {-}
+
+Coming soon.
+
+## Uploading the data to STRAF {-}
+
+Coming soon.
+
+## Common issues {-}
+
+Even though you've been very careful in the generation of STRAF's input file,
+it is possible that you still run into an error after uploading the file to STRAF.
+
+:::interpretation
+__Inut file checklist__
+
+* Check input parameters in the sidebar: do they actually correspond to the input data?
+* Check locus names: are they all different for haploid data? Do both columns for a single locus for diploid data have the exact same name?
+* Check that all missing data have been encoded with a "0"
+* Try to remove any special characters from sample and locus names
+* Check for the presence of empty spaces at the end of each line
+* Check if alleles are exclusively encoded with numbers
+* Check if values are separated by tabs and not spaces
+* Check if the first two columns are names "ind" and "pop"
+:::

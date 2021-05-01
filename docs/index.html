@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Preface | The STRAF Book</title>
-<meta name="author" content="Alexandre Gouy">
+<meta name="author" content="Alexandre Gouy and Martin Zieger">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.4.9003/tabs.js"></script><script src="libs/bs3compat-0.2.4.9003/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
-<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><link rel="stylesheet" href="style.css">
 </head>
 <body data-spy="scroll" data-target="#toc">
 
@@ -32,7 +32,7 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="active" href="index.html">Preface</a></li>
-<li><a class="" href="intro.html"><span class="header-section-number">1</span> Introduction to STRAF</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">1</span> Introduction</a></li>
 <li><a class="" href="importing-data.html"><span class="header-section-number">2</span> Importing data</a></li>
 <li><a class="" href="forensic-parameters.html"><span class="header-section-number">3</span> Forensic parameters</a></li>
 <li><a class="" href="population-genetics-indices.html"><span class="header-section-number">4</span> Population genetics indices</a></li>
@@ -49,51 +49,96 @@
 <h1>Preface<a class="anchor" aria-label="anchor" href="#preface"><i class="fas fa-link"></i></a>
 </h1>
 <center>
-<img src="img/cover.png" alt="book_cover" width="400">
+<img src="img/cover.png" class="cover" alt="book_cover" width="300">
 </center>
-<div id="the-story-behind-straf" class="section level2 unnumbered">
-<h2>The story behind STRAF<a class="anchor" aria-label="anchor" href="#the-story-behind-straf"><i class="fas fa-link"></i></a>
+<div id="what-is-this-book" class="section level2 unnumbered">
+<h2>What is this book?<a class="anchor" aria-label="anchor" href="#what-is-this-book"><i class="fas fa-link"></i></a>
 </h2>
-<p>Forensic genetics and population genetics are inherently linked.
-Software and metrics developed in the population genetics field are used in
-routine in forensic genetics practice.</p>
-<p>STRAF was born from the encounter of a forensic geneticist and a population geneticist.
-In 2017, in Bern, Switzerland, Martin Zieger came to visit a population genetics lab.
-Alexandre was doing his PhD thesis in the lab at that time. A few weeks later, STRAF was born.</p>
+<p>This is the online version of <strong>The STRAF Book</strong>, which is currently under
+active development. It is dedicated to the STRAF software, a web application
+for the analysis of genetic data in forensics practice.</p>
+</div>
+<div id="forensic-and-population-genetics-lost-sisters" class="section level2 unnumbered">
+<h2>Forensic and population genetics, lost sisters<a class="anchor" aria-label="anchor" href="#forensic-and-population-genetics-lost-sisters"><i class="fas fa-link"></i></a>
+</h2>
+<p>Genetics has many faces, and forensic and population genetics are two of them.
+If we were to summarise their respective scopes, we could say that the former
+applies genetics to legal matters, and the latter is focusing on understanding
+genetic differences within and between populations, a fundamental matter in
+evolutionary biology.</p>
+<p>Forensic genetics and population genetics have always been two tightly linked
+disciplines. Why is that? Because most questions are shared between disciplines.
+Problems in forensics and population genetics seem different, same problem
+phrased differently.</p>
+<p>Software and metrics developed in the population genetics field are used in
+routine in forensic genetics practice. But forensics is not just “applied population genetics”. Such a speicfic field of application, given the legal implications
+and the unique situations (data types and acquisition, unique challenges),
+that it also required the development of specific metrics.</p>
+</div>
+<div id="and-then-there-was-straf" class="section level2 unnumbered">
+<h2>And then there was STRAF<a class="anchor" aria-label="anchor" href="#and-then-there-was-straf"><i class="fas fa-link"></i></a>
+</h2>
+<p>STRAF was born from the encounter of two scientists: a forensic geneticist and
+a population geneticist. In 2017, in Bern, Switzerland, Martin Zieger came to
+visit a population genetics lab, where Alexandre Gouy was pursuing his PhD thesis at that time.</p>
 <p>Analysing a dataset using scripts I had developed for the analysis of STR /
 microsatellite data. We don’t event name our markers the same way, though we
 are doing the exact same thing: genotyping samples, controlling the quality of
 our data, computing relevant metrics about our markers, and investigating the
 relationship between populations and individuals.</p>
+<p>On the forensics side. These forensic parameters were computed using a that has
+been provided by one of the companies providing assays, the mythical PowerStats v1.2
+spreadsheet, allowing to compute forensic statistics and allele frequencies in
+Microsoft Excel. It has been since then removed from the Internet, and forensic
+geneticists started sharing this spreadsheet among each other, circulating
+almost secretly, “under the cloak” as French speakers would say.</p>
+<p>A few weeks later, STRAF was born, and after four year, STRAF had become a useful to the forensics community, but not only. It has been used as a support for teaching
+population genetics, and has been used in evolutionary biology studies.
+The positive reception of the software in the community motivated its
+development over the years until the release of STRAF 2.0 in 2021.</p>
 <p>STRAF’s story highlights the importance of communication between fields.</p>
 </div>
-<div id="why-read-this-book" class="section level2 unnumbered">
-<h2>Why read this book?<a class="anchor" aria-label="anchor" href="#why-read-this-book"><i class="fas fa-link"></i></a>
+<div id="what-will-you-learn" class="section level2 unnumbered">
+<h2>What will you learn?<a class="anchor" aria-label="anchor" href="#what-will-you-learn"><i class="fas fa-link"></i></a>
 </h2>
-<p>Coming soon.</p>
-</div>
-<div id="contents" class="section level2 unnumbered">
-<h2>Contents<a class="anchor" aria-label="anchor" href="#contents"><i class="fas fa-link"></i></a>
-</h2>
+<p>By reading this book, our hope is that you will:</p>
 <ul>
-<li><p>Introduction to STRAF</p></li>
-<li><p>Forensic parameters</p></li>
-<li><p>Population genetics indices</p></li>
-<li><p>PCA and MDS</p></li>
-<li><p>File conversion</p></li>
+<li><p>Get an overview of concepts forensic and populaation genetics</p></li>
+<li><p>Learn how to use the STRAF software for STR data analysis through practical
+applications</p></li>
+<li><p>Be able to interpret common metrics and analyses used in forensics practice</p></li>
+</ul>
+</div>
+<div id="outline" class="section level2 unnumbered">
+<h2>Outline<a class="anchor" aria-label="anchor" href="#outline"><i class="fas fa-link"></i></a>
+</h2>
+<p>The book is organised as follow:</p>
+<ul>
+<li><p>We’ll start by an introduction to essential forensic and population genetics concepts.</p></li>
+<li><p>In Chapter 1, focus on data. Which data are we dealin</p></li>
+<li><p>In Chapter 2, we will review forensic parameters</p></li>
+<li><p>In Chapter 3, Population genetics indices</p></li>
+<li><p>In Chapter 4, we will focus on multivariate statistics and how they can provide
+insights into population structure, with a particular focus on Principal Component
+Analysis (PCA) and Multidimensional Scaling (MDS), two widely used approaches in genetics.</p></li>
+<li><p>In Chapter 5, we gather recommendations around potential next analysis steps
+by presenting STRAF’s file conversion capabilities and useful methods implemented in
+other software.</p></li>
 </ul>
 </div>
 </div>
   <div class="chapter-nav">
 <div class="empty"></div>
-<div class="next"><a href="intro.html"><span class="header-section-number">1</span> Introduction to STRAF</a></div>
+<div class="next"><a href="intro.html"><span class="header-section-number">1</span> Introduction</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#preface">Preface</a></li>
-<li><a class="nav-link" href="#the-story-behind-straf">The story behind STRAF</a></li>
-<li><a class="nav-link" href="#why-read-this-book">Why read this book?</a></li>
-<li><a class="nav-link" href="#contents">Contents</a></li>
+<li><a class="nav-link" href="#what-is-this-book">What is this book?</a></li>
+<li><a class="nav-link" href="#forensic-and-population-genetics-lost-sisters">Forensic and population genetics, lost sisters</a></li>
+<li><a class="nav-link" href="#and-then-there-was-straf">And then there was STRAF</a></li>
+<li><a class="nav-link" href="#what-will-you-learn">What will you learn?</a></li>
+<li><a class="nav-link" href="#outline">Outline</a></li>
 </ul>
 
       <div class="book-extra">
@@ -110,7 +155,7 @@ relationship between populations and individuals.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy. It was last built on 2021-05-01.</p>
+    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-05-01.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

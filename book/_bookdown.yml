@@ -1,6 +1,20 @@
-#output_dir: "."
-output_dir: "../docs"
+book_filename: "straf-book"
 delete_merged_file: true
-bookdown::bs4_book:
-  theme:
-    primary: "#637238"
+output_dir: "../docs"
+
+rmd_files:
+  [
+    "index.Rmd",
+
+    "introduction.Rmd",
+
+    "data.Rmd",
+
+    "forensic_parameters.Rmd",
+
+    "popgen_parameters.Rmd",
+    
+    "pca_mds.Rmd",
+
+    "file_conversion.Rmd",
+  ]

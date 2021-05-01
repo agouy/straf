@@ -1,6 +1,6 @@
 --- 
 title: "The STRAF Book"
-author: "Alexandre Gouy"
+author: "Alexandre Gouy and Martin Zieger"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
@@ -12,17 +12,37 @@ description: "Test"
 
 # Preface {-}
 
-<center><img src="img/cover.png" alt="book_cover" width="400"/></center>
+<center><img src="img/cover.png" class="cover" alt="book_cover" width="300"/></center>
 
-## The story behind STRAF {-}
+## What is this book? {-}
 
-Forensic genetics and population genetics are inherently linked.
+This is the online version of __The STRAF Book__, which is currently under
+active development. It is dedicated to the STRAF software, a web application
+for the analysis of genetic data in forensics practice.
+
+## Forensic and population genetics, lost sisters {-}
+
+Genetics has many faces, and forensic and population genetics are two of them.
+If we were to summarise their respective scopes, we could say that the former 
+applies genetics to legal matters, and the latter is focusing on understanding 
+genetic differences within and between populations, a fundamental matter in 
+evolutionary biology.
+
+Forensic genetics and population genetics have always been two tightly linked
+disciplines. Why is that? Because most questions are shared between disciplines.
+Problems in forensics and population genetics seem different, same problem
+phrased differently.
+
 Software and metrics developed in the population genetics field are used in 
-routine in forensic genetics practice.
+routine in forensic genetics practice. But forensics is not just "applied population genetics". Such a speicfic field of application, given the legal implications
+and the unique situations (data types and acquisition, unique challenges),
+that it also required the development of specific metrics.
 
-STRAF was born from the encounter of a forensic geneticist and a population geneticist.
-In 2017, in Bern, Switzerland, Martin Zieger came to visit a population genetics lab. 
-Alexandre was doing his PhD thesis in the lab at that time. A few weeks later, STRAF was born.
+## And then there was STRAF {-}
+
+STRAF was born from the encounter of two scientists: a forensic geneticist and
+a population geneticist. In 2017, in Bern, Switzerland, Martin Zieger came to 
+visit a population genetics lab, where Alexandre Gouy was pursuing his PhD thesis at that time.
 
 Analysing a dataset using scripts I had developed for the analysis of STR / 
 microsatellite data. We don't event name our markers the same way, though we 
@@ -30,21 +50,47 @@ are doing the exact same thing: genotyping samples, controlling the quality of
 our data, computing relevant metrics about our markers, and investigating the
 relationship between populations and individuals.
 
+On the forensics side. These forensic parameters were computed using a that has 
+been provided by one of the companies providing assays, the mythical PowerStats v1.2
+spreadsheet, allowing to compute forensic statistics and allele frequencies in 
+Microsoft Excel. It has been since then removed from the Internet, and forensic 
+geneticists started sharing this spreadsheet among each other, circulating 
+almost secretly, "under the cloak" as French speakers would say.
+
+A few weeks later, STRAF was born, and after four year, STRAF had become a useful to the forensics community, but not only. It has been used as a support for teaching 
+population genetics, and has been used in evolutionary biology studies. 
+The positive reception of the software in the community motivated its 
+development over the years until the release of STRAF 2.0 in 2021. 
+
 STRAF's story highlights the importance of communication between fields.
 
+## What will you learn? {-}
 
-## Why read this book? {-}
+By reading this book, our hope is that you will:
 
-Coming soon.
+* Get an overview of concepts forensic and populaation genetics
 
-## Contents {-}
+* Learn how to use the STRAF software for STR data analysis through practical 
+applications
 
-* Introduction to STRAF
+* Be able to interpret common metrics and analyses used in forensics practice
 
-* Forensic parameters
+## Outline {-}
 
-* Population genetics indices
+The book is organised as follow:
 
-* PCA and MDS
+* We'll start by an introduction to essential forensic and population genetics concepts.
 
-* File conversion
+* In Chapter 1, focus on data. Which data are we dealin
+
+* In Chapter 2, we will review forensic parameters
+
+* In Chapter 3, Population genetics indices
+
+* In Chapter 4, we will focus on multivariate statistics and how they can provide 
+insights into population structure, with a particular focus on Principal Component
+Analysis (PCA) and Multidimensional Scaling (MDS), two widely used approaches in genetics.
+
+* In Chapter 5, we gather recommendations around potential next analysis steps
+by presenting STRAF's file conversion capabilities and useful methods implemented in
+other software.
