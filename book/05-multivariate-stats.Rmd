@@ -1,0 +1,9 @@
+# Multivariate statistics
+
+## Principal Component Analysis (PCA)
+
+Coming soon.
+
+## Multidimensional Scaling (MDS)
+
+Coming soon.

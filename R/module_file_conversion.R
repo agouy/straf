@@ -31,8 +31,8 @@ file_conv_Server <- function(id, fpath, ploidy) {
           paste('straf2genepop.txt', sep='') 
         },
         content = function(file) {
-          gp <- straf2genepop(f.name = fpath(), ploidy = switch(ploidy(), Diploid = 2, Haploid = 1))
-          cat(gp, file = file)
+          ploidy <- switch(ploidy(), Diploid = 2, Haploid = 1)
+          straf2genepop(input_file = fpath(), output_file = file, ploidy = ploidy)
         }
       )
       
@@ -41,8 +41,7 @@ file_conv_Server <- function(id, fpath, ploidy) {
           paste('straf2arlequin.arp', sep='') 
         },
         content = function(file) {
-          gp <- straf2arlequin(fpath())
-          cat(gp, file = file)
+          straf2arlequin(fpath(), file)
         }
       )
       
@@ -51,8 +50,7 @@ file_conv_Server <- function(id, fpath, ploidy) {
           paste('straf2familias.txt', sep='')
         },
         content = function(file) {
-          fmi <- straf2familias(fpath())
-          cat(fmi, file = file)
+          straf2familias(fpath(), output_file = file)
         }
       )
     }
@@ -61,8 +59,8 @@ file_conv_Server <- function(id, fpath, ploidy) {
 #' Convert STRAF file to the Genepop format.
 #' @export
 #' @noRd
-straf2genepop <- function(f.name, ploidy = 2) {
-  df <- readLines(f.name)
+straf2genepop <- function(input_file, output_file, ploidy = 2) {
+  df <- readLines(input_file)
   
   spt <- do.call("rbind", strsplit(df, "\t"))
   colnames(spt) <- spt[1, ]
@@ -121,16 +119,16 @@ straf2genepop <- function(f.name, ploidy = 2) {
   ## write file
   output <- c(first.line, loci, vec_out)
   output <- paste(output, "\n", collapse = "")
-  
-  return(output)
+  cat(output, file = output_file)  
+  return(NULL)
 }
 
 #' Convert STRAF file to the Familias format.
 #' @export
 #' @noRd
-straf2familias <- function(f.name) {
+straf2familias <- function(input_file, output_file) {
   
-  df <- readLines(f.name)
+  df <- readLines(input_file)
   
   spt <- do.call("rbind", strsplit(df, "\t"))
   colnames(spt) <- spt[1, ]
@@ -138,8 +136,6 @@ straf2familias <- function(f.name) {
   
   df_tmp <- df[, -1:-2]
   
-  # add leading zeros
-  # concatenate
   idx <- seq_len(length(df_tmp))
   ids <- as.logical(idx %% 2)
   
@@ -163,14 +159,18 @@ straf2familias <- function(f.name) {
   output <- paste(names(prop.tb), str.list, sep = "\n")
   out <- paste(output, collapse = "\n\n")
   out <- paste0(out, "\n")
-  return(out)
+  cat(out, file = output_file)
+  return(NULL)
 }
 
 #' Convert STRAF file to the Arlequin format.
+#' This function
+#' @param fname Input file name in the STRAF format.
+#' @return NULL
 #' @export
 #' @noRd
-straf2arlequin <- function(f.name) {
-  df <- readLines(f.name)
+straf2arlequin <- function(input_file, output_file) {
+  df <- readLines(input_file)
   
   spt <- do.call("rbind", strsplit(df, "\t"))
   colnames(spt) <- spt[1, ]
@@ -224,8 +224,8 @@ GenotypicData=1\nGameticPhase=0\nMissingData="?"\nLocusSeparator=WHITESPACE\n\n[
   output <- c(header, out_str)
   ## write file
   output <- paste(output, "\n", collapse = "")
-  
-  return(output)
+  cat(output, file = output_file)
+  return(NULL)
 }
 
 #' Convert allele frequencies to a format suitable for MDS analysis.

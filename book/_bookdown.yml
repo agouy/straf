@@ -1,0 +1,6 @@
+#output_dir: "."
+output_dir: "../docs"
+delete_merged_file: true
+bookdown::bs4_book:
+  theme:
+    primary: "#637238"

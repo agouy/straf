@@ -1,0 +1,46 @@
+# Forensic parameters
+
+## Gene diversity
+
+Genetic diversity ($GD$), or expected heterozygosity ($H_{\mathrm{exp}}$), is computed using its unbiased estimator:
+
+__Formula__
+
+$$
+  H_{\mathrm{exp}} = GD = \frac{n}{n - 1} \left( 1 - \sum_{i=1}^{n}(p_i)^2 \right)
+$$
+__Interpretation__
+
+Test.
+
+## Random match probability (PM)
+
+$$
+PM = \sum_i (G_i)^2
+$$
+
+## Power of Discrimination (PD)
+
+$$
+PD = 1 - PM
+$$
+
+
+## Polymorphism Information Content (PIC)
+
+$$
+PIC = 1 - \sum_{i=1}^{n} p_i^2 - \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} 2p_i^2p_j^2
+$$
+
+
+## Power of Exclusion (PE)
+
+$$
+PE = h^2\left(1 - 2hH^2\right)
+$$
+
+## Typical Paternity Index (TPI)
+
+$$
+PE = \frac{1}{2H}
+$$

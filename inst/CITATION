@@ -1,0 +1,15 @@
+citHeader("To cite straf in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "STRAF-a convenient online tool for STR data evaluation in forensic genetics",
+  author   = "Gouy, Alexandre and Zieger, Martin",
+  journal  = "Forensic Science International: Genetics",
+  year     = "2017",
+  volume   = "30",
+  pages    = "148-151",
+  url      = "https://doi.org/10.1016/j.fsigen.2017.07.007",
+  textVersion = paste(
+  "Gouy, A., & Zieger, M. (2017). STRAF—a convenient online tool for STR data evaluation in forensic genetics. Forensic Science International: Genetics, 30, 148-151."
+  )
+)

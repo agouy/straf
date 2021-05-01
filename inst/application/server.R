@@ -1,8 +1,6 @@
 shinyServer(function(input, output) {
   
   getData <- reactive({
-    ### check the input: returns NULL if problem
-    ### if NULL, the function checkinputfile will print a message
     if(is.null(input$file1)) { return(NULL) } else {
       
       X <- read.table(

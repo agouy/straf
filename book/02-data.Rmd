@@ -1,0 +1,19 @@
+# Importing data
+
+Coming soon.
+
+## STR data
+
+Coming soon.
+
+## Input data format
+
+Coming soon.
+
+## Generating the input data from Excel
+
+Coming soon.
+
+## Common issues
+
+Coming soon.

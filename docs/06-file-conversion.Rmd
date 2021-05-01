@@ -1,7 +1,0 @@
-# File conversion
-
-## Genepop
-
-## Arlequin
-
-## Familias

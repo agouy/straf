@@ -363,7 +363,7 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
           return(NULL)
         
         D <- getgenind()
-        datLD <- genind2loci(D)
+        datLD <- pegas::genind2loci(D)
         loci <- (unique(D@loc.fac))
         nloc <- length(unique(D@loc.fac))
         LDmat <- matrix(NA, nrow = nloc, ncol = nloc)
@@ -517,7 +517,6 @@ getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = "Diploid"
 #' @param ploidy character, ploidy, either "Diploid" or "Haploid".
 #' @export
 #' @noRd
-#' @importFrom pegas genind2loci
 getIndicesFromGenind <- function(data,
                                  hw = FALSE,
                                  hwperm = 1000,

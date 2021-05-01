@@ -13,6 +13,7 @@ Runs the shiny application.
 Main function to be called in order to start STRAF,
 }
 \examples{
+library(straf)
 # runStraf()
 
 }

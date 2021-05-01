@@ -8,7 +8,11 @@ ref_mds_UI <- function(id) {
   tabPanel(
     "Reference population",
     h3("Custom allele frequency database"),
-    fileInput(ns("refdata"), "Import allele frequencies (if empty, STRidER database will be used.)"),
+    fileInput(
+      ns("refdata"),
+      "Import allele frequencies (if empty, STRidER database will be used.)",
+      width = "300px"
+    ),
     awesomeCheckbox(ns("add_current_ref"), "Include uploaded data to the MDS", FALSE),
     uiOutput(ns('plotMDS_ref')),
     uiOutput(ns('select_ref_pops')),

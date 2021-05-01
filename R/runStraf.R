@@ -1,7 +1,10 @@
 #' Run the STRAF application
 #' @description Main function to be called in order to start STRAF,
+#' @param port TCP port.
+#' @param host IP address.
 #' @return Runs the shiny application.
 #' @examples
+#' library(straf)
 #' # runStraf()
 #' 
 #' @export
