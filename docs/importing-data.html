@@ -49,21 +49,108 @@
 <h1>
 <span class="header-section-number">2</span> Importing data<a class="anchor" aria-label="anchor" href="#importing-data"><i class="fas fa-link"></i></a>
 </h1>
-<p>Coming soon.</p>
+<p>Work in progress.</p>
 <div id="str-data" class="section level2 unnumbered">
 <h2>STR data<a class="anchor" aria-label="anchor" href="#str-data"><i class="fas fa-link"></i></a>
 </h2>
-<p>Coming soon.</p>
+<ul>
+<li>Observed values: genotypes for each individual, at each locus.</li>
+<li>Potentially two values observed per individual and per locus, if diploid markers.</li>
+<li>Value = can be anything but tipically correspond, for STR markers, to the length.</li>
+<li>Point alleles</li>
+</ul>
 </div>
 <div id="input-data-format" class="section level2 unnumbered">
 <h2>Input data format<a class="anchor" aria-label="anchor" href="#input-data-format"><i class="fas fa-link"></i></a>
 </h2>
-<p>Coming soon.</p>
+<ul>
+<li>Tab separated values</li>
+<li>1 or two columns per locus depending on ploidy</li>
+<li>1 row per individual</li>
+<li>1 column with sample name</li>
+<li>1 column with sample population (even if a single population)</li>
+</ul>
+<p>For diploid data, the table should look like this:</p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th>ind</th>
+<th>pop</th>
+<th>Locus1</th>
+<th>Locus1</th>
+<th>Locus2</th>
+<th>Locus2</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>Bern</td>
+<td>12</td>
+<td>14</td>
+<td>17</td>
+<td>17</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>Bern</td>
+<td>14</td>
+<td>14</td>
+<td>13</td>
+<td>15.2</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>Lausanne</td>
+<td>12</td>
+<td>16</td>
+<td>15.2</td>
+<td>17</td>
+</tr>
+</tbody>
+</table></div>
+<p>For haploid data, the table would look like this:</p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th>ind</th>
+<th>pop</th>
+<th>Locus1</th>
+<th>Locus2</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>Bern</td>
+<td>12</td>
+<td>17</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>Bern</td>
+<td>14</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>Lausanne</td>
+<td>12</td>
+<td>15.2</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div id="generating-the-input-data-from-excel" class="section level2 unnumbered">
 <h2>Generating the input data from Excel<a class="anchor" aria-label="anchor" href="#generating-the-input-data-from-excel"><i class="fas fa-link"></i></a>
 </h2>
-<p>Coming soon.</p>
+<p>It only takes a few steps to generate an input file in a format that is suitable
+for use in STRAF. From Excel, for example, we can start from a spreadsheet looking
+like this:</p>
+<ul>
+<li>Screen capture Excel</li>
+</ul>
+<p>Then, one simply needs to save this table as a tab-delimited text file. This can be
+achieved by clicking on <code>Save As</code> (…)</p>
+<ul>
+<li>Screen capture Save As</li>
+</ul>
 </div>
 <div id="uploading-the-data-to-straf" class="section level2 unnumbered">
 <h2>Uploading the data to STRAF<a class="anchor" aria-label="anchor" href="#uploading-the-data-to-straf"><i class="fas fa-link"></i></a>

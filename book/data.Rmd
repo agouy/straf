@@ -1,18 +1,50 @@
 # Importing data
 
-Coming soon.
+Work in progress.
 
 ## STR data {-}
 
-Coming soon.
+* Observed values: genotypes for each individual, at each locus.
+* Potentially two values observed per individual and per locus, if diploid markers.
+* Value = can be anything but tipically correspond, for STR markers, to the length.
+* Point alleles
 
 ## Input data format {-}
 
-Coming soon.
+* Tab separated values
+* 1 or two columns per locus depending on ploidy
+* 1 row per individual
+* 1 column with sample name
+* 1 column with sample population (even if a single population)
+
+For diploid data, the table should look like this:
+
+| ind | pop      | Locus1 | Locus1 | Locus2 | Locus2 |
+|-----|----------|--------|--------|--------|--------|
+| A   | Bern     | 12     | 14     | 17     | 17     |
+| B   | Bern     | 14     | 14     | 13     | 15.2   |
+| C   | Lausanne | 12     | 16     | 15.2   | 17     |
+
+For haploid data, the table would look like this:
+
+| ind | pop      | Locus1 | Locus2 |
+|-----|----------|--------|--------|
+| A   | Bern     | 12     | 17     |
+| B   | Bern     | 14     | 13     |
+| C   | Lausanne | 12     | 15.2   |
 
 ## Generating the input data from Excel {-}
 
-Coming soon.
+It only takes a few steps to generate an input file in a format that is suitable
+for use in STRAF. From Excel, for example, we can start from a spreadsheet looking 
+like this:
+
+* Screen capture Excel
+
+Then, one simply needs to save this table as a tab-delimited text file. This can be
+achieved by clicking on `Save As` (...)
+
+* Screen capture Save As
 
 ## Uploading the data to STRAF {-}
 
@@ -24,7 +56,7 @@ Even though you've been very careful in the generation of STRAF's input file,
 it is possible that you still run into an error after uploading the file to STRAF.
 
 :::interpretation
-__Inut file checklist__
+__Input file checklist__
 
 * Check input parameters in the sidebar: do they actually correspond to the input data?
 * Check locus names: are they all different for haploid data? Do both columns for a single locus for diploid data have the exact same name?
