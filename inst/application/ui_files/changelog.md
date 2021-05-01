@@ -1,6 +1,7 @@
 ### Udpates
 
-* 1.4.6 (25/04/2021) – It is now possible to add custome reference frequency data to eprform and MDS.
+* 2.0.0 (01/05/2021) – STRAF has been partially reimplemented as an R package, implying a lot of code refactoring. MDS with reference population improved. The STRAF book has been populated. Genepop-like format is not supported anymore and input parameters have been simplified (only the "ploidy"" input parameter remains). Overall performance has been optimised.
+* 1.4.6 (25/04/2021) – It is now possible to add custom reference frequency data to perform an MDS.
 * 1.4.5 (25/04/2021) – Genepop conversion now works for haploid data. Common alleles are displayed for MDS.
 * 1.4.4 (24/04/2021) – Various UI improvements (select and checkboxes inputs), code optimisation. MDS now excluding alleles with at least 1 missing value instead of imputing with the mean.
 * 1.4.3 (18/04/2021) – It is now possible to add uploaded population to the STRidER MDS. Minor UI improvements.
