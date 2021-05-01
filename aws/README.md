@@ -36,10 +36,16 @@ cd /etc/nginx/sites-enabled
 sudo ln -s /etc/nginx/sites-available/shiny.conf .
 ```
 
-## Update
+## Update as a repo
 
 ```
 cd /srv/shiny-server/straf
 sudo git pull
 sudo cp /srv/shiny-server/straf/* /srv/shiny-server/ -r
+```
+
+## Update as a package
+
+```
+sudo R -e "remotes::install_github('https://github.com/agouy/straf)"
 ```

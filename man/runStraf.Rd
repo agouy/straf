@@ -6,6 +6,11 @@
 \usage{
 runStraf(port = 3838, host = "0.0.0.0")
 }
+\arguments{
+\item{port}{TCP port.}
+
+\item{host}{IP address.}
+}
 \value{
 Runs the shiny application.
 }

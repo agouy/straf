@@ -10,8 +10,6 @@
 #' @export
 #' 
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
-#' @import dplyr
-#' @import ggplot2
 #' @importFrom graphics abline axis barplot hist image legend par
 #' @importFrom stats as.dist cmdscale cov frequency ks.test qqplot qunif
 #' @importFrom utils read.table write.table

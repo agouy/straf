@@ -2,6 +2,8 @@
 #' @export
 #' @noRd
 #' @importFrom shinyWidgets awesomeCheckbox
+#' @importFrom ggplot2 ggplot geom_point labs theme_minimal aes
+#' @importFrom magrittr "%>%"
 pca_mds_UI <- function(id) {
   ns <- NS(id)
   tabPanel(

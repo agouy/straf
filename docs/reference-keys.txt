@@ -8,12 +8,11 @@ polymorphism-information-content-pic
 power-of-exclusion-pe
 typical-paternity-index-tpi
 population-genetics-indices
-populationg-genetics-concepts
+population-genetics-concepts
 indices
 multivariate-statistics
 principal-component-analysis-pca
 multidimensional-scaling-mds
 file-conversion
-genepop
-arlequin
+genepop-and-arlequin-formats
 familias
