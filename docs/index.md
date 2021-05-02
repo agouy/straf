@@ -1,7 +1,7 @@
 --- 
 title: "The STRAF Book"
 author: "Alexandre Gouy and Martin Zieger"
-date: "`r Sys.Date()`"
+date: "2021-05-02"
 site: bookdown::bookdown_site
 documentclass: book
 output: bookdown::bs4_book

@@ -1,7 +1,13 @@
 bookdown::bs4_book:
   css: style.css
-  language:
-    ui:
-      chapter_name: "Chapter "
   theme:
     primary:  "#2C4443"
+    
+bookdown::pdf_book:
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
+  includes:
+      in_header: "preamble.tex"
+
+bookdown::epub_book: default

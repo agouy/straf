@@ -1,9 +1,13 @@
-intro
 importing-data
+str-data
+input-data-format
+generating-the-input-data-from-excel
+uploading-the-data-to-straf
+common-issues
 forensic-parameters
-gene-diversity
 random-match-probability-pm
 power-of-discrimination-pd
+gene-diversity
 polymorphism-information-content-pic
 power-of-exclusion-pe
 typical-paternity-index-tpi

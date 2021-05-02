@@ -1,0 +1,30 @@
+# Population genetics indices
+
+__WORK IN PROGRESS__
+
+## Population genetics concepts
+
+* Hardy-Weinberg equilibrium
+
+* Population structure
+
+## Indices
+
+* Heterozygosities
+
+* F-statistics
+
+* FST
+
+
+:::note
+__One concept, multiple estimators.__
+
+Several __estimators__ of Fst exist (for example, Weir and Cockerham's, Nei's, 
+Hudson's FST). It's like if each population geneticist decided to develop their
+own estimator! Why is that? In statistics, what we call an __estimator__
+is. It is important to keep in mind that these estimators rely on a specific __model__,
+with underlying assumptions. It explains why some estimators are more or less reliable
+depending on the case and observed data, and each of them has been developed for 
+a different situation.
+:::

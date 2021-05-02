@@ -1,0 +1,600 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  a5paper]{book}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={The STRAF Book},
+  pdfauthor={Alexandre Gouy and Martin Zieger},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{textwidth=12cm}
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX,Scale=0.8]{Arial}
+\usepackage[]{natbib}
+\bibliographystyle{apalike}
+
+\title{The STRAF Book}
+\author{Alexandre Gouy and Martin Zieger}
+\date{2021-05-02}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{preface}{%
+\chapter*{Preface}\label{preface}}
+\addcontentsline{toc}{chapter}{Preface}
+
+\hypertarget{what-is-this-book}{%
+\section*{What is this book?}\label{what-is-this-book}}
+\addcontentsline{toc}{section}{What is this book?}
+
+This is the online version of \textbf{The STRAF Book}, which is currently under
+active development. It is dedicated to the STRAF software, a web application
+for the analysis of genetic data in forensics practice.
+
+\hypertarget{forensic-and-population-genetics-lost-sisters}{%
+\section*{Forensic and population genetics, lost sisters}\label{forensic-and-population-genetics-lost-sisters}}
+\addcontentsline{toc}{section}{Forensic and population genetics, lost sisters}
+
+Genetics has many faces, and forensic and population genetics are two of them.
+If we were to summarise their respective scopes, we could say that the former
+is the application of genetics to legal matters, and the latter aims at
+understanding genetic differences within and between populations, a fundamental matter in
+evolutionary biology.
+
+Forensic genetics and population genetics have always been tightly linked
+disciplines. This is likely because quite a number of questions they address
+are similar. Even though problems in forensics and population genetics seem
+different, they often are the same question, simply phrased differently.
+
+As an example, DNA profiling, used in criminal investigations or parental testing,
+aims at matching different DNA samples and understanding how related are some
+samples in terms of DNA. In population genetics, a common goal is to
+characterise the genetic diversity of a set of populations, by looking at
+how related individuals are within and between populations. Hence you can now
+imagine why the two fields are linked: they both want to \textbf{understand and quantify}
+the \textbf{relatedness} of a set of samples.
+
+Software and metrics developed in the population genetics for the study of the
+evolution of species are now used routinely in forensic genetics practice.
+But forensics is not just \emph{applied population genetics}. The legal implications
+and unique situations encountered in the forensics world also led to the
+development of relevant statistical tools and metrics with a more specific purpose.
+
+\hypertarget{and-then-there-was-straf}{%
+\section*{And then there was STRAF}\label{and-then-there-was-straf}}
+\addcontentsline{toc}{section}{And then there was STRAF}
+
+STRAF was born from the encounter of two scientists: a forensic geneticist and
+a population geneticist. In 2017, in Bern, Switzerland, Martin Zieger came to
+visit a population genetics lab, where Alexandre Gouy was pursuing his
+Ph.D.~thesis at that time.
+
+This encounter led to a fruitful collaboration when they realised that some tools
+used in population genetics could be leveraged by the forensics community. The
+most striking example is the computation of forensics parameters, that describe
+for example how good are our loci at discriminating samples. These
+parameters were typically computed using a spreadsheet that had been created by
+one of the suppliers of assays used to genotype samples. It is the mythical
+PowerStats v1.2 spreadsheet, allowing to compute forensic statistics and allele
+frequencies in Microsoft Excel. It has been since then removed from the Internet,
+and forensic geneticists started sharing this spreadsheet among each other, circulating
+almost secretly, ``under the cloak'' as French speakers would say.
+
+As similar operations were done in routine in population genetics, we already had
+some scripts for the analysis of STR data. Then, after we applied them to an existing
+dataset, we decided to put everything into a web application so that the forensics
+community could benefit from it.
+
+A few weeks later, STRAF was born, and after four year, STRAF had become a
+widely used tool by the forensics community, but not only.
+It has been used as a support for teaching population genetics, and has
+been used in evolutionary biology studies.
+The positive reception of the software in the community motivated its
+development over the years until the release of STRAF 2.0 in 2021.
+
+STRAF's story highlights the importance of communication between fields.
+
+\hypertarget{what-will-you-learn}{%
+\section*{What will you learn?}\label{what-will-you-learn}}
+\addcontentsline{toc}{section}{What will you learn?}
+
+By reading this book, our hope is that you will:
+
+\begin{itemize}
+\item
+  Get an overview of common \textbf{concepts} in forensic and population genetics
+\item
+  Learn how to use the \textbf{STRAF software} for STR data analysis through \textbf{practical applications}
+\item
+  Be able to \textbf{interpret} common metrics and analyses used in forensics practice
+\end{itemize}
+
+\hypertarget{outline}{%
+\section*{Outline}\label{outline}}
+\addcontentsline{toc}{section}{Outline}
+
+The book is organised as follow:
+
+\begin{itemize}
+\item
+  We'll start by an \textbf{Introduction} to essential forensic and population genetics concepts.
+\item
+  In \textbf{Chapter 1}, we will focus on data, from its generation to its preparation for
+  downstream analysis in STRAF.
+\item
+  In \textbf{Chapter 2}, we will review \textbf{forensic parameters} that can be computed in STRAF,
+  and discuss their interpretation.
+\item
+  In \textbf{Chapter 3}, we will review essential population genetics concepts and
+  describe \textbf{population genetics indices} that can be computed in STRAF.
+\item
+  In \textbf{Chapter 4}, we will focus on \textbf{multivariate statistics} and how they can provide
+  insights into population structure, with a particular focus on Principal Component
+  Analysis (PCA) and Multidimensional Scaling (MDS), two widely used approaches in genetics.
+\item
+  In \textbf{Chapter 5}, we gather recommendations around potential next analysis steps
+  by presenting STRAF's \textbf{file conversion} capabilities and useful methods implemented in
+  \textbf{other software}.
+\end{itemize}
+
+\hypertarget{introduction}{%
+\chapter*{Introduction}\label{introduction}}
+\addcontentsline{toc}{chapter}{Introduction}
+
+\textbf{WORK IN PROGRESS}
+
+\hypertarget{essential-concepts}{%
+\section*{Essential concepts}\label{essential-concepts}}
+\addcontentsline{toc}{section}{Essential concepts}
+
+\begin{itemize}
+\item
+  DNA
+\item
+  Genotypes and phenotypes
+\item
+  Genetic variation, polymorphism
+\item
+  Markers of polymorphism
+\item
+  Short Tandem Repeats
+\end{itemize}
+
+\hypertarget{polymorphism-and-forensics}{%
+\section*{Polymorphism and forensics}\label{polymorphism-and-forensics}}
+\addcontentsline{toc}{section}{Polymorphism and forensics}
+
+\begin{itemize}
+\item
+  Goals: typing and matching
+\item
+  Paternity and maternity testing, suspect
+\item
+  Matching require reference populations
+\item
+  Allele frequencies known and reported
+\end{itemize}
+
+\textbf{Digression - Why are STR still so popular?}
+
+Comparing to whole-genome sequencing.
+
+\hypertarget{data-analysis}{%
+\section*{Data analysis}\label{data-analysis}}
+\addcontentsline{toc}{section}{Data analysis}
+
+\begin{itemize}
+\item
+  Data analysis in forensic genetics
+\item
+  STRAF's scope
+\end{itemize}
+
+\hypertarget{importing-data}{%
+\chapter{Importing data}\label{importing-data}}
+
+Work in progress.
+
+\hypertarget{str-data}{%
+\section{STR data}\label{str-data}}
+
+\begin{itemize}
+\tightlist
+\item
+  Observed values: genotypes for each individual, at each locus.
+\item
+  Potentially two values observed per individual and per locus, if diploid markers.
+\item
+  Value = can be anything but tipically correspond, for STR markers, to the length.
+\item
+  Point alleles
+\end{itemize}
+
+\hypertarget{input-data-format}{%
+\section{Input data format}\label{input-data-format}}
+
+STRAF's input file is a text file containing the genotypes of each sample:
+
+\begin{itemize}
+\tightlist
+\item
+  The first column, named \textbf{ind}, needs to contain the sample ID
+\item
+  The second column, , named \textbf{pop}, contains the population ID (this column must exist even if a single population is studied)
+\item
+  The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)
+\item
+  Genotypes must be encoded as numbers (STRAF accepts point alleles)
+\item
+  Missing data (e.g.~null alleles) must be indicated with a ``0''.
+\end{itemize}
+
+For diploid data, the table should look like this:
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule
+ind & pop & Locus1 & Locus1 & Locus2 & Locus2\tabularnewline
+\midrule
+\endhead
+A & Bern & 12 & 14 & 17 & 17\tabularnewline
+B & Bern & 14 & 14 & 13 & 15.2\tabularnewline
+C & Lausanne & 12 & 16 & 15.2 & 17\tabularnewline
+\bottomrule
+\end{longtable}
+
+For haploid data, the table would look like this:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+ind & pop & Locus1 & Locus2\tabularnewline
+\midrule
+\endhead
+A & Bern & 12 & 17\tabularnewline
+B & Bern & 14 & 13\tabularnewline
+C & Lausanne & 12 & 15.2\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{generating-the-input-data-from-excel}{%
+\section{Generating the input data from Excel}\label{generating-the-input-data-from-excel}}
+
+It only takes a few steps to generate an input file in a format that is suitable
+for use in STRAF. From Excel, for example, we can start from a spreadsheet looking
+like this:
+
+\begin{itemize}
+\tightlist
+\item
+  Screen capture Excel
+\end{itemize}
+
+Then, one simply needs to save this table as a tab-delimited text file. This can be
+achieved by clicking on \texttt{Save\ As} \textgreater{} \texttt{Text\ (Tab-delimited)\ (*.txt)}
+
+\begin{itemize}
+\tightlist
+\item
+  Screen capture Save As
+\end{itemize}
+
+\hypertarget{uploading-the-data-to-straf}{%
+\section{Uploading the data to STRAF}\label{uploading-the-data-to-straf}}
+
+Coming soon.
+
+\hypertarget{common-issues}{%
+\section{Common issues}\label{common-issues}}
+
+Even though you've been very careful in the generation of STRAF's input file,
+it is possible that you still run into an error after uploading the file to STRAF.
+
+\textbf{Input file checklist}
+
+\begin{itemize}
+\tightlist
+\item
+  Check input parameters in the sidebar: do they actually correspond to the input data?
+\item
+  Check locus names: are they all different for haploid data? Do both columns for a single locus for diploid data have the exact same name?
+\item
+  Check that all missing data have been encoded with a ``0''
+\item
+  Try to remove any special characters from sample and locus names
+\item
+  Check for the presence of empty spaces at the end of each line
+\item
+  Check if alleles are exclusively encoded with numbers
+\item
+  Check if values are separated by tabs and not spaces
+\item
+  Check if the first two columns are names ``ind'' and ``pop''
+\end{itemize}
+
+\hypertarget{forensic-parameters}{%
+\chapter{Forensic parameters}\label{forensic-parameters}}
+
+\textbf{WORK IN PROGRESS}
+
+In this chapter, we'll introduce a few equations. Do not be afraid! Each of them will
+be translated to plain English.
+
+\hypertarget{random-match-probability-pm}{%
+\section{Random match probability (PM)}\label{random-match-probability-pm}}
+
+The \textbf{Random match probability}, or probability of matching (PM), is defined as
+the probability of observing a random match between two individuals.
+
+\textbf{Formula}
+
+\[
+PM = \sum_i (G_i)^2,
+\]
+where \(G_i\) is the frequency of the genotype \(i\) at a given locus in the population.
+
+\textbf{Interpretation}
+
+Coming soon.
+
+\hypertarget{power-of-discrimination-pd}{%
+\section{Power of Discrimination (PD)}\label{power-of-discrimination-pd}}
+
+\textbf{Formula}
+
+\[
+PD = 1 - PM
+\]
+
+\textbf{Interpretation}
+
+Coming soon.
+
+\hypertarget{gene-diversity}{%
+\section{Gene diversity}\label{gene-diversity}}
+
+Genetic diversity (\(GD\)), or expected heterozygosity (\(H_{\mathrm{exp}}\)), is
+computed using the following estimator:
+
+\textbf{Formula}
+
+\[
+  H_{\mathrm{exp}} = GD = \frac{n}{n - 1} \left( 1 - \sum_{i=1}^{n}(p_i)^2 \right)
+\]
+
+\textbf{Interpretation}
+
+Coming soon.
+
+\hypertarget{polymorphism-information-content-pic}{%
+\section{Polymorphism Information Content (PIC)}\label{polymorphism-information-content-pic}}
+
+Polymorphism Information Content (PIC) can be interpreted as:
+* the probability that the maternal and paternal alleles of a child are
+deducible
+* or, the probability of being able to deduce which allele a
+parent has transmitted to the child.
+
+\textbf{Formula}
+
+\[
+PIC = 1 - \sum_{i=1}^{n} p_i^2 - \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} 2p_i^2p_j^2
+\]
+\textbf{Interpretation}
+
+Coming soon.
+
+\hypertarget{power-of-exclusion-pe}{%
+\section{Power of Exclusion (PE)}\label{power-of-exclusion-pe}}
+
+\textbf{Formula}
+
+\[
+PE = h^2\left(1 - 2hH^2\right)
+\]
+
+\textbf{Interpretation}
+
+Coming soon.
+
+\hypertarget{typical-paternity-index-tpi}{%
+\section{Typical Paternity Index (TPI)}\label{typical-paternity-index-tpi}}
+
+\textbf{Formula}
+
+\[
+PE = \frac{1}{2H}
+\]
+
+\textbf{Interpretation}
+
+Coming soon.
+
+\hypertarget{population-genetics-indices}{%
+\chapter{Population genetics indices}\label{population-genetics-indices}}
+
+\textbf{WORK IN PROGRESS}
+
+\hypertarget{population-genetics-concepts}{%
+\section{Population genetics concepts}\label{population-genetics-concepts}}
+
+\begin{itemize}
+\item
+  Hardy-Weinberg equilibrium
+\item
+  Population structure
+\end{itemize}
+
+\hypertarget{indices}{%
+\section{Indices}\label{indices}}
+
+\begin{itemize}
+\item
+  Heterozygosities
+\item
+  F-statistics
+\item
+  FST
+\end{itemize}
+
+\textbf{One concept, multiple estimators.}
+
+Several \textbf{estimators} of Fst exist (for example, Weir and Cockerham's, Nei's,
+Hudson's FST). It's like if each population geneticist decided to develop their
+own estimator! Why is that? In statistics, what we call an \textbf{estimator}
+is. It is important to keep in mind that these estimators rely on a specific \textbf{model},
+with underlying assumptions. It explains why some estimators are more or less reliable
+depending on the case and observed data, and each of them has been developed for
+a different situation.
+
+\hypertarget{multivariate-statistics}{%
+\chapter{Multivariate statistics}\label{multivariate-statistics}}
+
+\textbf{WORK IN PROGRESS}
+
+\hypertarget{principal-component-analysis-pca}{%
+\section{Principal Component Analysis (PCA)}\label{principal-component-analysis-pca}}
+
+PCA is a method of dimentionality reduction. What is does it that it captures most
+of the variation in our data and tries to project it onto a small number of new
+variables called components.
+
+This is a useful method to capture variation from a large number of variables and
+allows to discover hidden pattern by increasing interpretability.
+
+In our case, if we consider that each allele at each locus is a variable, and that
+our individual observations are the presence / absence of each allele for each sample,
+we end up with a highly dimensional dataset (we have as many variables as we have
+alleles!). It gets even worse if you analyse genome sequences, where you can have millions
+of variables in your dataset! This is definitely not an interpretable dataset.
+
+PCA allows to bring most of the variation existing between our samples onto a few
+axes.
+
+\begin{itemize}
+\item
+  PCA plot on Pemberton data.
+\item
+  PCA plot on Y haplogroups.
+\end{itemize}
+
+\textbf{Interpreting PCA results}
+
+\begin{itemize}
+\tightlist
+\item
+  Beware of the influence of sample size on the results.
+\end{itemize}
+
+\hypertarget{multidimensional-scaling-mds}{%
+\section{Multidimensional Scaling (MDS)}\label{multidimensional-scaling-mds}}
+
+MDS is conceptually similar to PCA. One of the main differences is that it takes
+different types of data as input. Pairwise distances between data points. In forensics practice, it is often used to compare populations and not individuals.
+It could be run on a pairwise FSTs or other genetic distances.
+
+\begin{itemize}
+\tightlist
+\item
+  MDS plot on Pemberton data.
+\end{itemize}
+
+\textbf{Interpreting MDS results}
+
+\hypertarget{file-conversion}{%
+\chapter{File conversion}\label{file-conversion}}
+
+\textbf{WORK IN PROGRESS}
+
+As STRAF is a web application and can be used simultaneously by multiple users,
+computing resources are limited. Therefore more computationally intensive analyses
+are not available in STRAF. In order to ease the path to other software,
+file conversion utilities have been implemented. It is possible to convert
+the input file to the Genepop, Arlequin and Familias formats. They are
+all available in the \textbf{File conversion} tab of the application.
+
+\hypertarget{genepop-and-arlequin-formats}{%
+\section{Genepop and Arlequin formats}\label{genepop-and-arlequin-formats}}
+
+\textbf{Genepop} and \textbf{Arlequin} softwares implement several population genetics methods,
+including ones that are part of standard forensics practice:
+* linkage disequilibrium computation
+* Hardy-Weinberg tests
+
+STRAF currently implements, however the ones implemented in Genepop as they can
+rely on more permutations and are overall preferable to the HW and LD tests implemented
+in STRAF.
+
+\hypertarget{familias}{%
+\section{Familias}\label{familias}}
+
+Here a file containing allele frequencies is created. This file can be used in
+Familias to provide allele frequencies reference.
+
+\end{document}
