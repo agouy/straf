@@ -23,7 +23,8 @@ sudo cp /srv/shiny-server/straf/aws/shiny-server.conf /etc/shiny-server/shiny-se
 sudo systemctl reload shiny-server
 
 sudo -su shiny
-R -e "install.packages(c('adegenet', 'ade4', 'pegas', 'hierfstat', 'DT', 'car', 'shinythemes', 'colourpicker', 'plotly', 'ggrepel', 'shinyWidgets', 'dbplyr', 'RSQLite'))"
+R -e "install.packages(c('remotes', 'dbplyr', 'RSQLite'))"
+R -e "remotes::install_github('agouy/straf')"
 exit
 
 sudo systemctl reload shiny-server
@@ -47,5 +48,5 @@ sudo cp /srv/shiny-server/straf/* /srv/shiny-server/ -r
 ## Update as a package
 
 ```
-sudo R -e "remotes::install_github('https://github.com/agouy/straf)"
+sudo R -e "remotes::install_github('agouy/straf')"
 ```

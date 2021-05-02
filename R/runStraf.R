@@ -8,11 +8,6 @@
 #' # runStraf()
 #' 
 #' @export
-#' 
-#' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
-#' @importFrom graphics abline axis barplot hist image legend par
-#' @importFrom stats as.dist cmdscale cov frequency ks.test qqplot qunif
-#' @importFrom utils read.table write.table
 runStraf <- function(port = 3838, host = "0.0.0.0") {
   options(
     warn = -1,

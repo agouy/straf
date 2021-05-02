@@ -35,4 +35,4 @@ Imports:
     adegenet,
     pegas,
     hierfstat,
-    pkgload
+    magrittr

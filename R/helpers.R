@@ -4,8 +4,6 @@
 #' @return An object of class genind.
 #' @export
 #' @noRd
-#' @importFrom adegenet as.genind df2genind pop<- locNames
-#' @importClassesFrom adegenet genind
 createGenind <- function(Ifile, ploidy) {
   
   if(ploidy == 2) {

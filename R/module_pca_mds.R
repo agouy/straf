@@ -1,9 +1,6 @@
 #' Generate the PCA UI.
 #' @export
 #' @noRd
-#' @importFrom shinyWidgets awesomeCheckbox
-#' @importFrom ggplot2 ggplot geom_point labs theme_minimal aes
-#' @importFrom magrittr "%>%"
 pca_mds_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -52,9 +49,6 @@ pca_mds_UI <- function(id) {
 #' Generate the PCA server.
 #' @export
 #' @noRd
-#' @importFrom adegenet genind2genpop transp funky dist.genpop loadingplot makefreq pop
-#' @importFrom ggrepel geom_text_repel
-#' @importFrom ade4 dudi.pca
 pca_mds_Server <- function(id, getgenind) {
   moduleServer(
     id,
@@ -121,6 +115,7 @@ pca_mds_Server <- function(id, getgenind) {
       do.pca <- reactive({
         freq.tab <- makefreq(getgenind(), missing = "mean", quiet = TRUE)
         pca.obj <- dudi.pca(freq.tab, nf = 3, scannf = FALSE)
+        
         return(pca.obj)
       })
       # DL principal components

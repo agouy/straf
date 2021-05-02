@@ -1,5 +1,7 @@
 # Forensic parameters
 
+__WORK IN PROGRESS__
+
 ## Gene diversity
 
 Genetic diversity ($GD$), or expected heterozygosity ($H_{\mathrm{exp}}$), is computed using its unbiased estimator:

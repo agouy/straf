@@ -1,5 +1,7 @@
 # Multivariate statistics
 
+__WORK IN PROGRESS__
+
 ## Principal Component Analysis (PCA)
 
 PCA is a method of dimentionality reduction. What is does it that it captures most 

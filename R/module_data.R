@@ -1,9 +1,6 @@
 #' Generate input data tab UI.
 #' @export
 #' @noRd
-#' @importFrom shinyWidgets awesomeCheckbox
-#' @importFrom DT dataTableOutput renderDataTable datatable
-#' @importFrom openxlsx write.xlsx
 data_UI <- function(id) {
   ns <- NS(id)
   tabPanel(

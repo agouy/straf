@@ -1,7 +1,6 @@
 #' Generate the forensic parameters UI.
 #' @export
 #' @noRd
-#' @importFrom shinyWidgets awesomeCheckbox
 for_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -133,7 +132,6 @@ popgen_UI <- function(id) {
 #' Generate the forensic parameters and population genetics tabs Server.
 #' @export
 #' @noRd
-#' @importFrom  hierfstat pairwise.WCfst genind2hierfstat
 for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, transparency, cexaxis) {
   moduleServer(
     id,

@@ -1,5 +1,7 @@
 # Population genetics indices
 
+__WORK IN PROGRESS__
+
 ## Population genetics concepts
 
 * Hardy-Weinberg equilibrium
