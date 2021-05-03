@@ -1,3 +1,4 @@
+library(straf)
 shinyUI(
   navbarPage(
     paste0("STRAF ", packageVersion("straf"), ": STR Analysis for Forensics"),
