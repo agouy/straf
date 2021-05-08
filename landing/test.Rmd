@@ -1,0 +1,10 @@
+---
+title: "stackoverflow_example"
+output: rmdformats::material
+---
+
+# Example plot
+
+```{r}
+plot(1:10)
+```

@@ -1,0 +1,33 @@
+---
+title: "<center><br/><img src='./img/logo.png' height='120'/></center>"
+output: 
+  rmdformats::material:
+    thumbnails: true
+    lightbox: false
+css: custom.css
+---
+
+# Welcome to STRAF!
+
+STRAF is a web application for the analysis of STR data. 
+
+Click on the logo to access the latest version of the application:
+
+<a href='http://straf.fr/app' target="_blank"><div align='center'><img src='./img/logo.png' align='center' width='120' /></div></a>
+
+Alternatively, you can use the following link:
+
+<center><a href='https://straf.fr/app' target='_blank'>https://straf.fr/app</a></center>
+
+# The STRAF Book
+
+Click on the image below to access our online book with a lot more details about the software:
+
+<a href='https://agouy.github.io/straf/' target='_blank'><div align='center'><img src='./img/cover.png' align='center' width='269' /></div>
+</a>
+
+Alternatively, you can use the following link:
+
+<center><a href='https://agouy.github.io/straf/' target='_blank'>https://agouy.github.io/straf/</a></center>
+
+
