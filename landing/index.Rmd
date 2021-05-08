@@ -14,7 +14,7 @@ STRAF is a web application for the analysis of STR data.
 
 Click on the logo to access the latest version of the application:
 
-<a href='http://straf.fr/app' target="_blank"><div align='center'><img src='./img/logo.png' align='center' width='120' /></div></a>
+<div align='center'><a href='http://straf.fr/app' target="_blank"><img class='link' src='./img/logo.png' width='120' /></a></div>
 
 Alternatively, you can use the following link:
 
@@ -24,8 +24,7 @@ Alternatively, you can use the following link:
 
 Click on the image below to access our online book with a lot more details about the software:
 
-<a href='https://agouy.github.io/straf/' target='_blank'><div align='center'><img src='./img/cover.png' align='center' width='269' /></div>
-</a>
+<div align='center'><a href='https://agouy.github.io/straf/' target='_blank'><img class='link' src='./img/cover.png' width='269'></a></div>
 
 Alternatively, you can use the following link:
 

@@ -9,3 +9,12 @@ body {
 .pages h1 {
   color: #E95420;
 }
+
+a {
+  display: block;
+  width: 33%;
+}
+
+.link {
+  width: 100%;
+}
