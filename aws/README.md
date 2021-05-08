@@ -55,7 +55,13 @@ sudo ln -s /etc/nginx/sites-available/shiny.conf .
 ```
 sudo add-apt-repository ppa:marutter/c2d4u
 sudo apt-get update
-apt install --no-install-recommends r-cran-rcppeigen
+apt install --no-install-recommends r-cran-rcppeigen \
+    r-cran-ggplot2 \
+    r-cran-adegenet \
+    r-cran-lme4 \
+    r-cran- \
+    r-cran-adegenet
+    
 ```
 
 ## Update STRAF on the server
@@ -64,4 +70,5 @@ One simple needs to update the R package from GitHub.
 
 ```
 sudo R -e "remotes::install_github('agouy/straf')"
+sudo systemctl reload shiny-server
 ```
