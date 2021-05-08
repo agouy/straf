@@ -20,7 +20,7 @@ where $G_i$ is the frequency of the genotype $i$ at a given locus in the populat
 __Interpretation__
 
 Computing $PM$ means calculating, for a given locus, the frequency of each 
-genotypes. Then we take the sqaure of each frequency, i.e. we multiply it by itself.
+genotypes. Then we take the square of each frequency, i.e. we multiply it by itself.
 Finally, we sum the values of each genotype.
 
 The intuition behind it is that if we have a random match in a population by looking
