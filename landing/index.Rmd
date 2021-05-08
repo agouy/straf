@@ -1,5 +1,6 @@
 ---
 title: "<center><br/><img src='./img/logo.png' height='120'/></center>"
+pagetitle: "STRAF: STR Analysis for Forensics"
 output: 
   rmdformats::material:
     thumbnails: true
