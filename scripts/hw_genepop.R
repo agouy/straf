@@ -1,6 +1,6 @@
 # install.packages("genepop")
 
-library(genepop)
+# library(genepop)
 locinfile <- ('./tests/input_files/exampleSTRAFdiplo.txt')
 run_gp_ld
 run_gp_ld <- function(input_file) {
@@ -38,8 +38,8 @@ df$Locus_1 <- factor(df$Locus_1, levels = unique(df$Locus_1))
 df$Locus_2 <- factor(df$Locus_2, levels = unique(df$Locus_2))
 
 
-library(dplyr)
-library(tidyr)
+# library(dplyr)
+# library(tidyr)
 
 df$fdr <- p.adjust(df$P_value, method = "bonferroni") + 1e-10
 
@@ -48,8 +48,8 @@ df$lab[df$fdr < 0.05] <- "*"
 df$lab[df$fdr < 0.01] <- "**"
 df$lab[df$fdr < 0.001] <- "***"
 
-library(ggplot2)
-f.plot <- "C:/Users/alexa/Desktop/LD_plot_v2.png"
+# library(ggplot2)
+f.plot <- "./LD_plot_v2.png"
 df2 <- df[df$Population=="3k",][1:20,]
 plt <- ggplot(data = df2, aes(Locus_1, Locus_2, fill = -log10(P_value))) +
   geom_tile(color = "white")+
@@ -87,8 +87,8 @@ df_out_wide$val <- paste0(df_out_wide$P_value, " (+/-", df_out_wide$Std_Error , 
 df_out_wide <- df_out_wide %>% select(Locus_1, Locus_2, val) %>% spread(Locus_2, val, fill = "-")
 df_out_wide <- df_out_wide[, c("Locus_1", rev(colnames(df_out_wide)[-1]))]
 
-library("xlsx")
-file <- "C:/Users/alexa/Desktop/LD_results_genepop.xlsx"
+# library("xlsx")
+file <- "./LD_results_genepop.xlsx"
 write.xlsx(df_out, file, sheetName = "LD_analysis", 
              col.names = TRUE, row.names = FALSE, append = FALSE)
 

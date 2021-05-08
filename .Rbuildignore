@@ -10,3 +10,4 @@ app.R
 book
 ^app\.R$
 ^rsconnect$
+^cran-comments\.md$

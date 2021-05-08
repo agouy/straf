@@ -1,5 +1,5 @@
-library(ggplot2)
-library(ggrepel)
+# library(ggplot2)
+# library(ggrepel)
 
 fname <- "./scripts//STRidER_frequencies_2019-08-02.csv"
 strider_frequencies <- freq_to_mds(fname)

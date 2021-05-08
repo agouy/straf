@@ -7,11 +7,13 @@ Authors@R:
            role = c("aut", "cre"),
            email = "alexandre.gouy@protonmail.com", 
            comment = c(ORCID = "0000-0002-2478-8475"))
-Description: A 'shiny' application to perform Short Tandem Repeats (STRs, also 
-    known as microsatellites) data analysis. The application allows one to 
+Description: A 'shiny' application to perform Short Tandem Repeats (or 
+    microsatellites) data analysis. The application allows one to 
     compute forensic parameters, population genetics indices, and investigate 
-    population structure through various methods and generate relevant data 
-    visualisations. It also implements file conversion to other popular formats.
+    population structure through various methods. Users can generate relevant data 
+    visualisations and tables. It also implements file conversion to 
+    other popular genetic data analysis formats.
+URL: https://straf.fr
 Depends: R (>= 3.5.0)
 License: GPL-3
 Encoding: UTF-8
@@ -36,3 +38,6 @@ Imports:
     pegas,
     hierfstat,
     magrittr
+Suggests:
+    knitr,
+    rmarkdown

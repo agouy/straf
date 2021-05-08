@@ -1,7 +1,7 @@
-library(dplyr)
-library(tidyr)
+# library(dplyr)
+# library(tidyr)
 d <- read.table(
-  "C:/Users/alexa/Desktop/pembertonEtAl2013.MS5795_formatted.stru",
+  "./pembertonEtAl2013.MS5795_formatted.stru",
   header=TRUE
 )
 
