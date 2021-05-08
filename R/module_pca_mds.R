@@ -103,7 +103,7 @@ pca_mds_Server <- function(id, getgenind) {
         dst <- dist.genpop(obj, method = 1)
         MDS <- cmdscale(dst)
         MDS <- data.frame(ax1 = MDS[, 1], ax2 = MDS[, 2], pop = rownames(MDS))
-
+        .data <- NA
         p <- ggplot(MDS, aes(x = .data$ax1, y = .data$ax2, color = pop, label = pop)) +
           geom_point() +
           geom_text_repel() + 

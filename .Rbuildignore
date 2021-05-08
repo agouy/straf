@@ -1,9 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 .github
+.vscode
 aws
+landing
 docs
 scripts
 app.R
+book
 ^app\.R$
 ^rsconnect$

@@ -116,7 +116,7 @@ ref_mds_Server <- function(id, getgenind) {
         
         mds <- cmdscale(d)
         MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
-        
+        .data <- NA
         p <- ggplot(MDS, aes(x=.data$ax1, y=.data$ax2, color = pop, label = pop)) +
           geom_point() +
           geom_text_repel(max.overlaps = 50) + 
@@ -158,6 +158,7 @@ freq_to_mds <- function(fname) {
       colnames(df) <- gsub(pattern = " ", replacement = "_", colnames(df))
       colnames(df) <- gsub(pattern = "\"", replacement = "", colnames(df))
       Allele <- NA
+      location <- NA
       df_long <- tidyr::gather(df, location, frequency, -Allele, factor_key=TRUE)
       df_long$locus <- loc_name
       return(df_long)
