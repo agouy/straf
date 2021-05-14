@@ -12,26 +12,20 @@ sidebarUI <- function() {
               p(strong('Welcome!'), br(), br(), 'STRAF is an STR data analysis application.'),
       )),
     h4('Input'),
-    p('Please read the documentation for details about input files and analyses.'),
-    # radioButtons('microvariants', "Number of columns per locus:", c('2', '1'), inline = TRUE),
+    p('Please go to the documentation tab for details about the input file format.'),
+    HTML('<a id="raw-url" href="example_straf_pemberton13.txt" download="example_straf_pemberton13.txt" target="_blank">Click here to download an example file.</a>'),
+    tags$hr(),
     radioButtons(
-      inputId = 'ploidy', label =  "Ploidy:",
+      inputId = 'ploidy', label =  "Ploidy",
       choiceNames = c('Diploid', 'Haploid'),
       choiceValues = c(2, 1),
       inline = TRUE
     ),
-    # conditionalPanel(
-    #   condition="input.microvariants == 1",
-    #   radioButtons('ncode', 'Number of digits for allele sizes:', c('2', '3'), inline = TRUE)
-    # ),
     fileInput(
-      'file1', 'Choose file to upload:',
+      'file1', 'Import a file',
       accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv')
     ),
-    # tags$hr(),
-    # actionButton("load_example", "Download example dataset"),
     tags$hr(),
-    
     h4('Graphical parameters'),
     awesomeCheckbox("hidegraph", "Display graphical parameters", FALSE),
     conditionalPanel(

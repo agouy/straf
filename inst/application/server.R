@@ -95,6 +95,16 @@ shinyServer(function(input, output) {
     return(df_out)
   })
   
+  output$dl_example <- downloadHandler(
+    filename = function() { paste('allele_frequencies.tsv', sep='') },
+    content = function(file) {
+      if (!input$displayAlleleTable) return(NULL)
+      if(input$selectPop == "") matr <- alleleFreqTabs()[[1]]
+      else matr <- alleleFreqTabs()[[input$selectPop]]
+      write.table(matr, file, sep = "\t", na = "", row.names = TRUE)
+    }
+  )
+  
   ploidy <- reactive({input$ploidy})
   barplotcolor <- reactive({input$barplotcolor})
   transparency <- reactive({input$transparency})

@@ -1,0 +1,14 @@
+name: straf
+title: straf
+username:
+account: agouy
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4100512
+bundleId: 4574606
+url: https://agouy.shinyapps.io/straf/
+when: 1620489464.50521
+lastSyncTime: 1620489464.50521
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .Rbuildignore|.vscode/tasks.json|aws/README.md|aws/shiny-server.conf|aws/shiny.conf|cran-comments.md|DESCRIPTION|man/runStraf.Rd|man/straf.Rd|NAMESPACE|README.md|tests/input_files/exampleSTRAFdiplo.txt|tests/input_files/exampleSTRAFhaplo.txt|tests/input_files/exampleSTRAFhaplo_point.txt|tests/input_files/test_genepop_format.txt|book|docs|inst|landing|R|scripts
