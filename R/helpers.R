@@ -171,3 +171,36 @@ plotPCA <- function(pca, popus, coul, axis) {
   }))
   
 }
+
+
+#' Convert a POPTREE file to a format suitable for use in STRAF
+#' @param fname Input file path
+#' @return An object of class genind.
+#' @export
+#' @noRd
+poptree2straf <- function(fname) {
+  # df <- readxl::read_excel(fname, sheet = 1, skip = 0, col_names = FALSE)
+  df <- readlines(fname)
+  
+  popnames <- df[[1]]
+  popnames <- popnames[2:(which(is.na(popnames))[1] - 1)]
+  n_pops <- length(popnames)
+  
+  a <- grep("locus", df[[1]])
+  b <- grep("#", df[[1]])
+  if(length(a) != length(b)) stop("problem")
+  str_out <- c()
+  for(i in seq_along(a)) {
+    
+    df_tmp <- df[a[i]:(b[i]-1), ]
+    pop_names <- df_tmp[1, 4:(4+n_pops-1)]
+    Locus <- df_tmp[1, 2][[1]]
+    freq <- df_tmp[, 4:(4+n_pops-1)]
+    all_names <- c("Allele", unname(unlist(df_tmp[-1, 2])))
+    df_tmp2 <- cbind(all_names, freq)
+    df_tmp3 <- apply(df_tmp2, 1, paste0, collapse = ",")
+    str_out <- c(str_out, Locus, df_tmp3)
+  }
+  str_out <- gsub(",[.]", ",0." , str_out)
+  return(str_out)
+}

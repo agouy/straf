@@ -39,7 +39,8 @@ pca_mds_UI <- function(id) {
     conditionalPanel(
       condition = "input.displayMDS == true",
       ns = ns,
-      uiOutput(ns('plotMDS'))
+      uiOutput(ns('plotMDS')),
+      uiOutput(ns('plotMDStree'))
     ),
     
     tags$hr()
@@ -97,10 +98,12 @@ pca_mds_Server <- function(id, getgenind) {
       })
       output$runMDS <- renderPlot({
         if (!input$displayMDS)  return(NULL)
-        dat2 <- getgenind()
-        if(length(levels(pop(dat2))) < 2) return(NULL)
-        obj <- genind2genpop(dat2, quiet = TRUE)
-        dst <- dist.genpop(obj, method = 1)
+        # dat2 <- getgenind()
+        # if(length(levels(pop(dat2))) < 2) stop("Multiple populations are required for the MDS.")
+        # obj <- genind2genpop(dat2, quiet = TRUE)
+        # dst <- dist.genpop(obj, method = 1)
+        # MDS <- cmdscale(dst)
+        dst <- do.dist()
         MDS <- cmdscale(dst)
         MDS <- data.frame(ax1 = MDS[, 1], ax2 = MDS[, 2], pop = rownames(MDS))
         .data <- NA
@@ -111,6 +114,26 @@ pca_mds_Server <- function(id, getgenind) {
           theme_minimal()
         plot(p)
       })
+      
+      output$plotMDStree <- renderUI({
+        plotOutput(ns('runMDStree'))
+      })
+      output$runMDStree <- renderPlot({
+        if (!input$displayMDS)  return(NULL)
+        dst <- do.dist()
+        hc <- hclust(dst)
+        plot(ape::as.phylo(hc), cex = 0.9)        
+      })
+      do.dist <- reactive({
+        if (!input$displayMDS)  return(NULL)
+        dat2 <- getgenind()
+        if(length(levels(pop(dat2))) < 2) stop("Multiple populations are required for the MDS.")
+        obj <- genind2genpop(dat2, quiet = TRUE)
+        dst <- dist.genpop(obj, method = 1)
+
+        return(dst)
+      })
+      
       
       do.pca <- reactive({
         freq.tab <- makefreq(getgenind(), missing = "mean", quiet = TRUE)

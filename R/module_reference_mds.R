@@ -14,6 +14,7 @@ ref_mds_UI <- function(id) {
     ),
     awesomeCheckbox(ns("add_current_ref"), "Include uploaded data to the MDS", FALSE),
     uiOutput(ns('plotMDS_ref')),
+    uiOutput(ns('plotMDStree_ref')),
     uiOutput(ns('select_ref_pops')),
     textOutput(ns("common_all")),
     div(
@@ -98,6 +99,28 @@ ref_mds_Server <- function(id, getgenind) {
         ))
       })
       output$runMDS_ref <- renderPlot({
+        d <- do.dist_ref()
+        mds <- cmdscale(d)
+        MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
+        .data <- NA
+        p <- ggplot(MDS, aes(x=.data$ax1, y=.data$ax2, color = pop, label = pop)) +
+          geom_point() +
+          geom_text_repel(max.overlaps = 50) + 
+          labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
+          theme_minimal()
+        plot(p)
+        
+      })
+      
+      output$plotMDStree_ref <- renderUI({
+        plotOutput(ns('runMDStree_ref'))
+      })
+      output$runMDStree_ref <- renderPlot({
+        dst <- do.dist_ref()
+        hc <- hclust(dst)
+        plot(ape::as.phylo(hc), cex = 0.9)        
+      })
+      do.dist_ref <- reactive({
         X <- getRefData()
         if(is.null(X)) return(NULL)
         if(!any(rownames(X) %in% input$refpops)) return(NULL)
@@ -114,17 +137,8 @@ ref_mds_Server <- function(id, getgenind) {
         d <- -log(d)
         d <- as.dist(d)
         
-        mds <- cmdscale(d)
-        MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
-        .data <- NA
-        p <- ggplot(MDS, aes(x=.data$ax1, y=.data$ax2, color = pop, label = pop)) +
-          geom_point() +
-          geom_text_repel(max.overlaps = 50) + 
-          labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
-          theme_minimal()
-        plot(p)
-        
-      })  
+        return(d)
+      })
       
 
     }
