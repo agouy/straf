@@ -98,11 +98,7 @@ pca_mds_Server <- function(id, getgenind) {
       })
       output$runMDS <- renderPlot({
         if (!input$displayMDS)  return(NULL)
-        # dat2 <- getgenind()
-        # if(length(levels(pop(dat2))) < 2) stop("Multiple populations are required for the MDS.")
-        # obj <- genind2genpop(dat2, quiet = TRUE)
-        # dst <- dist.genpop(obj, method = 1)
-        # MDS <- cmdscale(dst)
+        req(do.dist())
         dst <- do.dist()
         MDS <- cmdscale(dst)
         MDS <- data.frame(ax1 = MDS[, 1], ax2 = MDS[, 2], pop = rownames(MDS))
@@ -110,7 +106,7 @@ pca_mds_Server <- function(id, getgenind) {
         p <- ggplot(MDS, aes(x = .data$ax1, y = .data$ax2, color = pop, label = pop)) +
           geom_point() +
           geom_text_repel() + 
-          labs( x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
+          labs(x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
           theme_minimal()
         plot(p)
       })
@@ -119,6 +115,7 @@ pca_mds_Server <- function(id, getgenind) {
         plotOutput(ns('runMDStree'))
       })
       output$runMDStree <- renderPlot({
+        req(do.dist())
         if (!input$displayMDS)  return(NULL)
         dst <- do.dist()
         hc <- hclust(dst)

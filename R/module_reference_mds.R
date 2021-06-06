@@ -1,4 +1,4 @@
-#' Generate the referecne population tab UI.
+#' Generate the reference population tab UI.
 #' @export
 #' @noRd
 ref_mds_UI <- function(id) {
@@ -9,7 +9,7 @@ ref_mds_UI <- function(id) {
     h3("Custom allele frequency database"),
     fileInput(
       ns("refdata"),
-      "Import allele frequencies (if empty, STRidER database will be used.)",
+      "Import allele frequencies (if empty, the STRidER database will be used.)",
       width = "300px"
     ),
     awesomeCheckbox(ns("add_current_ref"), "Include uploaded data to the MDS", FALSE),
@@ -17,15 +17,11 @@ ref_mds_UI <- function(id) {
     uiOutput(ns('plotMDStree_ref')),
     uiOutput(ns('select_ref_pops')),
     uiOutput(ns('common_all')),
-    div(
-      "If no reference frequencies are uploaded, the MDS is performed on STRidER allele frequencies. Missing frequencies are imputed per allele as the mean allele frequency of other populations.", 
-      tags$a(href = "https://strider.online/frequencies", "Link to source data.")
-    ),
     tags$hr()
   )
 }
 
-#' Generate the referecne population tab Server.
+#' Generate the reference population tab Server.
 #' @export
 #' @noRd
 ref_mds_Server <- function(id, getgenind) {
