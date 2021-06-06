@@ -16,7 +16,7 @@ ref_mds_UI <- function(id) {
     uiOutput(ns('plotMDS_ref')),
     uiOutput(ns('plotMDStree_ref')),
     uiOutput(ns('select_ref_pops')),
-    textOutput(ns("common_all")),
+    uiOutput(ns('common_all')),
     div(
       "If no reference frequencies are uploaded, the MDS is performed on STRidER allele frequencies. Missing frequencies are imputed per allele as the mean allele frequency of other populations.", 
       tags$a(href = "https://strider.online/frequencies", "Link to source data.")
@@ -44,6 +44,11 @@ ref_mds_Server <- function(id, getgenind) {
         fr <- fr[, idx_in]
         return(fr)
       })
+
+      output$common_all <- renderUI({
+        textOutput(ns("common_all"))
+      })
+      
       output$plotMDS_strider <- renderUI({
         plotOutput(ns('runMDS_strider'))
       })
@@ -65,6 +70,9 @@ ref_mds_Server <- function(id, getgenind) {
         return(X)
       })
       output$common_all <- renderText({
+        if(!input$add_current_ref) {          
+          return(NULL)
+        }
         req(getRefData())
         X <- common_alleles()
         loci <- unique(unlist(lapply(strsplit(colnames(X), "_"), "[", 1)))
@@ -85,6 +93,7 @@ ref_mds_Server <- function(id, getgenind) {
         rownames(refdat)
       })
       output$select_ref_pops <- renderUI({
+        req(ref_pops())
         all <- ref_pops()
         req(all)
         suppressMessages(pickerInput(
@@ -99,6 +108,7 @@ ref_mds_Server <- function(id, getgenind) {
         ))
       })
       output$runMDS_ref <- renderPlot({
+        req(do.dist_ref())
         d <- do.dist_ref()
         mds <- cmdscale(d)
         MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
@@ -116,11 +126,13 @@ ref_mds_Server <- function(id, getgenind) {
         plotOutput(ns('runMDStree_ref'))
       })
       output$runMDStree_ref <- renderPlot({
+        req(do.dist_ref())
         dst <- do.dist_ref()
         hc <- hclust(dst)
         plot(ape::as.phylo(hc), cex = 0.9)        
       })
       do.dist_ref <- reactive({
+        req(getRefData())
         X <- getRefData()
         if(is.null(X)) return(NULL)
         if(!any(rownames(X) %in% input$refpops)) return(NULL)
