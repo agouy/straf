@@ -49,7 +49,7 @@ ref_mds_Server <- function(id, getgenind) {
         plotOutput(ns('runMDS_strider'))
       })
       common_alleles <- reactive({
-        req(input$refpops, getRefData())
+        req(input$refpops, getRefData(), getgenind())
         X <- getRefData()[input$refpops, ]
         X <- X[, colSums(is.na(X)) == 0]
         obj <- genind2genpop(getgenind(), quiet = TRUE)
@@ -106,6 +106,7 @@ ref_mds_Server <- function(id, getgenind) {
       output$runMDS_ref <- renderPlot({
         req(do.dist_ref())
         d <- do.dist_ref()
+        if(is.null(d)) return(NULL)
         mds <- cmdscale(d)
         MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
         .data <- NA
@@ -124,6 +125,7 @@ ref_mds_Server <- function(id, getgenind) {
       output$runMDStree_ref <- renderPlot({
         req(do.dist_ref())
         dst <- do.dist_ref()
+        if(is.null(dst)) return(NULL)
         hc <- hclust(dst)
         plot(ape::as.phylo(hc), cex = 0.9)        
       })
