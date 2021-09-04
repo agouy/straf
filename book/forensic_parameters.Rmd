@@ -69,13 +69,9 @@ Coming soon.
 
 ## Polymorphism Information Content (PIC)
 
-Polymorphism Information Content (PIC) can be interpreted as:
-* the probability that the maternal and paternal alleles of a child are
-deducible
-* or, the probability of being able to deduce which allele a
-parent has transmitted to the child.
-
 __Formula__
+
+Polymorphism Information Content (PIC) is computed as follow:
 
 $$
 PIC = 1 - \sum_{i=1}^{n} p_i^2 - \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} 2p_i^2p_j^2,
@@ -84,7 +80,14 @@ where $p_i$ and $p_j$ are allele frequencies.
 
 __Interpretation__
 
-Coming soon.
+The PIC can be interpreted as:
+
+* the probability that the maternal and paternal alleles of a child are
+deducible
+
+* or, the probability of being able to deduce which allele a
+parent has transmitted to the child.
+
 
 ## Power of Exclusion (PE)
 

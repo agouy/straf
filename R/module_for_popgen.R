@@ -47,18 +47,20 @@ popgen_UI <- function(id) {
       uiOutput(ns("selectPop3"))
     ),
     
-    conditionalPanel(
-      condition = "input.ploidy == 2",
-      ns = ns,
-      awesomeCheckbox(
-        ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
-        FALSE
-      ),
-      numericInput(
-        ns('hw_nperm'), 'Number of permutations for HW test',
-        1000, min = 100, max = 10000, step = 100
-      )
-    ),
+    uiOutput(ns("uiPG_HW")),
+    
+    # conditionalPanel(
+    #   condition = "input.ploidy == 2",
+    #   ns = ns,
+    #   awesomeCheckbox(
+    #     ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
+    #     FALSE
+    #   ),
+    #   numericInput(
+    #     ns('hw_nperm'), 'Number of permutations for HW test',
+    #     1000, min = 100, max = 10000, step = 100
+    #   )
+    # ),
     conditionalPanel(
       condition = "input.displayDiv == true",
       ns = ns,
@@ -143,6 +145,29 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
       output$selectPop3 <- renderUI({
         selectInput(ns("selectPop3"), "Select a population:", popnames())
       })
+      
+      
+      output$uiPG_HW <- renderUI({
+        pl <- ploidy()
+        if(pl == 2) {
+          return(list(
+            awesomeCheckbox(
+              ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
+              FALSE
+            ),
+            numericInput(
+              ns('hw_nperm'), 'Number of permutations for HW test',
+              1000, min = 100, max = 10000, step = 100
+            )
+          ))
+        } 
+        else {
+          return(NULL)
+        } 
+      })
+      
+      
+      
       reacIndices <- reactive({
         if(is.null(getgenind())) return(NULL)
         
