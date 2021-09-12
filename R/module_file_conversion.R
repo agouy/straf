@@ -227,3 +227,51 @@ GenotypicData=1\nGameticPhase=0\nMissingData="?"\nLocusSeparator=WHITESPACE\n\n[
   return(NULL)
 }
 
+
+
+#' Convert POPTREE file to the STRAF allele frequencies format.
+#' This function
+#' @param fname Input file name in the STRAF format.
+#' @return NULL
+#' @export
+#' @noRd
+poptree2straf <- function(input_file, output_file) {
+  
+  fname <- input_file
+  if(tools::file_ext(fname) %in% c("xls", "xlsx")) {
+    df <- readxl::read_excel(fname, sheet = 1, skip = 0, col_names = FALSE)
+  } else {
+    no_col <- max(count.fields(fname, sep = ""))
+    df <- read.table(fname, 
+                     comment.char = "",
+                     header = T, sep = "\t", col.names = 1:no_col, fill = TRUE)
+    df[df == ""] <- NA
+    df <- df[, !colSums(is.na(df)) == nrow(df)]
+  }
+  
+  popnames <- df[[1]]
+  popnames <- popnames[2:(which(is.na(popnames))[1] - 1)]
+  n_pops <- length(popnames)
+  
+  a <- grep("locus", df[[1]])
+  b <- grep("#", df[[1]])
+  if(length(a) != length(b)) stop("problem")
+  str_out <- c()
+  for(i in seq_along(a)) {
+    
+    df_tmp <- df[a[i]:(b[i]-1), ]
+    pop_names <- df_tmp[1, 4:(4+n_pops-1)]
+    Locus <- df_tmp[1, 2][[1]]
+    freq <- df_tmp[, 4:(4+n_pops-1)]
+    all_names <- c("Allele", unname(unlist(df_tmp[-1, 2])))
+    df_tmp2 <- cbind(all_names, freq)
+    df_tmp3 <- apply(df_tmp2, 1, paste0, collapse = ",")
+    str_out <- c(str_out, Locus, df_tmp3)
+  }
+  str_out <- gsub(",[.]", ",0." , str_out)
+
+  output <- paste(str_out, "\n", collapse = "")
+  cat(output, file = output_file)
+  return(NULL)
+}
+

@@ -136,7 +136,6 @@ ref_mds_Server <- function(id, getgenind) {
         if(!any(rownames(X) %in% input$refpops)) return(NULL)
         X <- X[input$refpops, ]
         X <- X[, colSums(is.na(X)) == 0]
-        
         if(input$add_current_ref) {          
           X <- common_alleles()
         }
@@ -146,7 +145,7 @@ ref_mds_Server <- function(id, getgenind) {
         d <- d / vec[row(d)]
         d <- -log(d)
         d <- as.dist(d)
-        
+
         return(d)
       })
       
