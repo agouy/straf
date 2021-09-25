@@ -1,9 +1,13 @@
 # Forensic parameters
 
-__WORK IN PROGRESS__
+In this chapter, we'll introduce a few equations. Do not be afraid! The goal of
+this chapter is to translate each of them into plain English.
 
-In this chapter, we'll introduce a few equations. Do not be afraid! Each of them will
-be translated to plain English.
+## How to compute forensic parameters in STRAF
+
+<center><img src="img/capture_forensics_parameters_1.png" class="capture"/></center>
+
+<center><img src="img/capture_forensics_parameters_2.png" class="capture"/></center>
 
 ## Random match probability (PM)
 
@@ -115,7 +119,7 @@ __Formula__
 Let $H$ be the frequency of homozygotes, then
 
 $$
-PE = \frac{1}{2H}
+TPI = \frac{1}{2H}
 $$
 
 __Interpretation__

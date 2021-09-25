@@ -49,12 +49,22 @@
 <h1>
 <span class="header-section-number">2</span> Forensic parameters<a class="anchor" aria-label="anchor" href="#forensic-parameters"><i class="fas fa-link"></i></a>
 </h1>
-<p><strong>WORK IN PROGRESS</strong></p>
-<p>In this chapter, we’ll introduce a few equations. Do not be afraid! Each of them will
-be translated to plain English.</p>
+<p>In this chapter, we’ll introduce a few equations. Do not be afraid! The goal of
+this chapter is to translate each of them into plain English.</p>
+<div id="how-to-compute-forensic-parameters-in-straf" class="section level2">
+<h2>
+<span class="header-section-number">2.1</span> How to compute forensic parameters in STRAF<a class="anchor" aria-label="anchor" href="#how-to-compute-forensic-parameters-in-straf"><i class="fas fa-link"></i></a>
+</h2>
+<center>
+<img src="img/capture_forensics_parameters_1.png" class="capture">
+</center>
+<center>
+<img src="img/capture_forensics_parameters_2.png" class="capture">
+</center>
+</div>
 <div id="random-match-probability-pm" class="section level2">
 <h2>
-<span class="header-section-number">2.1</span> Random match probability (PM)<a class="anchor" aria-label="anchor" href="#random-match-probability-pm"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.2</span> Random match probability (PM)<a class="anchor" aria-label="anchor" href="#random-match-probability-pm"><i class="fas fa-link"></i></a>
 </h2>
 <p>The <strong>Random match probability</strong>, or probability of matching (PM), is defined as
 the probability of observing a random match between two individuals.</p>
@@ -65,7 +75,7 @@ PM = \sum_i (G_i)^2,
 where <span class="math inline">\(G_i\)</span> is the frequency of the genotype <span class="math inline">\(i\)</span> at a given locus in the population.</p>
 <p><strong>Interpretation</strong></p>
 <p>Computing <span class="math inline">\(PM\)</span> means calculating, for a given locus, the frequency of each
-genotypes. Then we take the sqaure of each frequency, i.e. we multiply it by itself.
+genotypes. Then we take the square of each frequency, i.e. we multiply it by itself.
 Finally, we sum the values of each genotype.</p>
 <p>The intuition behind it is that if we have a random match in a population by looking
 at a singly locu, it means that our two samples have the same genotype at that locus.
@@ -78,7 +88,7 @@ in our population.</p>
 </div>
 <div id="power-of-discrimination-pd" class="section level2">
 <h2>
-<span class="header-section-number">2.2</span> Power of Discrimination (PD)<a class="anchor" aria-label="anchor" href="#power-of-discrimination-pd"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.3</span> Power of Discrimination (PD)<a class="anchor" aria-label="anchor" href="#power-of-discrimination-pd"><i class="fas fa-link"></i></a>
 </h2>
 <p>The power of discrimination (PD) is defined as the probability of
 discriminating between two unrelated individuals.</p>
@@ -92,7 +102,7 @@ interested in the probability of “not matching”, i.e. the probability of di
 </div>
 <div id="gene-diversity" class="section level2">
 <h2>
-<span class="header-section-number">2.3</span> Gene diversity<a class="anchor" aria-label="anchor" href="#gene-diversity"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.4</span> Gene diversity<a class="anchor" aria-label="anchor" href="#gene-diversity"><i class="fas fa-link"></i></a>
 </h2>
 <p>Genetic diversity (<span class="math inline">\(GD\)</span>), or expected heterozygosity (<span class="math inline">\(H_{\mathrm{exp}}\)</span>), is
 computed using the following estimator:</p>
@@ -107,24 +117,26 @@ frequency of the <span class="math inline">\(i^{th}\)</span> allele in the popul
 </div>
 <div id="polymorphism-information-content-pic" class="section level2">
 <h2>
-<span class="header-section-number">2.4</span> Polymorphism Information Content (PIC)<a class="anchor" aria-label="anchor" href="#polymorphism-information-content-pic"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.5</span> Polymorphism Information Content (PIC)<a class="anchor" aria-label="anchor" href="#polymorphism-information-content-pic"><i class="fas fa-link"></i></a>
 </h2>
-<p>Polymorphism Information Content (PIC) can be interpreted as:
-* the probability that the maternal and paternal alleles of a child are
-deducible
-* or, the probability of being able to deduce which allele a
-parent has transmitted to the child.</p>
 <p><strong>Formula</strong></p>
+<p>Polymorphism Information Content (PIC) is computed as follow:</p>
 <p><span class="math display">\[
 PIC = 1 - \sum_{i=1}^{n} p_i^2 - \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} 2p_i^2p_j^2,
 \]</span>
 where <span class="math inline">\(p_i\)</span> and <span class="math inline">\(p_j\)</span> are allele frequencies.</p>
 <p><strong>Interpretation</strong></p>
-<p>Coming soon.</p>
+<p>The PIC can be interpreted as:</p>
+<ul>
+<li><p>the probability that the maternal and paternal alleles of a child are
+deducible</p></li>
+<li><p>or, the probability of being able to deduce which allele a
+parent has transmitted to the child.</p></li>
+</ul>
 </div>
 <div id="power-of-exclusion-pe" class="section level2">
 <h2>
-<span class="header-section-number">2.5</span> Power of Exclusion (PE)<a class="anchor" aria-label="anchor" href="#power-of-exclusion-pe"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.6</span> Power of Exclusion (PE)<a class="anchor" aria-label="anchor" href="#power-of-exclusion-pe"><i class="fas fa-link"></i></a>
 </h2>
 <p><strong>Formula</strong></p>
 <p>The power of exclusion (<span class="math inline">\(PE\)</span>) is defined as:</p>
@@ -138,14 +150,14 @@ proportion of homozygous individuals in the population sample.</p>
 </div>
 <div id="typical-paternity-index-tpi" class="section level2">
 <h2>
-<span class="header-section-number">2.6</span> Typical Paternity Index (TPI)<a class="anchor" aria-label="anchor" href="#typical-paternity-index-tpi"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.7</span> Typical Paternity Index (TPI)<a class="anchor" aria-label="anchor" href="#typical-paternity-index-tpi"><i class="fas fa-link"></i></a>
 </h2>
 <p>Finally, the typical paternity index (<span class="math inline">\(TPI\)</span>) reflects the “mean PI for
 random non-excluded men“ for a given locus.</p>
 <p><strong>Formula</strong></p>
 <p>Let <span class="math inline">\(H\)</span> be the frequency of homozygotes, then</p>
 <p><span class="math display">\[
-PE = \frac{1}{2H}
+TPI = \frac{1}{2H}
 \]</span></p>
 <p><strong>Interpretation</strong></p>
 <p>Coming soon.</p>
@@ -159,12 +171,13 @@ PE = \frac{1}{2H}
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#forensic-parameters"><span class="header-section-number">2</span> Forensic parameters</a></li>
-<li><a class="nav-link" href="#random-match-probability-pm"><span class="header-section-number">2.1</span> Random match probability (PM)</a></li>
-<li><a class="nav-link" href="#power-of-discrimination-pd"><span class="header-section-number">2.2</span> Power of Discrimination (PD)</a></li>
-<li><a class="nav-link" href="#gene-diversity"><span class="header-section-number">2.3</span> Gene diversity</a></li>
-<li><a class="nav-link" href="#polymorphism-information-content-pic"><span class="header-section-number">2.4</span> Polymorphism Information Content (PIC)</a></li>
-<li><a class="nav-link" href="#power-of-exclusion-pe"><span class="header-section-number">2.5</span> Power of Exclusion (PE)</a></li>
-<li><a class="nav-link" href="#typical-paternity-index-tpi"><span class="header-section-number">2.6</span> Typical Paternity Index (TPI)</a></li>
+<li><a class="nav-link" href="#how-to-compute-forensic-parameters-in-straf"><span class="header-section-number">2.1</span> How to compute forensic parameters in STRAF</a></li>
+<li><a class="nav-link" href="#random-match-probability-pm"><span class="header-section-number">2.2</span> Random match probability (PM)</a></li>
+<li><a class="nav-link" href="#power-of-discrimination-pd"><span class="header-section-number">2.3</span> Power of Discrimination (PD)</a></li>
+<li><a class="nav-link" href="#gene-diversity"><span class="header-section-number">2.4</span> Gene diversity</a></li>
+<li><a class="nav-link" href="#polymorphism-information-content-pic"><span class="header-section-number">2.5</span> Polymorphism Information Content (PIC)</a></li>
+<li><a class="nav-link" href="#power-of-exclusion-pe"><span class="header-section-number">2.6</span> Power of Exclusion (PE)</a></li>
+<li><a class="nav-link" href="#typical-paternity-index-tpi"><span class="header-section-number">2.7</span> Typical Paternity Index (TPI)</a></li>
 </ul>
 
       <div class="book-extra">
@@ -181,7 +194,7 @@ PE = \frac{1}{2H}
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-05-02.</p>
+    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-09-25.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

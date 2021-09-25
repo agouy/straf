@@ -1,9 +1,13 @@
 # Forensic parameters
 
-__WORK IN PROGRESS__
+In this chapter, we'll introduce a few equations. Do not be afraid! The goal of
+this chapter is to translate each of them into plain English.
 
-In this chapter, we'll introduce a few equations. Do not be afraid! Each of them will
-be translated to plain English.
+## How to compute forensic parameters in STRAF
+
+<center><img src="img/capture_forensics_parameters_1.png" class="capture"/></center>
+
+<center><img src="img/capture_forensics_parameters_2.png" class="capture"/></center>
 
 ## Random match probability (PM)
 
@@ -20,7 +24,7 @@ where $G_i$ is the frequency of the genotype $i$ at a given locus in the populat
 __Interpretation__
 
 Computing $PM$ means calculating, for a given locus, the frequency of each 
-genotypes. Then we take the sqaure of each frequency, i.e. we multiply it by itself.
+genotypes. Then we take the square of each frequency, i.e. we multiply it by itself.
 Finally, we sum the values of each genotype.
 
 The intuition behind it is that if we have a random match in a population by looking
@@ -69,13 +73,9 @@ Coming soon.
 
 ## Polymorphism Information Content (PIC)
 
-Polymorphism Information Content (PIC) can be interpreted as:
-* the probability that the maternal and paternal alleles of a child are
-deducible
-* or, the probability of being able to deduce which allele a
-parent has transmitted to the child.
-
 __Formula__
+
+Polymorphism Information Content (PIC) is computed as follow:
 
 $$
 PIC = 1 - \sum_{i=1}^{n} p_i^2 - \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} 2p_i^2p_j^2,
@@ -84,7 +84,14 @@ where $p_i$ and $p_j$ are allele frequencies.
 
 __Interpretation__
 
-Coming soon.
+The PIC can be interpreted as:
+
+* the probability that the maternal and paternal alleles of a child are
+deducible
+
+* or, the probability of being able to deduce which allele a
+parent has transmitted to the child.
+
 
 ## Power of Exclusion (PE)
 
@@ -112,7 +119,7 @@ __Formula__
 Let $H$ be the frequency of homozygotes, then
 
 $$
-PE = \frac{1}{2H}
+TPI = \frac{1}{2H}
 $$
 
 __Interpretation__

@@ -1,3 +1,7 @@
+dna-genotypes-and-phenotypes
+genetic-variation
+dna-profiling
+the-role-of-reference-populations
 importing-data
 str-data
 input-data-format
@@ -5,6 +9,7 @@ generating-the-input-data-from-excel
 uploading-the-data-to-straf
 common-issues
 forensic-parameters
+how-to-compute-forensic-parameters-in-straf
 random-match-probability-pm
 power-of-discrimination-pd
 gene-diversity
@@ -18,5 +23,6 @@ multivariate-statistics
 principal-component-analysis-pca
 multidimensional-scaling-mds
 file-conversion
+how-to-convert-a-file-in-straf
 genepop-and-arlequin-formats
 familias

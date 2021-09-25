@@ -1,13 +1,16 @@
 # File conversion
 
-__WORK IN PROGRESS__
-
 As STRAF is a web application and can be used simultaneously by multiple users,
-computing resources are limited. Therefore more computationally intensive analyses
+computing resources are limited. Therefore, the most computationally intensive analyses
 are not available in STRAF. In order to ease the path to other software, 
 file conversion utilities have been implemented. It is possible to convert
-the input file to the Genepop, Arlequin and Familias formats. They are
+the input file to the __Genepop__, __Arlequin__ and __Familias__ formats. They are
 all available in the __File conversion__ tab of the application.
+
+## How to convert a file in STRAF
+
+<center><img src="img/capture_file_conversion_1.png" class="capture"/></center>
+
 
 ## Genepop and Arlequin formats
 
@@ -16,9 +19,9 @@ including ones that are part of standard forensics practice:
 * linkage disequilibrium computation
 * Hardy-Weinberg tests
 
-STRAF currently implements, however the ones implemented in Genepop as they can 
-rely on more permutations and are overall preferable to the HW and LD tests implemented 
-in STRAF.
+STRAF currently implements these computations, however the ones implemented in 
+Genepop are overall more reliable as they can rely on more permutations. They
+are overall preferable to the HW and LD tests implemented in STRAF.
 
 ## Familias
 
