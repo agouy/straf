@@ -50,12 +50,14 @@
 <h1>
 <span class="header-section-number">3</span> Population genetics indices<a class="anchor" aria-label="anchor" href="#population-genetics-indices"><i class="fas fa-link"></i></a>
 </h1>
-<p><strong>Coming soon.</strong></p>
+<p>In this chapter, we will see how to compute some population genetics indices in STRAF.</p>
 <div id="computing-population-genetics-parameters-in-straf" class="section level2">
 <h2>
 <span class="header-section-number">3.1</span> Computing population genetics parameters in STRAF<a class="anchor" aria-label="anchor" href="#computing-population-genetics-parameters-in-straf"><i class="fas fa-link"></i></a>
 </h2>
-<p><strong>Coming soon.</strong></p>
+<p>Once you have uploaded your genotypes in STRAF, you can go to the <strong>Population genetics</strong>
+tab to compute relevant population genetics indices. It is also possible to perform
+a Hardy-Weinberg equilibrium test by checking the relevant box.</p>
 <center>
 <img src="img/capture_popgen_parameters_1.png" class="capture">
 </center>
@@ -68,19 +70,58 @@
 <h3>
 <span class="header-section-number">3.2.1</span> Hardy-Weinberg equilibrium<a class="anchor" aria-label="anchor" href="#hardy-weinberg-equilibrium"><i class="fas fa-link"></i></a>
 </h3>
-<p><strong>Coming soon.</strong></p>
+<p>A population is considered at Hardy-Weinberg equilibrium (HWE) when the observed
+genotypic frequencies are in agreement with the expectations in an “ideal” population,
+which assumes for example random mating in the population.
+This is important as the assumptions of the Hardy-Weinberg model
+allow to derive quantities such as forensic parameters and population genetic indices.
+Therefore, if some assumptions of the model are violated, conclusions drawn from
+metrics computed assuming HWE could be challenged.</p>
+<p>If a locus presents a significant deviation from HWE, it means that a process
+is influencing the distribution of allele and genotype frequencies in the population.
+It could for example be due to <strong>inbreeding</strong>, <strong>hidden population structure</strong>,
+or <strong>natural selection</strong>.</p>
+<p>STRAF reports the <strong>p-value</strong> of a test for HWE. A low p-value indicates a significant
+deviation from HWE.</p>
 </div>
 <div id="heterozygosities" class="section level3">
 <h3>
 <span class="header-section-number">3.2.2</span> Heterozygosities<a class="anchor" aria-label="anchor" href="#heterozygosities"><i class="fas fa-link"></i></a>
 </h3>
-<p><strong>Coming soon.</strong></p>
+<p>In STRAF, several measures of <strong>heterozygosity</strong> are computed. They capture
+different aspects of genetic diversity.</p>
+<ul>
+<li><p>The <strong>expected heterozygosity</strong> (or <strong>Gene diversity</strong>, <span class="math inline">\(H_{exp}\)</span> or <span class="math inline">\(GD\)</span>) has been defined in the previous chapter.</p></li>
+<li><p>The <strong>observed heterozygosity</strong> (<span class="math inline">\(H_{obs}\)</span>) is the proportion of heterozygous genotypes at this locus in the population.</p></li>
+<li><p>The <strong>total heterozygosity</strong> (<span class="math inline">\(H_T\)</span>) is the heterozygosity expected if all the
+individuals in all the subpopulations were behaving as a population at HWE.</p></li>
+</ul>
 </div>
 <div id="f-statistics" class="section level3">
 <h3>
 <span class="header-section-number">3.2.3</span> F-statistics<a class="anchor" aria-label="anchor" href="#f-statistics"><i class="fas fa-link"></i></a>
 </h3>
-<p><strong>Coming soon.</strong></p>
+<p>STRAF reports two <strong>F-statistics</strong>.</p>
+<ul>
+<li><p>The <span class="math inline">\(F_{\textrm{IS}}\)</span> is a measure of genetic relatedness within a population.
+It is sometimes called the <strong>inbreeding coefficient</strong>. High values indicate
+a high degree of inbreeding.</p></li>
+<li><p>The <span class="math inline">\(F_{\textrm{ST}}\)</span> is a measure of genetic differentiation between populations.
+It takes values between 0 (no differentiation) and 1 (full differentiation).</p></li>
+</ul>
+<div class="note">
+<p><strong>One concept, multiple estimators.</strong></p>
+<p>Several <strong>estimators</strong> of <span class="math inline">\(F_{\textrm{ST}}\)</span> exist (for example, Weir and Cockerham’s, Nei’s,
+Hudson’s <span class="math inline">\(F_{\textrm{ST}}\)</span>). It’s like if each population geneticist had decided
+to develop their own estimator!</p>
+<p>Why is that? In statistics, what we call an <strong>estimator</strong> a metric aiming at estimating
+a given quantity based on <strong>observed data</strong>. It is important to keep in mind that
+these estimators rely on a specific <strong>model</strong>, with underlying assumptions.
+It explains why some estimators are more or less reliable depending on the case
+and observed data, and each of them has been developed for a different situation.
+In the case of <span class="math inline">\(F_{\textrm{ST}}\)</span> for example, different estimators assume
+different demographic models.</p>
+</div>
 </div>
 </div>
 <div id="linkage-disequilibrium-ld" class="section level2">
@@ -91,16 +132,32 @@
 <h3>
 <span class="header-section-number">3.3.1</span> What is linkage disequilibrium?<a class="anchor" aria-label="anchor" href="#what-is-linkage-disequilibrium"><i class="fas fa-link"></i></a>
 </h3>
-<p><strong>Coming soon.</strong></p>
+<p>Linkage disequilibrium is an important quantity to be measured in genetics.
+It is defined as the <strong>nonindependence of genotypes at distinct loci</strong>.
+It means that it is more likely to observe the co-occurence of some genotypes
+at different loci.</p>
+<p>Most of the times, this is explained by the physical proximity between loci. If
+two loci are next to each other on the genome, recombination events between them
+will be rare and genotypes won’t be suffled. Genotypes at these loci will be correlated
+and linkage disequilibrium will be high. On the other hand, two loci found on two different
+chromosomes are not expected to show any LD signals as genotypes will be systematically
+shuffled at each generation.</p>
 </div>
 <div id="how-to-compute-ld-in-straf" class="section level3">
 <h3>
 <span class="header-section-number">3.3.2</span> How to compute LD in STRAF?<a class="anchor" aria-label="anchor" href="#how-to-compute-ld-in-straf"><i class="fas fa-link"></i></a>
 </h3>
-<p><strong>Coming soon.</strong></p>
+<p>It is possible to test for the presence of LD in the dataset you uploaded using
+STRAF. After checking the <em>Display pairwise LD p-values matrix</em>, LD tests between
+each pair of loci will be performed and p-values will be reported.</p>
 <center>
 <img src="img/capture_popgen_parameters_2.png" class="capture">
 </center>
+<p><strong>Important note</strong>: Other population genetics software,
+<strong>Genepop</strong> and <strong>Arlequin</strong>, implement more reliable
+versions of the LD test that should be preferred. They are currently not implemented
+in STRAF because of performance limitations. If you need to perform such a test, the
+<strong>File conversion</strong> utilities (cf. Chapter 6) should facilitate the workflow.</p>
 
 </div>
 </div>

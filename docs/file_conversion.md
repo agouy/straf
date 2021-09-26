@@ -20,7 +20,9 @@ buttons to download your genotypes in another format.
 
 __Genepop__ and __Arlequin__ softwares implement several population genetics methods, 
 including ones that are part of standard forensics practice:
+
 * linkage disequilibrium computation
+
 * Hardy-Weinberg tests
 
 STRAF currently implements these computations, however the ones implemented in 
