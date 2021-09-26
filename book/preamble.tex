@@ -1,6 +1,40 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
-\geometry{textwidth=12cm}
+\geometry{a5paper}
 \usepackage{fontspec}
 \setmainfont[Ligatures=TeX,Scale=0.8]{Arial}
+
+\usepackage{color}
+\usepackage{framed}
+\setlength{\fboxsep}{.8em}
+
+\usepackage{tcolorbox}
+
+\definecolor{boxlight}{HTML}{c7e0df}
+\definecolor{boxdark}{HTML}{2C4443}
+
+\newtcolorbox{interpretation}{
+  colback=boxlight,
+  colframe=boxdark,
+  coltext=boxdark,
+  boxsep=5pt,
+  arc=2pt}
+  
+\newenvironment{infobox}
+  {
+  \begin{itemize}
+  \renewcommand{\labelitemi}{
+    \raisebox{-.7\height}[0pt][0pt]{
+      {\setkeys{Gin}{width=3em,keepaspectratio}
+        \includegraphics{img/key3.png}}
+    }
+  }
+  \setlength{\fboxsep}{1em}
+  \begin{interpretation}
+  \item
+  }
+  {
+  \end{interpretation}
+  \end{itemize}
+  }

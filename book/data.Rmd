@@ -1,22 +1,26 @@
 # Importing data
 
-Work in progress.
+In this chapter, we will explain how to prepare the input file containing 
+genotypic data, and how to upload it into STRAF.
 
-## STR data
+## STR data and STRAF input format
 
-* Observed values: genotypes for each individual, at each locus.
-* Potentially two values observed per individual and per locus, if diploid markers.
-* Value = can be anything but tipically correspond, for STR markers, to the length.
-* Point alleles
+STR data consists in various __observations__: the __genotypes__ (number of STR repeats)
+of __each individual__, at __each locus__.
 
-## Input data format
+In genetics, we potentially observe two values per individual and per locus, if the
+markers are diploid, that is two copies are present per sample.
 
-STRAF's input file is a text file containing the genotypes of each sample:
+__STRAF's input file__ is a __text__ file containing the genotypes of each sample:
 
 * The first column, named __ind__, needs to contain the sample ID 
+
 * The second column, , named __pop__, contains the population ID (this column must exist even if a single population is studied)
+
 * The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)
+
 * Genotypes must be encoded as numbers (STRAF accepts point alleles)
+
 * Missing data (e.g. null alleles) must be indicated with a “0”.
 
 For diploid data, the table should look like this:
@@ -50,10 +54,19 @@ achieved by clicking on `Save As` > `Text (Tab-delimited) (*.txt)`
 
 ## Uploading the data to STRAF
 
-Coming soon.
+Once the input file has been prepared, it is possible to upload it into STRAF. Alternatively,
+you can __download an example file__ by clicking on the link in the sidebar.
+
+Then, you need to select the __ploidy__ of your data (for example, _Diploid_ for
+autosomal markers, and _Haploid_ for Y-chromosome markers). After that, you can
+upload the file by clicking on _Browse_ and selecting the file on your computer.
+
+Once the file is uploaded, a preview will be displayed on the right and all the
+analyses will be available. If not, it is likely that an error has occured. If the error
+message is not explicit, you can refer to the __Input file checklist__ below that
+gathers common issues with the input file.
 
 <center><img src="img/capture_import_1.png" class="capture"/></center>
-
 
 ## Common issues
 
@@ -77,6 +90,15 @@ __Input file checklist__
 
 ## Having a first look at the data
 
+Below the dataset preview, you will be able to generate a plot of allele frequencies
+at each locus.
+
 <center><img src="img/capture_import_2.png" class="capture"/></center>
+
+You can also generate an allele frequency table, which is standard practice when
+reporting new population data in a forensics journal. You can either download 
+the allele frequencies in a text format (TSV), or as an Excel (XLSX) file. Note
+that you have the ability to select a specific population using the drop-down menu
+above the table.
 
 <center><img src="img/capture_import_3.png" class="capture"/></center>

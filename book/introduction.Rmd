@@ -11,29 +11,29 @@ used by the body to function and development. This information is encoded by a
 chain of __nucleotides__ of four types that can be referred to using the letters
 A (Adenine), T (Thymine), C (Cytosine) and G (Guanine).
 
-Developments in biotechnologies enabled the ability to characterise the DNA of
-individuals. These technologies also led to the discovery that this DNA varies
+Developments in biotechnologies enabled the characterisation of the DNA of
+individuals. These techniques also led to the discovery that this DNA varies
 between individuals. This __genetic variation__, also called __polymorphism__, 
 can be used to characterise individuals and populations based on their DNA.
 
 ## Markers of polymorphism {-}
 
 DNA variation can take different forms: it can for example be a 
-__Single Nucleotide Polymorphism__ (**SNP**), when a mutation occured and changed a
+__Single Nucleotide Polymorphism__ (**SNP**), when a mutation occurs and changes a
 nucleotide at a given position in the genome. In that case, we would observe
 different nucleotides in a population at a single position. 
 
-There are also __insertions__ and __deletions__ (sometimes referred to as
+There can also be __insertions__ and __deletions__ (sometimes referred to as
 **InDels**), of one or multiple nucleotides.
 
-Finally, other markers of genetic variation are
-__Copy Number Variants__ (**CNVs**), when a sequence is repeated a certain number
-of times. They can be and contain more or less repetitive units.
-
-__Short Tandem Repeats__ (**STRs**) a type of genetic polymorphism consisting
-in short sequences from 2 to 7 base pairs that are repeated a certain number of time.
-As the number of repeats varies among individuals, characterizing their 
-length can be useful to identify individuals.
+Finally, other markers of genetic variation are __Copy Number Variants__ (**CNVs**), 
+when a sequence is repeated a certain number of times. 
+They can contain more or less repetitive units. These units can contain more or 
+less nucleotides. __Short Tandem Repeats__ (**STRs**) a type of genetic 
+polymorphism consisting in short sequences from 2 to 7 base pairs that are 
+repeated. The __number of repeats varies__ among individuals, therefore characterizing 
+their length can be useful to identify individuals. STRs are still nowadays one of 
+the most commons markers used in forensic genetics.
 
 ## Polymorphism and forensics {-}
 
@@ -56,16 +56,25 @@ of __genetic variants__ (or **alleles**) frequencies in populations of interest,
 at different __loci__ across the genome. Indeed, these frequencies can vary 
 widely among populations.
 
+In this context, STRAF has been designed to facilitate the analysis of 
+__population data__ in forensic genetics.
+
 
 :::digression
 __Digression - Why STRs and not other markers?__
 
-Comparing to whole-genome sequencing. They have a high __power of discrimination__
-because they have a much higher diversity (their mutation rate is higher than
-other common markers).
+Nowadays, it is easier and cheaper to generate whole-genome sequences. One could
+wonder why STRs are still so popular in forensic practice, and have not been replaced
+by SNPs that are easily generated from Next-Generation Sequencing (NGS) data.
+
+This is mainly due to the fact that STRs have a high mutation rate, therefore
+are more diverse in human populations. This explains their high __power of discrimination__.
+
+Furthermore, they can also be used in deciphering mixture components, a very common
+case in forensics.
+
+Finally, they can be combined in multiplex assays, which is convenient when low 
+amounts of biological material can be recovered.
+
+For all these reasons, STRs remain the dominant marker used in forensic genetics.
 :::
-
-## STRAF and population data analysis {-}
-
-In this context, STRAF has been designed to facilitate the analysis of 
-__population data__ in forensic genetics.

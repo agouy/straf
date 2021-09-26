@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Multivariate statistics
 
 In this chapter, we will describe the two multivariate statistics methods implemented
@@ -30,7 +35,7 @@ the following _Run and plot a PCA_ checkbox.
 It will trigger the PCA computation and return a graph. You are also able to 
 download to coordinates on different PCs (also called eigenvectors).
 
-:::interpretation
+::: {.interpretation data-latex=""}
 __Interpreting PCA results__
 
 PCA has become a popular tool in population genetics, as the relationships between
@@ -74,7 +79,7 @@ relationships between populations.
 
 <center><img src="img/capture_mds_1.png" class="capture"/></center>
 
-:::interpretation
+::: {.interpretation data-latex=""}
 __Interpreting MDS results__
 
 Just like with a PCA, populations the __closer__ populations are on the MDS projection,

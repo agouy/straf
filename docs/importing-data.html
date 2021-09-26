@@ -37,7 +37,8 @@
 <li><a class="" href="forensic-parameters.html"><span class="header-section-number">2</span> Forensic parameters</a></li>
 <li><a class="" href="population-genetics-indices.html"><span class="header-section-number">3</span> Population genetics indices</a></li>
 <li><a class="" href="multivariate-statistics.html"><span class="header-section-number">4</span> Multivariate statistics</a></li>
-<li><a class="" href="file-conversion.html"><span class="header-section-number">5</span> File conversion</a></li>
+<li><a class="" href="reference-populations-analysis.html"><span class="header-section-number">5</span> Reference populations analysis</a></li>
+<li><a class="" href="file-conversion.html"><span class="header-section-number">6</span> File conversion</a></li>
 </ul>
 
         <div class="book-extra">
@@ -49,29 +50,23 @@
 <h1>
 <span class="header-section-number">1</span> Importing data<a class="anchor" aria-label="anchor" href="#importing-data"><i class="fas fa-link"></i></a>
 </h1>
-<p>Work in progress.</p>
-<div id="str-data" class="section level2">
+<p>In this chapter, we will explain how to prepare the input file containing
+genotypic data, and how to upload it into STRAF.</p>
+<div id="str-data-and-straf-input-format" class="section level2">
 <h2>
-<span class="header-section-number">1.1</span> STR data<a class="anchor" aria-label="anchor" href="#str-data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.1</span> STR data and STRAF input format<a class="anchor" aria-label="anchor" href="#str-data-and-straf-input-format"><i class="fas fa-link"></i></a>
 </h2>
+<p>STR data consists in various <strong>observations</strong>: the <strong>genotypes</strong> (number of STR repeats)
+of <strong>each individual</strong>, at <strong>each locus</strong>.</p>
+<p>In genetics, we potentially observe two values per individual and per locus, if the
+markers are diploid, that is two copies are present per sample.</p>
+<p><strong>STRAF’s input file</strong> is a <strong>text</strong> file containing the genotypes of each sample:</p>
 <ul>
-<li>Observed values: genotypes for each individual, at each locus.</li>
-<li>Potentially two values observed per individual and per locus, if diploid markers.</li>
-<li>Value = can be anything but tipically correspond, for STR markers, to the length.</li>
-<li>Point alleles</li>
-</ul>
-</div>
-<div id="input-data-format" class="section level2">
-<h2>
-<span class="header-section-number">1.2</span> Input data format<a class="anchor" aria-label="anchor" href="#input-data-format"><i class="fas fa-link"></i></a>
-</h2>
-<p>STRAF’s input file is a text file containing the genotypes of each sample:</p>
-<ul>
-<li>The first column, named <strong>ind</strong>, needs to contain the sample ID</li>
-<li>The second column, , named <strong>pop</strong>, contains the population ID (this column must exist even if a single population is studied)</li>
-<li>The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)</li>
-<li>Genotypes must be encoded as numbers (STRAF accepts point alleles)</li>
-<li>Missing data (e.g. null alleles) must be indicated with a “0”.</li>
+<li><p>The first column, named <strong>ind</strong>, needs to contain the sample ID</p></li>
+<li><p>The second column, , named <strong>pop</strong>, contains the population ID (this column must exist even if a single population is studied)</p></li>
+<li><p>The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)</p></li>
+<li><p>Genotypes must be encoded as numbers (STRAF accepts point alleles)</p></li>
+<li><p>Missing data (e.g. null alleles) must be indicated with a “0”.</p></li>
 </ul>
 <p>For diploid data, the table should look like this:</p>
 <div class="inline-table"><table class="table table-sm">
@@ -142,7 +137,7 @@
 </div>
 <div id="generating-the-input-data-from-excel" class="section level2">
 <h2>
-<span class="header-section-number">1.3</span> Generating the input data from Excel<a class="anchor" aria-label="anchor" href="#generating-the-input-data-from-excel"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.2</span> Generating the input data from Excel<a class="anchor" aria-label="anchor" href="#generating-the-input-data-from-excel"><i class="fas fa-link"></i></a>
 </h2>
 <p>It only takes a few steps to generate an input file in a format that is suitable
 for use in STRAF. From Excel, for example, we can start from a spreadsheet looking
@@ -158,16 +153,24 @@ achieved by clicking on <code>Save As</code> &gt; <code>Text (Tab-delimited) (*.
 </div>
 <div id="uploading-the-data-to-straf" class="section level2">
 <h2>
-<span class="header-section-number">1.4</span> Uploading the data to STRAF<a class="anchor" aria-label="anchor" href="#uploading-the-data-to-straf"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.3</span> Uploading the data to STRAF<a class="anchor" aria-label="anchor" href="#uploading-the-data-to-straf"><i class="fas fa-link"></i></a>
 </h2>
-<p>Coming soon.</p>
+<p>Once the input file has been prepared, it is possible to upload it into STRAF. Alternatively,
+you can <strong>download an example file</strong> by clicking on the link in the sidebar.</p>
+<p>Then, you need to select the <strong>ploidy</strong> of your data (for example, <em>Diploid</em> for
+autosomal markers, and <em>Haploid</em> for Y-chromosome markers). After that, you can
+upload the file by clicking on <em>Browse</em> and selecting the file on your computer.</p>
+<p>Once the file is uploaded, a preview will be displayed on the right and all the
+analyses will be available. If not, it is likely that an error has occured. If the error
+message is not explicit, you can refer to the <strong>Input file checklist</strong> below that
+gathers common issues with the input file.</p>
 <center>
 <img src="img/capture_import_1.png" class="capture">
 </center>
 </div>
 <div id="common-issues" class="section level2">
 <h2>
-<span class="header-section-number">1.5</span> Common issues<a class="anchor" aria-label="anchor" href="#common-issues"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.4</span> Common issues<a class="anchor" aria-label="anchor" href="#common-issues"><i class="fas fa-link"></i></a>
 </h2>
 <p>Even though you’ve been very careful in the generation of STRAF’s input file,
 it is possible that you still run into an error after uploading the file to STRAF.
@@ -189,11 +192,18 @@ common issues with the input file.</p>
 </div>
 <div id="having-a-first-look-at-the-data" class="section level2">
 <h2>
-<span class="header-section-number">1.6</span> Having a first look at the data<a class="anchor" aria-label="anchor" href="#having-a-first-look-at-the-data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5</span> Having a first look at the data<a class="anchor" aria-label="anchor" href="#having-a-first-look-at-the-data"><i class="fas fa-link"></i></a>
 </h2>
+<p>Below the dataset preview, you will be able to generate a plot of allele frequencies
+at each locus.</p>
 <center>
 <img src="img/capture_import_2.png" class="capture">
 </center>
+<p>You can also generate an allele frequency table, which is standard practice when
+reporting new population data in a forensics journal. You can either download
+the allele frequencies in a text format (TSV), or as an Excel (XLSX) file. Note
+that you have the ability to select a specific population using the drop-down menu
+above the table.</p>
 <center>
 <img src="img/capture_import_3.png" class="capture">
 </center>
@@ -207,12 +217,11 @@ common issues with the input file.</p>
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#importing-data"><span class="header-section-number">1</span> Importing data</a></li>
-<li><a class="nav-link" href="#str-data"><span class="header-section-number">1.1</span> STR data</a></li>
-<li><a class="nav-link" href="#input-data-format"><span class="header-section-number">1.2</span> Input data format</a></li>
-<li><a class="nav-link" href="#generating-the-input-data-from-excel"><span class="header-section-number">1.3</span> Generating the input data from Excel</a></li>
-<li><a class="nav-link" href="#uploading-the-data-to-straf"><span class="header-section-number">1.4</span> Uploading the data to STRAF</a></li>
-<li><a class="nav-link" href="#common-issues"><span class="header-section-number">1.5</span> Common issues</a></li>
-<li><a class="nav-link" href="#having-a-first-look-at-the-data"><span class="header-section-number">1.6</span> Having a first look at the data</a></li>
+<li><a class="nav-link" href="#str-data-and-straf-input-format"><span class="header-section-number">1.1</span> STR data and STRAF input format</a></li>
+<li><a class="nav-link" href="#generating-the-input-data-from-excel"><span class="header-section-number">1.2</span> Generating the input data from Excel</a></li>
+<li><a class="nav-link" href="#uploading-the-data-to-straf"><span class="header-section-number">1.3</span> Uploading the data to STRAF</a></li>
+<li><a class="nav-link" href="#common-issues"><span class="header-section-number">1.4</span> Common issues</a></li>
+<li><a class="nav-link" href="#having-a-first-look-at-the-data"><span class="header-section-number">1.5</span> Having a first look at the data</a></li>
 </ul>
 
       <div class="book-extra">

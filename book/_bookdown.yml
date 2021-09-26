@@ -11,7 +11,8 @@ rmd_files:
     "introduction.Rmd",
     "data.Rmd",
     "forensic_parameters.Rmd",
-    "popgen_parameters.Rmd",
+    "popgen_parameters_tmp.Rmd",
     "pca_mds.Rmd",
+    "reference_pop_tmp.Rmd",
     "file_conversion.Rmd",
   ]
