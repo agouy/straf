@@ -27,3 +27,9 @@ div.interpretation {
   margin-bottom: 50px;
   border:3px solid #2C4443;
 }
+
+.capture_small {
+  width:320px;
+  margin-bottom: 50px;
+  border:3px solid #2C4443;
+}

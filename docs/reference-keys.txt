@@ -26,6 +26,8 @@ multivariate-statistics
 principal-component-analysis-pca
 multidimensional-scaling-mds
 reference-populations-analysis
+mds-on-reference-frequencies
+preparing-a-custom-allele-frequency-database
 file-conversion
 how-to-convert-a-file-in-straf
 genepop-and-arlequin-formats

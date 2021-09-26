@@ -50,15 +50,137 @@
 <h1>
 <span class="header-section-number">5</span> Reference populations analysis<a class="anchor" aria-label="anchor" href="#reference-populations-analysis"><i class="fas fa-link"></i></a>
 </h1>
-<p><strong>Coming soon.</strong></p>
+<p>In this chapter, we will see how to compare the uploaded populations to
+reference populations (based on allele frequencies).</p>
+<div id="mds-on-reference-frequencies" class="section level2">
+<h2>
+<span class="header-section-number">5.1</span> MDS on reference frequencies<a class="anchor" aria-label="anchor" href="#mds-on-reference-frequencies"><i class="fas fa-link"></i></a>
+</h2>
+<p>STRAF implements an MDS computation based on allele frequency data. By default,
+allele frequencies from the STRiDER database are used (loci with less than 10
+populations have been excluded). If you are not familiar with the MDS method and
+interpretation, you can find details in <strong>Chapter 4</strong>.</p>
+<p>You can see the output of the MDS in the <strong>Reference population</strong> tab. It includes the
+MDS projection in two dimensions for 19 European populations, as well as the population
+tree.</p>
+<center>
+<img src="img/capture_ref_pop_1.png" class="capture">
+</center>
+<p>The drop-down menu below the plots allows one to select or unselect populations
+to be used in the MDS analysis.</p>
+<center>
+<img src="img/capture_ref_pop_2.png" class="capture">
+</center>
+<p>Provided that some loci are in common between the reference allele frequencies and
+the genotypes you uploaded, it is possible to add your own populations to the existing MDS
+by checking the <em>Include uploaded data to the MDS</em> box.</p>
+<center>
+<img src="img/capture_ref_pop_3.png" class="capture">
+</center>
+<p>You will then see your populations added to the MDS plots.</p>
+</div>
+<div id="preparing-a-custom-allele-frequency-database" class="section level2">
+<h2>
+<span class="header-section-number">5.2</span> Preparing a custom allele frequency database<a class="anchor" aria-label="anchor" href="#preparing-a-custom-allele-frequency-database"><i class="fas fa-link"></i></a>
+</h2>
+<p>If you want to use other reference databases than STRIDER, for example if you’re working with
+non-European samples or with different loci, it is possible to upload a custom
+allele frequency database in STRAF.</p>
+<p>The data must be formatted as follows:</p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th>D1S1656</th>
+<th></th>
+<th></th>
+<th></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Allele</td>
+<td>Switzerland</td>
+<td>Germany</td>
+<td>France</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>0.12</td>
+<td>0.09</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>0.40</td>
+<td>0.35</td>
+<td>0.28</td>
+</tr>
+<tr class="even">
+<td>10.2</td>
+<td>0.31</td>
+<td>0.41</td>
+<td>0.5</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>0.17</td>
+<td>0.15</td>
+<td>0.22</td>
+</tr>
+<tr class="even">
+<td><strong>D2S1338</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Allele</td>
+<td>Switzerland</td>
+<td>Germany</td>
+<td>France</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>0.40</td>
+<td>0.38</td>
+<td>0.42</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td>0.42</td>
+<td>0.26</td>
+<td>0.28</td>
+</tr>
+<tr class="even">
+<td>21</td>
+<td>0.31</td>
+<td>0.36</td>
+<td>0.3</td>
+</tr>
+</tbody>
+</table></div>
+<p>Starting from an Excel file for example, we can start with a spreadsheet that looks
+like this:</p>
+<center>
+<img src="img/capture_ref_excel_1.png" class="capture_small">
+</center>
+<p>Then, one simply needs to save this table as a CSV (Comma-Separated Values) file. This can be
+achieved by clicking on <code>Save As</code> &gt; <code>CSV (Comma-delimited) (*.csv)</code></p>
+<center>
+<img src="img/capture_ref_excel_2.png" class="capture">
+</center>
+<p>Then, you can upload your data and use it as described for the STRIDER database.</p>
 
+</div>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="multivariate-statistics.html"><span class="header-section-number">4</span> Multivariate statistics</a></div>
 <div class="next"><a href="file-conversion.html"><span class="header-section-number">6</span> File conversion</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
-      <ul class="nav navbar-nav"><li><a class="nav-link" href="#reference-populations-analysis"><span class="header-section-number">5</span> Reference populations analysis</a></li></ul>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#reference-populations-analysis"><span class="header-section-number">5</span> Reference populations analysis</a></li>
+<li><a class="nav-link" href="#mds-on-reference-frequencies"><span class="header-section-number">5.1</span> MDS on reference frequencies</a></li>
+<li><a class="nav-link" href="#preparing-a-custom-allele-frequency-database"><span class="header-section-number">5.2</span> Preparing a custom allele frequency database</a></li>
+</ul>
 
       <div class="book-extra">
         <ul class="list-unstyled">
