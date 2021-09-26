@@ -1,7 +1,7 @@
 --- 
 title: "The STRAF Book"
 author: "Alexandre Gouy and Martin Zieger"
-date: "2021-09-25"
+date: "2021-09-26"
 site: bookdown::bookdown_site
 documentclass: book
 output: bookdown::bs4_book
@@ -19,28 +19,27 @@ description: "Online version of the STRAF Book."
 
 This is the online version of __The STRAF Book__, which is currently under
 active development. It is dedicated to the STRAF software, a web application
-for the analysis of genetic data in forensics practice.
+for the analysis of genetic data in forensic practice.
 
 ## Forensic and population genetics, lost sisters {-}
 
 Genetics has many faces, and forensic and population genetics are two of them.
 If we were to summarise their respective scopes, we could say that the former 
 is the application of genetics to legal matters, and the latter aims at 
-understanding genetic differences within and between populations, a fundamental matter in 
-evolutionary biology.
+understanding genetic differences within and between populations, a 
+fundamental matter in evolutionary biology.
 
 Forensic genetics and population genetics have always been tightly linked
 disciplines. This is likely because quite a number of questions they address
 are similar. Even though problems in forensics and population genetics seem 
-different, they often are the same question, simply phrased differently.
+different, they often correspond to the same question, simply phrased differently.
 
-As an example, DNA profiling, used in criminal investigations or parental testing,
-aims at matching different DNA samples and understanding how related are some
-samples in terms of DNA. In population genetics, a common goal is to
-characterise the genetic diversity of a set of populations, by looking at
-how related individuals are within and between populations. Hence you can now
-imagine why the two fields are linked: they both want to __understand and quantify__ 
-the __relatedness__ of a set of samples.
+For example, DNA profiling, used in criminal investigations or parental testing,
+aims at matching different DNA samples and understanding how related they are in
+terms of DNA. In population genetics, a common goal is to characterise the
+genetic diversity of a set of populations, by looking at how related individuals 
+are within and between populations. Both fields aim at __understanding__ and
+__quantifying__ the __relatedness__ of individuals based on their DNA.
 
 Software and metrics developed in the population genetics for the study of the 
 evolution of species are now used routinely in forensic genetics practice. 
@@ -50,10 +49,12 @@ development of relevant statistical tools and metrics with a more specific purpo
 
 ## And then there was STRAF {-}
 
-STRAF was born from the encounter of two scientists: a forensic geneticist and
-a population geneticist. In 2017, in Bern, Switzerland, Martin Zieger came to 
-visit a population genetics lab, where Alexandre Gouy was pursuing his 
-Ph.D. thesis at that time.
+__STRAF__ was born from the encounter of two scientists: a forensic geneticist and a 
+population geneticist, in 2017, in the beautiful city of Bern (Switzerland).
+Martin came to visit a population genetics lab, where Alexandre was pursuing 
+his Ph.D. thesis at that time. This encounter led to a fruitful collaboration 
+when they realised that some tools used in population genetics could be 
+leveraged by the forensics community.
 
 This encounter led to a fruitful collaboration when they realised that some tools
 used in population genetics could be leveraged by the forensics community. The
@@ -77,8 +78,6 @@ It has been used as a support for teaching population genetics, and has
 been used in evolutionary biology studies. 
 The positive reception of the software in the community motivated its 
 development over the years until the release of STRAF 2.0 in 2021. 
-
-STRAF's story highlights the importance of communication between fields.
 
 ## What will you learn? {-}
 

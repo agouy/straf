@@ -1,51 +1,71 @@
 # Introduction {-}
 
-__WORK IN PROGRESS__
+In this chapter, we will briefly introduce some essential concepts in genetics.
 
-## Essential concepts {-}
+## DNA and genetic variation {-}
 
-### DNA, genotypes and phenotypes
+Each of our cells contains 23 pairs of __chromosomes__, composed of a long __DNA__ 
+(deoxyribonucleic acid) molecule. Under this somewhat barbaric name
+is hiding a simple concept. This molecule is the support of the information 
+used by the body to function and development. This information is encoded by a 
+chain of __nucleotides__ of four types that can be referred to using the letters
+A (Adenine), T (Thymine), C (Cytosine) and G (Guanine).
 
-Each of us contain DNA (Desoxyribonucleic Acid). Under this somewhat barbaric name
-is hiding a simple concept. This is the support of the information used by the
-body to function and development.
+Developments in biotechnologies enabled the ability to characterise the DNA of
+individuals. These technologies also led to the discovery that this DNA varies
+between individuals. This __genetic variation__, also called __polymorphism__, 
+can be used to characterise individuals and populations based on their DNA.
 
-Le gène, lui, est un morceau de cet ADN qui correspond à une information génétique particulière qui code pour une protéine unique. C’est donc une très petite portion de chromosome.
+## Markers of polymorphism {-}
 
-Comme nous possédons chaque chromosome en double, chaque gène est également présent en double dans nos cellules. Ces deux copies d’un même gène, are called __alleles__: one is inherited from the mother; the other from the father.
+DNA variation can take different forms: it can for example be a 
+__Single Nucleotide Polymorphism__ (**SNP**), when a mutation occured and changed a
+nucleotide at a given position in the genome. In that case, we would observe
+different nucleotides in a population at a single position. 
 
-### Genetic variation
+There are also __insertions__ and __deletions__ (sometimes referred to as
+**InDels**), of one or multiple nucleotides.
 
-* Markers of polymorphism
+Finally, other markers of genetic variation are
+__Copy Number Variants__ (**CNVs**), when a sequence is repeated a certain number
+of times. They can be and contain more or less repetitive units.
 
-__Short Tandem Repeats__ (__STRs__) a type of genetic polymorphism consisting
+__Short Tandem Repeats__ (**STRs**) a type of genetic polymorphism consisting
 in short sequences from 2 to 7 base pairs that are repeated a certain number of time.
-As the number of repeats varies among individuals, characterizing their length can be useful to identify individuals.
+As the number of repeats varies among individuals, characterizing their 
+length can be useful to identify individuals.
 
 ## Polymorphism and forensics {-}
 
-### DNA profiling 
+### DNA profiling and typing {-}
 
-* Goals: typing and matching
+As DNA varies between individuals, DNA typing became a central element of the forensic
+scientist toolkit. For example, typical questions forensic genetics aims at
+answering include:
 
-* Paternity and maternity testing, suspect
+* What is the probability that a randomly-picked person in a population would 
+match the individual of interest in terms of DNA?
 
-### The role of reference populations
+* Which proportion of the population has the same combination of
+genetic variants as the sample of interest?
 
-* Matching require reference populations
+### The role of population genetics {-}
 
-* Allele frequencies known and reported
+To answer these questions, it is crucial to first get a good characterisation 
+of __genetic variants__ (or **alleles**) frequencies in populations of interest,
+at different __loci__ across the genome. Indeed, these frequencies can vary 
+widely among populations.
+
 
 :::digression
-__Digression - Why are STR still so popular?__
+__Digression - Why STRs and not other markers?__
 
 Comparing to whole-genome sequencing. They have a high __power of discrimination__
 because they have a much higher diversity (their mutation rate is higher than
 other common markers).
 :::
 
-## Data analysis {-}
+## STRAF and population data analysis {-}
 
-* Data analysis in forensic genetics
-
-* STRAF's scope
+In this context, STRAF has been designed to facilitate the analysis of 
+__population data__ in forensic genetics.

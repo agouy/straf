@@ -49,7 +49,6 @@
 <h1>
 <span class="header-section-number">3</span> Population genetics indices<a class="anchor" aria-label="anchor" href="#population-genetics-indices"><i class="fas fa-link"></i></a>
 </h1>
-<p><strong>WORK IN PROGRESS</strong></p>
 <div id="population-genetics-concepts" class="section level2">
 <h2>
 <span class="header-section-number">3.1</span> Population genetics concepts<a class="anchor" aria-label="anchor" href="#population-genetics-concepts"><i class="fas fa-link"></i></a>
@@ -60,10 +59,10 @@
 HWE, it means that a process is influencing the distribution of allele and genotype
 frequencies in the population.</p>
 <ul>
-<li>inbreeding</li>
-<li>population structure</li>
-<li>locus is under selection. This is very unlikely that STR loci as they are
-supposed to evolve neutrally. However, they could be found near loci under selection</li>
+<li><p>inbreeding</p></li>
+<li><p>population structure</p></li>
+<li><p>locus is under selection. This is very unlikely that STR loci as they are
+supposed to evolve neutrally. However, they could be found near loci under selection</p></li>
 </ul>
 <p>In forensics, we need to assume HWE as indices computed (for example, a match probability)
 would be biased if</p>
@@ -72,14 +71,21 @@ would be biased if</p>
 </ul>
 <p>Individuals closer from each other are in general more likely to mate with each other.</p>
 </div>
-<div id="indices" class="section level2">
+<div id="how-to-compute-population-genetics-parameters-in-straf" class="section level2">
 <h2>
-<span class="header-section-number">3.2</span> Indices<a class="anchor" aria-label="anchor" href="#indices"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2</span> How to compute population genetics parameters in STRAF<a class="anchor" aria-label="anchor" href="#how-to-compute-population-genetics-parameters-in-straf"><i class="fas fa-link"></i></a>
+</h2>
+<center>
+<img src="img/capture_popgen_parameters_1.png" class="capture">
+</center>
+</div>
+<div id="population-genetics-parameters" class="section level2">
+<h2>
+<span class="header-section-number">3.3</span> Population genetics parameters<a class="anchor" aria-label="anchor" href="#population-genetics-parameters"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
 <li><p>Heterozygosities</p></li>
-<li><p>F-statistics</p></li>
-<li><p>FST</p></li>
+<li><p>F-statistics: FIS and FST</p></li>
 </ul>
 <div class="note">
 <p><strong>One concept, multiple estimators.</strong></p>
@@ -91,6 +97,20 @@ with underlying assumptions. It explains why some estimators are more or less re
 depending on the case and observed data, and each of them has been developed for
 a different situation.</p>
 </div>
+</div>
+<div id="what-is-linkage-disequilibrium" class="section level2">
+<h2>
+<span class="header-section-number">3.4</span> What is linkage disequilibrium?<a class="anchor" aria-label="anchor" href="#what-is-linkage-disequilibrium"><i class="fas fa-link"></i></a>
+</h2>
+<p><strong>Coming soon.</strong></p>
+</div>
+<div id="how-to-compute-ld-in-straf" class="section level2">
+<h2>
+<span class="header-section-number">3.5</span> How to compute LD in STRAF<a class="anchor" aria-label="anchor" href="#how-to-compute-ld-in-straf"><i class="fas fa-link"></i></a>
+</h2>
+<center>
+<img src="img/capture_popgen_parameters_2.png" class="capture">
+</center>
 
 </div>
 </div>
@@ -102,7 +122,10 @@ a different situation.</p>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#population-genetics-indices"><span class="header-section-number">3</span> Population genetics indices</a></li>
 <li><a class="nav-link" href="#population-genetics-concepts"><span class="header-section-number">3.1</span> Population genetics concepts</a></li>
-<li><a class="nav-link" href="#indices"><span class="header-section-number">3.2</span> Indices</a></li>
+<li><a class="nav-link" href="#how-to-compute-population-genetics-parameters-in-straf"><span class="header-section-number">3.2</span> How to compute population genetics parameters in STRAF</a></li>
+<li><a class="nav-link" href="#population-genetics-parameters"><span class="header-section-number">3.3</span> Population genetics parameters</a></li>
+<li><a class="nav-link" href="#what-is-linkage-disequilibrium"><span class="header-section-number">3.4</span> What is linkage disequilibrium?</a></li>
+<li><a class="nav-link" href="#how-to-compute-ld-in-straf"><span class="header-section-number">3.5</span> How to compute LD in STRAF</a></li>
 </ul>
 
       <div class="book-extra">
@@ -119,7 +142,7 @@ a different situation.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-09-25.</p>
+    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-09-26.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

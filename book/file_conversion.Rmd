@@ -9,6 +9,10 @@ all available in the __File conversion__ tab of the application.
 
 ## How to convert a file in STRAF
 
+Once you have imported your file, it is straightforward to conevrt it to another 
+format. You can go to the __File conversion__ tab and click on one of the following
+buttons to download your genotypes in another format.
+
 <center><img src="img/capture_file_conversion_1.png" class="capture"/></center>
 
 

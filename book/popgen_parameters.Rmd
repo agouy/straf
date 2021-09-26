@@ -1,7 +1,5 @@
 # Population genetics indices
 
-__WORK IN PROGRESS__
-
 ## Population genetics concepts
 
 __Hardy-Weinberg equilibrium__
@@ -13,7 +11,9 @@ HWE, it means that a process is influencing the distribution of allele and genot
 frequencies in the population.
 
 * inbreeding
+
 * population structure
+
 * locus is under selection. This is very unlikely that STR loci as they are 
 supposed to evolve neutrally. However, they could be found near loci under selection
 
@@ -24,13 +24,15 @@ would be biased if
 
 Individuals closer from each other are in general more likely to mate with each other.
 
-## Indices
+## How to compute population genetics parameters in STRAF
+
+<center><img src="img/capture_popgen_parameters_1.png" class="capture"/></center>
+
+## Population genetics parameters
 
 * Heterozygosities
 
-* F-statistics
-
-* FST
+* F-statistics: FIS and FST
 
 
 :::note
@@ -44,3 +46,11 @@ with underlying assumptions. It explains why some estimators are more or less re
 depending on the case and observed data, and each of them has been developed for 
 a different situation.
 :::
+
+## What is linkage disequilibrium?
+
+__Coming soon.__
+
+## How to compute LD in STRAF
+
+<center><img src="img/capture_popgen_parameters_2.png" class="capture"/></center>

@@ -49,46 +49,78 @@
 <h1>
 <span class="header-section-number">4</span> Multivariate statistics<a class="anchor" aria-label="anchor" href="#multivariate-statistics"><i class="fas fa-link"></i></a>
 </h1>
-<p><strong>WORK IN PROGRESS</strong></p>
+<p>In this chapter, we will describe the two multivariate statistics methods implemented
+in STRAF, <strong>Principal Component Analysis</strong> (<strong>PCA</strong>) and <strong>Multidimensional Scaling</strong> (<strong>MDS</strong>).</p>
 <div id="principal-component-analysis-pca" class="section level2">
 <h2>
 <span class="header-section-number">4.1</span> Principal Component Analysis (PCA)<a class="anchor" aria-label="anchor" href="#principal-component-analysis-pca"><i class="fas fa-link"></i></a>
 </h2>
-<p>PCA is a method of dimentionality reduction. What is does it that it captures most
-of the variation in our data and tries to project it onto a small number of new
-variables called components.</p>
+<p>PCA is a method of <strong>dimensionality reduction</strong>. What is does it that it tries to
+<strong>capture most of the variation</strong> present in the data and <strong>project</strong> it onto a
+small number of new axes called <strong>principal components</strong> (PCs).</p>
 <p>This is a useful method to capture variation from a large number of variables and
-allows to discover hidden pattern by increasing interpretability.</p>
-<p>In our case, if we consider that each allele at each locus is a variable, and that
+allows to discover hidden patterns by increasing interpretability.</p>
+<p>In our case, if we consider that <strong>each allele at each locus</strong> is a variable, and that
 our individual observations are the presence / absence of each allele for each sample,
 we end up with a highly dimensional dataset (we have as many variables as we have
 alleles!). It gets even worse if you analyse genome sequences, where you can have millions
-of variables in your dataset! This is definitely not an interpretable dataset.</p>
+of variables in your dataset. This is definitely not an interpretable dataset if you
+are not able to easily extract relevant information.</p>
 <p>PCA allows to bring most of the variation existing between our samples onto a few
-axes.</p>
-<ul>
-<li><p>PCA plot on Pemberton data.</p></li>
-<li><p>PCA plot on Y haplogroups.</p></li>
-</ul>
+axes capturing most of the variation (PCs).</p>
+<p>In STRAF, you can perform a PCA by going into the <strong>PCA - MDS</strong> tab and checking
+the following <em>Run and plot a PCA</em> checkbox.</p>
+<center>
+<img src="img/capture_pca_1.png" class="capture">
+</center>
+<p>It will trigger the PCA computation and return a graph. You are also able to
+download to coordinates on different PCs (also called eigenvectors).</p>
 <div class="interpretation">
 <p><strong>Interpreting PCA results</strong></p>
-<ul>
-<li>Beware of the influence of sample size on the results.</li>
-</ul>
+<p>PCA has become a popular tool in population genetics, as the relationships between
+individuals on the PCA projection tends to reflect their genetic <strong>relatedness</strong>. The
+closer individuals are on the PCA projection, the more genetically related they tend to be.</p>
+<p>It can also be used as a <strong>quality control</strong> tool. For example, if a sample is very far
+from all the others, including the ones that are part of the same population,
+it is possible that there is an issue with the data. One would need to inspect
+the raw data and check if any strange pattern can be found.</p>
+<p>It is important to be aware of the influence of non demographic processes on
+the PCA projection. For example, <strong>imbalanced sample sizes</strong> between populations
+can drive some patterns. When populations are sampled unevenly, the projection will
+be <strong>distorted</strong> and distances observed on the projection can be driven by these
+differences and not by their evolutionary history.</p>
+<p>Hence, as multiple processes influence the results, PCA should remain an
+<strong>exploratory approach</strong> and further analyses should be conducted before drawing
+any major conclusions on the relationships between populations and individuals.</p>
 </div>
 </div>
 <div id="multidimensional-scaling-mds" class="section level2">
 <h2>
 <span class="header-section-number">4.2</span> Multidimensional Scaling (MDS)<a class="anchor" aria-label="anchor" href="#multidimensional-scaling-mds"><i class="fas fa-link"></i></a>
 </h2>
-<p>MDS is conceptually similar to PCA. One of the main differences is that it takes
-different types of data as input. Pairwise distances between data points. In forensics practice, it is often used to compare populations and not individuals.
-It could be run on a pairwise FSTs or other genetic distances.</p>
-<ul>
-<li>MDS plot on Pemberton data.</li>
-</ul>
+<p>An <strong>MDS</strong> is conceptually similar to a PCA. One of the main differences is
+that it takes as input data in a different format. As PCA uses raw genotypes and
+can accommodate data at the individual level, <strong>pairwise distances</strong> between data
+points are used for an MDS.</p>
+<p>In forensics practice, it is typically used to compare <strong>populations</strong> and not
+<strong>individuals</strong>, even though it would be theoretically possible.</p>
+<p>As <strong>pairwise distances between populations</strong> are used, and MDS can be based on
+any genetic distance: one could for example compute pairwise <strong>FSTs</strong>,
+<strong>Nei’s genetic distance</strong>, or any other metric.</p>
+<p>Based on these distances, the MDS will <strong>project</strong> the populations onto a
+<strong>lower-dimensional space</strong>. This projection facilitates the interpretation of
+relationships between populations.</p>
+<center>
+<img src="img/capture_mds_1.png" class="capture">
+</center>
 <div class="interpretation">
 <p><strong>Interpreting MDS results</strong></p>
+<p>Just like with a PCA, populations the <strong>closer</strong> populations are on the MDS projection,
+the more <strong>genetically related</strong> the tend to be, based on the markers that have been
+used to compute their pairwise genetic distances.</p>
+<p>Again, like for the PCA, the MDS should remain an
+<strong>exploratory approach</strong> and further analyses should be conducted before drawing
+any major conclusions on the relationships between populations and individuals.</p>
 </div>
 
 </div>
@@ -118,7 +150,7 @@ It could be run on a pairwise FSTs or other genetic distances.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-09-25.</p>
+    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-09-26.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
