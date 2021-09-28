@@ -9,16 +9,17 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     libssh2-1-dev \
     unixodbc-dev \
     libcurl4-openssl-dev \
-    libssl-dev
+    libssl-dev \
+    libgdal-dev
 
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get clean
 
-COPY /app.R ./app.R
-
 RUN Rscript -e "install.packages(c('remotes'))"
 RUN Rscript -e "remotes::install_github('agouy/straf')"
+
+COPY /app.R ./app.R
 
 # expose port
 EXPOSE 3838
