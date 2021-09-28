@@ -233,7 +233,11 @@ The book is organised as follow:
   insights into population structure, with a particular focus on Principal Component
   Analysis (PCA) and Multidimensional Scaling (MDS), two widely used approaches in genetics.
 \item
-  In \textbf{Chapter 5}, we gather recommendations around potential next analysis steps
+  In \textbf{Chapter 5}, we will explain how to compare samples of interest to
+  \textbf{reference populations} by loading reference allele frequencies into the
+  software and performing a Multidimensional Scaling analysis.
+\item
+  In \textbf{Chapter 6}, we gather recommendations around potential next analysis steps
   by presenting STRAF's \textbf{file conversion} capabilities and useful methods implemented in
   \textbf{other software}.
 \end{itemize}
@@ -255,8 +259,8 @@ used by the body to function and development. This information is encoded by a
 chain of \textbf{nucleotides} of four types that can be referred to using the letters
 A (Adenine), T (Thymine), C (Cytosine) and G (Guanine).
 
-Developments in biotechnologies enabled the ability to characterise the DNA of
-individuals. These technologies also led to the discovery that this DNA varies
+Developments in biotechnologies enabled the characterisation of the DNA of
+individuals. These techniques also led to the discovery that this DNA varies
 between individuals. This \textbf{genetic variation}, also called \textbf{polymorphism},
 can be used to characterise individuals and populations based on their DNA.
 
@@ -265,21 +269,21 @@ can be used to characterise individuals and populations based on their DNA.
 \addcontentsline{toc}{section}{Markers of polymorphism}
 
 DNA variation can take different forms: it can for example be a
-\textbf{Single Nucleotide Polymorphism} (\textbf{SNP}), when a mutation occured and changed a
+\textbf{Single Nucleotide Polymorphism} (\textbf{SNP}), when a mutation occurs and changes a
 nucleotide at a given position in the genome. In that case, we would observe
 different nucleotides in a population at a single position.
 
-There are also \textbf{insertions} and \textbf{deletions} (sometimes referred to as
+There can also be \textbf{insertions} and \textbf{deletions} (sometimes referred to as
 \textbf{InDels}), of one or multiple nucleotides.
 
-Finally, other markers of genetic variation are
-\textbf{Copy Number Variants} (\textbf{CNVs}), when a sequence is repeated a certain number
-of times. They can be and contain more or less repetitive units.
-
-\textbf{Short Tandem Repeats} (\textbf{STRs}) a type of genetic polymorphism consisting
-in short sequences from 2 to 7 base pairs that are repeated a certain number of time.
-As the number of repeats varies among individuals, characterizing their
-length can be useful to identify individuals.
+Finally, other markers of genetic variation are \textbf{Copy Number Variants} (\textbf{CNVs}),
+when a sequence is repeated a certain number of times.
+They can contain more or less repetitive units. These units can contain more or
+less nucleotides. \textbf{Short Tandem Repeats} (\textbf{STRs}) a type of genetic
+polymorphism consisting in short sequences from 2 to 7 base pairs that are
+repeated. The \textbf{number of repeats varies} among individuals, therefore characterizing
+their length can be useful to identify individuals. STRs are still nowadays one of
+the most commons markers used in forensic genetics.
 
 \hypertarget{polymorphism-and-forensics}{%
 \section*{Polymorphism and forensics}\label{polymorphism-and-forensics}}
@@ -311,46 +315,44 @@ of \textbf{genetic variants} (or \textbf{alleles}) frequencies in populations of
 at different \textbf{loci} across the genome. Indeed, these frequencies can vary
 widely among populations.
 
-\textbf{Digression - Why STRs and not other markers?}
-
-Comparing to whole-genome sequencing. They have a high \textbf{power of discrimination}
-because they have a much higher diversity (their mutation rate is higher than
-other common markers).
-
-\hypertarget{straf-and-population-data-analysis}{%
-\section*{STRAF and population data analysis}\label{straf-and-population-data-analysis}}
-\addcontentsline{toc}{section}{STRAF and population data analysis}
-
 In this context, STRAF has been designed to facilitate the analysis of
 \textbf{population data} in forensic genetics.
+
+\textbf{Digression - Why STRs and not other markers?}
+
+Nowadays, it is easier and cheaper to generate whole-genome sequences. One could
+wonder why STRs are still so popular in forensic practice, and have not been replaced
+by SNPs that are easily generated from Next-Generation Sequencing (NGS) data.
+
+This is mainly due to the fact that STRs have a high mutation rate, therefore
+are more diverse in human populations. This explains their high \textbf{power of discrimination}.
+
+Furthermore, they can also be used in deciphering mixture components, a very common
+case in forensics.
+
+Finally, they can be combined in multiplex assays, which is convenient when low
+amounts of biological material can be recovered.
+
+For all these reasons, STRs remain the dominant marker used in forensic genetics.
 
 \hypertarget{importing-data}{%
 \chapter{Importing data}\label{importing-data}}
 
-Work in progress.
+In this chapter, we will explain how to prepare the input file containing
+genotypic data, and how to upload it into STRAF.
 
-\hypertarget{str-data}{%
-\section{STR data}\label{str-data}}
+\hypertarget{str-data-and-straf-input-format}{%
+\section{STR data and STRAF input format}\label{str-data-and-straf-input-format}}
 
-\begin{itemize}
-\tightlist
-\item
-  Observed values: genotypes for each individual, at each locus.
-\item
-  Potentially two values observed per individual and per locus, if diploid markers.
-\item
-  Value = can be anything but tipically correspond, for STR markers, to the length.
-\item
-  Point alleles
-\end{itemize}
+STR data consists in various \textbf{observations}: the \textbf{genotypes} (number of STR repeats)
+of \textbf{each individual}, at \textbf{each locus}.
 
-\hypertarget{input-data-format}{%
-\section{Input data format}\label{input-data-format}}
+In genetics, we potentially observe two values per individual and per locus, if the
+markers are diploid, that is two copies are present per sample.
 
-STRAF's input file is a text file containing the genotypes of each sample:
+\textbf{STRAF's input file} is a \textbf{text} file containing the genotypes of each sample:
 
 \begin{itemize}
-\tightlist
 \item
   The first column, named \textbf{ind}, needs to contain the sample ID
 \item
@@ -396,13 +398,29 @@ It only takes a few steps to generate an input file in a format that is suitable
 for use in STRAF. From Excel, for example, we can start from a spreadsheet looking
 like this:
 
+\includegraphics[width=0.8\linewidth]{img/capture_excel_1}
+
 Then, one simply needs to save this table as a tab-delimited text file. This can be
 achieved by clicking on \texttt{Save\ As} \textgreater{} \texttt{Text\ (Tab-delimited)\ (*.txt)}
+
+\includegraphics[width=0.8\linewidth]{img/capture_excel_2}
 
 \hypertarget{uploading-the-data-to-straf}{%
 \section{Uploading the data to STRAF}\label{uploading-the-data-to-straf}}
 
-Coming soon.
+Once the input file has been prepared, it is possible to upload it into STRAF. Alternatively,
+you can \textbf{download an example file} by clicking on the link in the sidebar.
+
+Then, you need to select the \textbf{ploidy} of your data (for example, \emph{Diploid} for
+autosomal markers, and \emph{Haploid} for Y-chromosome markers). After that, you can
+upload the file by clicking on \emph{Browse} and selecting the file on your computer.
+
+Once the file is uploaded, a preview will be displayed on the right and all the
+analyses will be available. If not, it is likely that an error has occured. If the error
+message is not explicit, you can refer to the \textbf{Input file checklist} below that
+gathers common issues with the input file.
+
+\includegraphics[width=0.8\linewidth]{img/capture_import_1}
 
 \hypertarget{common-issues}{%
 \section{Common issues}\label{common-issues}}
@@ -437,17 +455,47 @@ common issues with the input file.
 \hypertarget{having-a-first-look-at-the-data}{%
 \section{Having a first look at the data}\label{having-a-first-look-at-the-data}}
 
+Below the dataset preview, you will be able to generate a plot of allele frequencies
+at each locus.
+
+\includegraphics[width=0.8\linewidth]{img/capture_import_2}
+
+You can also generate an allele frequency table, which is standard practice when
+reporting new population data in a forensics journal. You can either download
+the allele frequencies in a text format (TSV), or as an Excel (XLSX) file. Note
+that you have the ability to select a specific population using the drop-down menu
+above the table.
+
+\includegraphics[width=0.8\linewidth]{img/capture_import_3}
+
 \hypertarget{forensic-parameters}{%
 \chapter{Forensic parameters}\label{forensic-parameters}}
 
-In this chapter, we'll introduce a few equations. Do not be afraid! The goal of
+In this chapter, we'll show how to compute forensic parameters using STRAF, and
+provide details on how they are computed and should be interpreted.
+We'll introduce a few equations, but please do not be afraid! The goal of
 this chapter is to translate each of them into plain English.
 
 \hypertarget{how-to-compute-forensic-parameters-in-straf}{%
 \section{How to compute forensic parameters in STRAF}\label{how-to-compute-forensic-parameters-in-straf}}
 
+Once your data has bee uploaded, you can go to the \textbf{Forensic parameters} tab
+and check the \emph{Compute forensics statistics} box. The computation will be performed
+and a table containing the values per locus will be displayed. The computation is done
+per population and overall, a drop-down menu is present to select the population.
+
+\includegraphics[width=0.8\linewidth]{img/capture_forensics_parameters_1}
+
+Below the forensic parameters table, You can select the metric you would like
+to represent using the drop-down menu.
+
+\includegraphics[width=0.8\linewidth]{img/capture_forensics_parameters_2}
+
+\hypertarget{details-on-the-forensic-parameters}{%
+\section{Details on the forensic parameters}\label{details-on-the-forensic-parameters}}
+
 \hypertarget{random-match-probability-pm}{%
-\section{Random match probability (PM)}\label{random-match-probability-pm}}
+\subsection{Random match probability (PM)}\label{random-match-probability-pm}}
 
 The \textbf{Random match probability}, or probability of matching (PM), is defined as
 the probability of observing a random match between two individuals.
@@ -465,13 +513,15 @@ Computing \(PM\) means calculating, for a given locus, the frequency of each
 genotypes. Then we take the square of each frequency, i.e.~we multiply it by itself.
 Finally, we sum the values of each genotype.
 
-The intuition behind it is that if we have a random match in a population by looking
-at a singly locu, it means that our two samples have the same genotype at that locus.
-In terms of probability, this will happen as many times as we .
-The probability of sampling a specific genotype in the population is equal to its frequency.
+The intuition behind it is that if we observe a random match in a population when looking
+at a single locus, it means that our two samples have the same genotype at that locus.
+In terms of probabilities, sampling a specific genotype in the population has a probability
+equal to its frequency. And sampling the same genotype a second time (i.e., observing a match),
+is the probability of sampling this genotype multiplied by itself.
 
-Say the genotype ``12-14'' has a frequency of 5\% in the population, the probability of
+As an example, say the genotype ``12-14'' has a frequency of 5\% in the population, the probability of
 having a random match between two individuals having the same genotype is 0.05 x 0.05.
+
 To get an overall probability of matching, we sum this over all possible genotypes
 in our population.
 
@@ -495,8 +545,8 @@ interested in the probability of ``not matching'', i.e.~the probability of discr
 \hypertarget{gene-diversity}{%
 \section{Gene diversity}\label{gene-diversity}}
 
-Genetic diversity (\(GD\)), or expected heterozygosity (\(H_{\mathrm{exp}}\)), is
-computed using the following estimator:
+\textbf{Gene diversity} (\(GD\), sometimes simply \(D\)), also called \textbf{expected heterozygosity}
+(\(H_{\mathrm{exp}}\)), is computed using the following estimator:
 
 \textbf{Formula}
 
@@ -509,14 +559,25 @@ frequency of the \(i^{th}\) allele in the population.
 
 \textbf{Interpretation}
 
-Coming soon.
+It is the probability that an individual will be heterozygous at a given locus.
+
+As an example, a value of \(GD\) of 0.6 mean that 60\% chance of being
+heterozygote at this locus.
+
+It depends directly on the genetic diversity at this locus, which itself depends on
+allele frequencies in your population.
+
+Say we have two alleles in a given population, genetic diversity will be higher
+in a population aith allele frequencies 0.5 and 0.5 than in a population where
+frequencies are 0.1 and 0.9 (as less heterozygotes can be made with rare
+alleles). This rationale can be extended to any number of alleles.
 
 \hypertarget{polymorphism-information-content-pic}{%
 \section{Polymorphism Information Content (PIC)}\label{polymorphism-information-content-pic}}
 
 \textbf{Formula}
 
-Polymorphism Information Content (PIC) is computed as follow:
+The \textbf{Polymorphism Information Content} (PIC) is computed as follow:
 
 \[
 PIC = 1 - \sum_{i=1}^{n} p_i^2 - \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} 2p_i^2p_j^2,
@@ -541,17 +602,21 @@ The PIC can be interpreted as:
 
 \textbf{Formula}
 
-The power of exclusion (\(PE\)) is defined as:
+The \textbf{power of exclusion} (\(PE\)) is defined as:
 
 \[
 PE = h^2\left(1 - 2hH^2\right),
 \]
+
 where \(h\) is the proportion of heterozygous individuals and \(H\) the
 proportion of homozygous individuals in the population sample.
 
 \textbf{Interpretation}
 
-Coming soon.
+The power of exclusion depends on the observed proportions of heterozygous and
+homozygous individuals in a population. These proportions, multiplied as in the
+equation above, give the \textbf{probability that two persons do not have the same genotype
+in the population}.
 
 \hypertarget{typical-paternity-index-tpi}{%
 \section{Typical Paternity Index (TPI)}\label{typical-paternity-index-tpi}}
@@ -569,73 +634,128 @@ TPI = \frac{1}{2H}
 
 \textbf{Interpretation}
 
-Coming soon.
+Unlike the other parameters, the typical paternity index values are not in the 0-1
+range and cannot be interpreted as a probability. It is a ratio of 1 divided by
+twice the frequency of homozygotes in the population. This is an \textbf{odds ratio},
+measuring how many times more likely that a possible father is the actual
+father than a randomly selected man in the population, on average (\emph{typical} case).
 
 \hypertarget{population-genetics-indices}{%
 \chapter{Population genetics indices}\label{population-genetics-indices}}
 
-\hypertarget{population-genetics-concepts}{%
-\section{Population genetics concepts}\label{population-genetics-concepts}}
+In this chapter, we will see how to compute some population genetics indices in STRAF.
 
-\textbf{Hardy-Weinberg equilibrium}
+\hypertarget{computing-population-genetics-parameters-in-straf}{%
+\section{Computing population genetics parameters in STRAF}\label{computing-population-genetics-parameters-in-straf}}
 
-A population is considered at Hardy-Weinberg equilibrium when
+Once you have uploaded your genotypes in STRAF, you can go to the \textbf{Population genetics}
+tab to compute relevant population genetics indices. It is also possible to perform
+a Hardy-Weinberg equilibrium test by checking the relevant box.
 
-Why is it important to check? If a locus presents a significant deviation from
-HWE, it means that a process is influencing the distribution of allele and genotype
-frequencies in the population.
+\includegraphics[width=0.8\linewidth]{img/capture_popgen_parameters_1}
+
+\hypertarget{details-on-population-genetics-indices}{%
+\section{Details on population genetics indices}\label{details-on-population-genetics-indices}}
+
+\hypertarget{hardy-weinberg-equilibrium}{%
+\subsection{Hardy-Weinberg equilibrium}\label{hardy-weinberg-equilibrium}}
+
+A population is considered at Hardy-Weinberg equilibrium (HWE) when the observed
+genotypic frequencies are in agreement with the expectations in an ``ideal'' population,
+which assumes for example random mating in the population.
+This is important as the assumptions of the Hardy-Weinberg model
+allow to derive quantities such as forensic parameters and population genetic indices.
+Therefore, if some assumptions of the model are violated, conclusions drawn from
+metrics computed assuming HWE could be challenged.
+
+If a locus presents a significant deviation from HWE, it means that a process
+is influencing the distribution of allele and genotype frequencies in the population.
+It could for example be due to \textbf{inbreeding}, \textbf{hidden population structure},
+or \textbf{natural selection}.
+
+STRAF reports the \textbf{p-value} of a test for HWE. A low p-value indicates a significant
+deviation from HWE.
+
+\hypertarget{heterozygosities}{%
+\subsection{Heterozygosities}\label{heterozygosities}}
+
+In STRAF, several measures of \textbf{heterozygosity} are computed. They capture
+different aspects of genetic diversity.
 
 \begin{itemize}
 \item
-  inbreeding
+  The \textbf{expected heterozygosity} (or \textbf{Gene diversity}, \(H_{exp}\) or \(GD\)) has been defined in the previous chapter.
 \item
-  population structure
+  The \textbf{observed heterozygosity} (\(H_{obs}\)) is the proportion of heterozygous genotypes at this locus in the population.
 \item
-  locus is under selection. This is very unlikely that STR loci as they are
-  supposed to evolve neutrally. However, they could be found near loci under selection
+  The \textbf{total heterozygosity} (\(H_T\)) is the heterozygosity expected if all the
+  individuals in all the subpopulations were behaving as a population at HWE.
 \end{itemize}
 
-In forensics, we need to assume HWE as indices computed (for example, a match probability)
-would be biased if
+\hypertarget{f-statistics}{%
+\subsection{F-statistics}\label{f-statistics}}
 
-\begin{itemize}
-\tightlist
-\item
-  Population structure
-\end{itemize}
-
-Individuals closer from each other are in general more likely to mate with each other.
-
-\hypertarget{how-to-compute-population-genetics-parameters-in-straf}{%
-\section{How to compute population genetics parameters in STRAF}\label{how-to-compute-population-genetics-parameters-in-straf}}
-
-\hypertarget{population-genetics-parameters}{%
-\section{Population genetics parameters}\label{population-genetics-parameters}}
+STRAF reports two \textbf{F-statistics}.
 
 \begin{itemize}
 \item
-  Heterozygosities
+  The \(F_{\textrm{IS}}\) is a measure of genetic relatedness within a population.
+  It is sometimes called the \textbf{inbreeding coefficient}. High values indicate
+  a high degree of inbreeding.
 \item
-  F-statistics: FIS and FST
+  The \(F_{\textrm{ST}}\) is a measure of genetic differentiation between populations.
+  It takes values between 0 (no differentiation) and 1 (full differentiation).
 \end{itemize}
 
+\begin{interpretation}
 \textbf{One concept, multiple estimators.}
 
-Several \textbf{estimators} of Fst exist (for example, Weir and Cockerham's, Nei's,
-Hudson's FST). It's like if each population geneticist decided to develop their
-own estimator! Why is that? In statistics, what we call an \textbf{estimator}
-is. It is important to keep in mind that these estimators rely on a specific \textbf{model},
-with underlying assumptions. It explains why some estimators are more or less reliable
-depending on the case and observed data, and each of them has been developed for
-a different situation.
+Several \textbf{estimators} of \(F_{\textrm{ST}}\) exist (for example, Weir and Cockerham's, Nei's,
+Hudson's \(F_{\textrm{ST}}\)). It's like if each population geneticist had decided
+to develop their own estimator!
+
+Why is that? In statistics, what we call an \textbf{estimator} a metric aiming at estimating
+a given quantity based on \textbf{observed data}. It is important to keep in mind that
+these estimators rely on a specific \textbf{model}, with underlying assumptions.
+It explains why some estimators are more or less reliable depending on the case
+and observed data, and each of them has been developed for a different situation.
+In the case of \(F_{\textrm{ST}}\) for example, different estimators assume
+different demographic models.
+
+\end{interpretation}
+
+\hypertarget{linkage-disequilibrium-ld}{%
+\section{Linkage disequilibrium (LD)}\label{linkage-disequilibrium-ld}}
 
 \hypertarget{what-is-linkage-disequilibrium}{%
-\section{What is linkage disequilibrium?}\label{what-is-linkage-disequilibrium}}
+\subsection{What is linkage disequilibrium?}\label{what-is-linkage-disequilibrium}}
 
-\textbf{Coming soon.}
+Linkage disequilibrium is an important quantity to be measured in genetics.
+It is defined as the \textbf{nonindependence of genotypes at distinct loci}.
+It means that it is more likely to observe the co-occurence of some genotypes
+at different loci.
+
+Most of the times, this is explained by the physical proximity between loci. If
+two loci are next to each other on the genome, recombination events between them
+will be rare and genotypes won't be suffled. Genotypes at these loci will be correlated
+and linkage disequilibrium will be high. On the other hand, two loci found on two different
+chromosomes are not expected to show any LD signals as genotypes will be systematically
+shuffled at each generation.
 
 \hypertarget{how-to-compute-ld-in-straf}{%
-\section{How to compute LD in STRAF}\label{how-to-compute-ld-in-straf}}
+\subsection{How to compute LD in STRAF?}\label{how-to-compute-ld-in-straf}}
+
+It is possible to test for the presence of LD in the dataset you uploaded using
+STRAF. After checking the \emph{Display pairwise LD p-values matrix}, LD tests between
+each pair of loci will be performed and p-values will be reported.
+
+\includegraphics[width=0.8\linewidth]{img/capture_popgen_parameters_2}
+
+\textbf{Important note}: Other population genetics software,
+\textbf{Genepop} and \textbf{Arlequin}, implement more reliable
+versions of the LD test that should be preferred. They are currently not implemented
+in STRAF because of performance limitations. If you need to perform such a test, the
+\textbf{File conversion} utilities (cf.~Chapter 6) should facilitate the workflow.
 
 \hypertarget{multivariate-statistics}{%
 \chapter{Multivariate statistics}\label{multivariate-statistics}}
@@ -665,6 +785,8 @@ axes capturing most of the variation (PCs).
 
 In STRAF, you can perform a PCA by going into the \textbf{PCA - MDS} tab and checking
 the following \emph{Run and plot a PCA} checkbox.
+
+\includegraphics[width=0.8\linewidth]{img/capture_pca_1}
 
 It will trigger the PCA computation and return a graph. You are also able to
 download to coordinates on different PCs (also called eigenvectors).
@@ -712,6 +834,8 @@ Based on these distances, the MDS will \textbf{project} the populations onto a
 \textbf{lower-dimensional space}. This projection facilitates the interpretation of
 relationships between populations.
 
+\includegraphics[width=0.8\linewidth]{img/capture_mds_1}
+
 \begin{interpretation}
 \textbf{Interpreting MDS results}
 
@@ -724,6 +848,78 @@ Again, like for the PCA, the MDS should remain an
 any major conclusions on the relationships between populations and individuals.
 
 \end{interpretation}
+
+\hypertarget{reference-populations-analysis}{%
+\chapter{Reference populations analysis}\label{reference-populations-analysis}}
+
+In this chapter, we will see how to compare the uploaded populations to
+reference populations (based on allele frequencies).
+
+\hypertarget{mds-on-reference-frequencies}{%
+\section{MDS on reference frequencies}\label{mds-on-reference-frequencies}}
+
+STRAF implements an MDS computation based on allele frequency data. By default,
+allele frequencies from the STRiDER database are used (loci with less than 10
+populations have been excluded). If you are not familiar with the MDS method and
+interpretation, you can find details in \textbf{Chapter 4}.
+
+You can see the output of the MDS in the \textbf{Reference population} tab. It includes the
+MDS projection in two dimensions for 19 European populations, as well as the population
+tree.
+
+\includegraphics[width=0.8\linewidth]{img/capture_ref_pop_1}
+
+The drop-down menu below the plots allows one to select or unselect populations
+to be used in the MDS analysis.
+
+\includegraphics[width=0.8\linewidth]{img/capture_ref_pop_2}
+
+Provided that some loci are in common between the reference allele frequencies and
+the genotypes you uploaded, it is possible to add your own populations to the existing MDS
+by checking the \emph{Include uploaded data to the MDS} box.
+
+\includegraphics[width=0.8\linewidth]{img/capture_ref_pop_3}
+
+You will then see your populations added to the MDS plots.
+
+\hypertarget{preparing-a-custom-allele-frequency-database}{%
+\section{Preparing a custom allele frequency database}\label{preparing-a-custom-allele-frequency-database}}
+
+If you want to use other reference databases than STRIDER, for example if you're working with
+non-European samples or with different loci, it is possible to upload a custom
+allele frequency database in STRAF.
+
+The data must be formatted as follows:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+D1S1656 & & &\tabularnewline
+\midrule
+\endhead
+Allele & Switzerland & Germany & France\tabularnewline
+9 & 0.12 & 0.09 & 0\tabularnewline
+10 & 0.40 & 0.35 & 0.28\tabularnewline
+10.2 & 0.31 & 0.41 & 0.5\tabularnewline
+11 & 0.17 & 0.15 & 0.22\tabularnewline
+\textbf{D2S1338} & & &\tabularnewline
+Allele & Switzerland & Germany & France\tabularnewline
+19 & 0.40 & 0.38 & 0.42\tabularnewline
+20 & 0.42 & 0.26 & 0.28\tabularnewline
+21 & 0.31 & 0.36 & 0.3\tabularnewline
+\bottomrule
+\end{longtable}
+
+Starting from an Excel file for example, we can start with a spreadsheet that looks
+like this:
+
+\includegraphics[width=0.8\linewidth]{img/capture_ref_excel_1}
+
+Then, one simply needs to save this table as a CSV (Comma-Separated Values) file. This can be
+achieved by clicking on \texttt{Save\ As} \textgreater{} \texttt{CSV\ (Comma-delimited)\ (*.csv)}
+
+\includegraphics[width=0.8\linewidth]{img/capture_ref_excel_2}
+
+Then, you can upload your data and use it as described for the STRIDER database.
 
 \hypertarget{file-conversion}{%
 \chapter{File conversion}\label{file-conversion}}
@@ -742,13 +938,20 @@ Once you have imported your file, it is straightforward to conevrt it to another
 format. You can go to the \textbf{File conversion} tab and click on one of the following
 buttons to download your genotypes in another format.
 
+\includegraphics[width=0.8\linewidth]{img/capture_file_conversion_1}
+
 \hypertarget{genepop-and-arlequin-formats}{%
 \section{Genepop and Arlequin formats}\label{genepop-and-arlequin-formats}}
 
 \textbf{Genepop} and \textbf{Arlequin} softwares implement several population genetics methods,
 including ones that are part of standard forensics practice:
-* linkage disequilibrium computation
-* Hardy-Weinberg tests
+
+\begin{itemize}
+\item
+  linkage disequilibrium computation
+\item
+  Hardy-Weinberg tests
+\end{itemize}
 
 STRAF currently implements these computations, however the ones implemented in
 Genepop are overall more reliable as they can rely on more permutations. They

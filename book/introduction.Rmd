@@ -1,5 +1,11 @@
 # Introduction {-}
 
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo=FALSE, out.width="100%"
+)
+```
+
 In this chapter, we will briefly introduce some essential concepts in genetics.
 
 ## DNA and genetic variation {-}

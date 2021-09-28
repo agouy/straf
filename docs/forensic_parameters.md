@@ -1,5 +1,7 @@
 # Forensic parameters
 
+
+
 In this chapter, we'll show how to compute forensic parameters using STRAF, and
 provide details on how they are computed and should be interpreted.
 We'll introduce a few equations, but please do not be afraid! The goal of
@@ -12,12 +14,17 @@ and check the _Compute forensics statistics_ box. The computation will be perfor
 and a table containing the values per locus will be displayed. The computation is done
 per population and overall, a drop-down menu is present to select the population.
 
-<center><img src="img/capture_forensics_parameters_1.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_forensics_parameters_1.png" width="100%" />
+:::
+
 
 Below the forensic parameters table, You can select the metric you would like
 to represent using the drop-down menu.
 
-<center><img src="img/capture_forensics_parameters_2.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_forensics_parameters_2.png" width="100%" />
+:::
 
 ## Details on the forensic parameters
 

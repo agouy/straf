@@ -1,5 +1,7 @@
 # Population genetics indices
 
+
+
 In this chapter, we will see how to compute some population genetics indices in STRAF.
 
 ## Computing population genetics parameters in STRAF
@@ -8,7 +10,9 @@ Once you have uploaded your genotypes in STRAF, you can go to the __Population g
 tab to compute relevant population genetics indices. It is also possible to perform
 a Hardy-Weinberg equilibrium test by checking the relevant box.
 
-<center><img src="img/capture_popgen_parameters_1.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_popgen_parameters_1.png" width="100%" />
+:::
 
 ## Details on population genetics indices
 
@@ -54,7 +58,7 @@ a high degree of inbreeding.
 It takes values between 0 (no differentiation) and 1 (full differentiation).
 
 
-:::note
+::: {.interpretation data-latex=""}
 __One concept, multiple estimators.__
 
 Several __estimators__ of $F_{\textrm{ST}}$ exist (for example, Weir and Cockerham's, Nei's, 
@@ -93,7 +97,9 @@ It is possible to test for the presence of LD in the dataset you uploaded using
 STRAF. After checking the _Display pairwise LD p-values matrix_, LD tests between
 each pair of loci will be performed and p-values will be reported.
 
-<center><img src="img/capture_popgen_parameters_2.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_popgen_parameters_2.png" width="100%" />
+:::
 
 __Important note__: Other population genetics software, 
 __Genepop__ and __Arlequin__, implement more reliable

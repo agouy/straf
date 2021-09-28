@@ -1,5 +1,7 @@
 # Importing data
 
+
+
 In this chapter, we will explain how to prepare the input file containing 
 genotypic data, and how to upload it into STRAF.
 
@@ -45,12 +47,16 @@ It only takes a few steps to generate an input file in a format that is suitable
 for use in STRAF. From Excel, for example, we can start from a spreadsheet looking 
 like this:
 
-<center><img src="img/capture_excel_1.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_excel_1.png" width="100%" />
+:::
 
 Then, one simply needs to save this table as a tab-delimited text file. This can be
 achieved by clicking on `Save As` > `Text (Tab-delimited) (*.txt)`
 
-<center><img src="img/capture_excel_2.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_excel_2.png" width="100%" />
+:::
 
 ## Uploading the data to STRAF
 
@@ -66,7 +72,10 @@ analyses will be available. If not, it is likely that an error has occured. If t
 message is not explicit, you can refer to the __Input file checklist__ below that
 gathers common issues with the input file.
 
-<center><img src="img/capture_import_1.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_import_1.png" width="100%" />
+:::
+
 
 ## Common issues
 
@@ -93,7 +102,9 @@ __Input file checklist__
 Below the dataset preview, you will be able to generate a plot of allele frequencies
 at each locus.
 
-<center><img src="img/capture_import_2.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_import_2.png" width="100%" />
+:::
 
 You can also generate an allele frequency table, which is standard practice when
 reporting new population data in a forensics journal. You can either download 
@@ -101,4 +112,6 @@ the allele frequencies in a text format (TSV), or as an Excel (XLSX) file. Note
 that you have the ability to select a specific population using the drop-down menu
 above the table.
 
-<center><img src="img/capture_import_3.png" class="capture"/></center>
+:::{.capture}
+<img src="img/capture_import_3.png" width="100%" />
+:::

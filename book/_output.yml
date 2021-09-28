@@ -4,7 +4,7 @@ bookdown::bs4_book:
     primary:  "#2C4443"
     
 bookdown::pdf_book:
-  latex_engine: xelatex
+  latex_engine: lualatex
   citation_package: natbib
   keep_tex: yes
   includes:

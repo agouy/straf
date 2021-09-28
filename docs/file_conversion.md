@@ -1,5 +1,7 @@
 # File conversion
 
+
+
 As STRAF is a web application and can be used simultaneously by multiple users,
 computing resources are limited. Therefore, the most computationally intensive analyses
 are not available in STRAF. In order to ease the path to other software, 
@@ -13,8 +15,9 @@ Once you have imported your file, it is straightforward to conevrt it to another
 format. You can go to the __File conversion__ tab and click on one of the following
 buttons to download your genotypes in another format.
 
-<center><img src="img/capture_file_conversion_1.png" class="capture"/></center>
-
+:::{.capture}
+<img src="img/capture_file_conversion_1.png" width="100%" />
+:::
 
 ## Genepop and Arlequin formats
 
