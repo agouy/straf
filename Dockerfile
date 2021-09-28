@@ -10,7 +10,9 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     unixodbc-dev \
     libcurl4-openssl-dev \
     libssl-dev \
-    libgdal-dev
+    libgdal-dev \
+    default-libmysqlclient-dev
+
 
 RUN apt-get update && \
     apt-get upgrade -y && \
