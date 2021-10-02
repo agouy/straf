@@ -52,14 +52,7 @@ popgen_UI <- function(id) {
     conditionalPanel(
       condition = "input.ploidy == 2",
       ns = ns,
-      awesomeCheckbox(
-        ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
-        FALSE
-      ),
-      numericInput(
-        ns('hw_nperm'), 'Number of permutations for HW test',
-        1000, min = 100, max = 10000, step = 100
-      )
+      uiOutput(ns("HW_comp"))
     ),
     conditionalPanel(
       condition = "input.displayDiv == true",
@@ -134,7 +127,7 @@ popgen_UI <- function(id) {
 #' Generate the forensic parameters and population genetics tabs Server.
 #' @export
 #' @noRd
-for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, transparency, cexaxis) {
+for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compute_hw, hw_perm, barplotcolor, transparency, cexaxis) {
   moduleServer(
     id,
     function(input, output, session) { 
@@ -144,6 +137,16 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
       })
       output$selectPop3 <- renderUI({
         selectInput(ns("selectPop3"), "Select a population:", popnames())
+      })
+      output$HWcomp <- renderUI({
+        list(awesomeCheckbox(
+          ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
+          FALSE
+        ),
+        numericInput(
+          ns('hw_nperm'), 'Number of permutations for HW test',
+          1000, min = 100, max = 10000, step = 100
+        ))
       })
       
       
@@ -167,7 +170,8 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
       })
       
       
-      
+      compute_hw <- reactive({input$computeHW})
+        
       reacIndices <- reactive({
         if(is.null(getgenind())) return(NULL)
         
@@ -176,10 +180,30 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
         
         DF <- getIndicesAllPop(
           getgenind(),
-          hw = input$computeHW,
-          hwperm = input$hw_nperm,
           ploidy = ploidy()
         )
+        ## get HW from gp
+        if(ploidy() == 2 & input$computeHW) {
+          hw_results <- getGenepopHW(input_file(), ploidy(), input$hw_nperm)
+          for(pop in names(DF)) { # 
+            df_tmp <- DF[[pop]]
+            rownames(df_tmp) <- df_tmp$locus
+            
+            
+            if(pop == "all") hw_tmp <- hw_results[hw_results$Population == pop, ]
+            else {
+              popu <- unique(hw_results$Population)[grep(pop, names(DF)[names(DF) != "all"])]
+              hw_tmp <- hw_results[hw_results$Population == popu, ]
+              hw_tmp$Population <- popu
+            }
+            
+            hw_tmp$locus <- hw_tmp$Locus
+            df_tmp <- dplyr::left_join(df_tmp, hw_tmp[, c("locus", "P_value")], "locus")
+            
+            DF[[pop]] <- df_tmp
+          }
+        }
+
         return(DF)
       })
       
@@ -524,12 +548,12 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
 #' @inheritParams getIndicesFromGenind
 #' @export
 #' @noRd
-getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = 2) {
+getIndicesAllPop <- function(data, ploidy = 2) {
   ind <- list()
-  ind$all <- getIndicesFromGenind(data, hw, hwperm, ploidy)
+  ind$all <- getIndicesFromGenind(data,ploidy)
   for(popu in unique(data$pop)) {
     ind <- c(ind, x = NA)
-    mat <- getIndicesFromGenind(data[data@pop == popu, ], hw, hwperm, ploidy)
+    mat <- getIndicesFromGenind(data[data@pop == popu, ],ploidy)
     ind$x <- mat
     names(ind)[length(ind)] <- popu
   }
@@ -543,10 +567,7 @@ getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = 2) {
 #' @param ploidy character, ploidy, either "Diploid" or "Haploid".
 #' @export
 #' @noRd
-getIndicesFromGenind <- function(data,
-                                 hw = FALSE,
-                                 hwperm = 1000,
-                                 ploidy = 2) {
+getIndicesFromGenind <- function(data, ploidy = 2) {
   
   freq <- apply(data@tab, 2, sum, na.rm = TRUE)
   
@@ -625,11 +646,6 @@ getIndicesFromGenind <- function(data,
   }
   
   ploidy <- as.numeric(ploidy)
-  if(ploidy == 2 & hw) {
-    withProgress(message = 'Performing HW test...', value = 0, {
-      DF$pHW <- pegas::hw.test(data, B = hwperm)[names(GD), 4]
-    })
-  } 
   return(DF)
 }
 

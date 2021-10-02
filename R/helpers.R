@@ -204,3 +204,193 @@ poptree2straf <- function(fname) {
   str_out <- gsub(",[.]", ",0." , str_out)
   return(str_out)
 }
+
+
+#' Pairwise Linkage Disequilibrium computation.
+#' @param data a genind object
+#' @return a table containing Genepop's LD p-values
+#' @export
+#' @noRd
+getGenepopLD <- function(data, ploidy, n_iter) {
+  
+  gp_tmp <- tempfile()
+  on.exit(unlink(gp_tmp))
+  
+  out_tmp <- tempfile()
+  on.exit(unlink(out_tmp))
+  
+  straf2genepop(data, gp_tmp, ploidy)
+  genepop::test_LD(
+    gp_tmp, 
+    out_tmp, 
+    dememorization = 5000, 
+    batches = 100, 
+    iterations = n_iter
+  )
+  
+  df <- get_ld_gp(out_tmp)
+  
+  lnam <- sort(unique(c(as.character(df$Locus_2), as.character(df$Locus_1))))
+  df$Locus_1 <- factor(df$Locus_1, levels=rev(lnam))
+  df$Locus_2 <- factor(df$Locus_2, levels=rev(lnam))
+  
+  df$plab <- sub('^(-)?0[.]', '\\1.', round(df$P_value, 3))
+  df$plab[df$plab == "0"] <- "< .0001"
+  par(mar = c(4,4,4,8))
+  df <- dplyr::distinct(df)
+  return(df)
+}
+
+#' Plot Pairwise Linkage Disequilibrium.
+#' @param df a table containing LD test results
+#' @param pop string, population to represent
+#' @return a heatmap representing LD test p-values
+#' @export
+#' @noRd
+plot_ld <- function(df, pop) {
+  df <- df[df$Population == df$Population[1], ]
+  
+  plt <- ggplot(data = df, aes(Locus_1, Locus_2, fill = -log10(P_value))) +
+    geom_tile(color = "white", na.value='lightgrey') +
+    scale_fill_gradient2(low = "#fee6ce", mid = "#fdae6b", high = "#e6550d", 
+                         midpoint = 2.5, limit = c(-0.1,5), space = "Lab", 
+                         name="LD\nSignificance\n\n-log10(p-value)\n") +
+    theme_minimal() + 
+    scale_x_discrete(position = "top") +
+    theme(
+      axis.text.x = element_text(angle = 90, size = 9), axis.text.y = element_text(angle = 0, size = 9),
+      panel.grid.major = element_blank(),
+      legend.position=c(1.2, 0.6),
+      plot.caption=element_text(vjust = 30, hjust = 1.5, size = 10),
+      plot.margin = margin(t = 0.2, r =  4, b = 0.2, l = 0.2, "cm")
+    ) + 
+    geom_text(aes(label = plab), size = 2, col = "black") +
+    ggtitle(label = "Linkage disequilibrium between loci") +
+    xlab("") + ylab("") +
+    coord_fixed()
+  
+  plotly::ggplotly(plt)
+  
+}
+
+#' Parse Linkage Disequilibrium Genepop results.
+#' @param out.name path to genepop file
+#' @return a dataframe containing LD test p-values
+#' @export
+#' @noRd
+get_ld_gp <- function(out.name) {
+  tx <- readLines(out.name)
+  genepop::clean_workdir()
+  
+  tx <- gsub("Not possible", "NA NA NA", tx)
+  tx <- gsub("No information", "NA NA NA", tx)
+  
+  tx <- gsub("& ", "", tx)
+  # tx <- gsub("Penta E", "PentaE", tx)
+  spl <- strsplit(tx, "\\s+")
+  ln <- lengths(spl)
+  tb <- do.call(rbind, spl[ln == 6])
+  
+  df <- as.data.frame(tb[-c(1:5), ])
+  colnames(df) <- c("Population", "Locus_1", "Locus_2", "P_value", "Std_Error", "Switches")
+  
+  df$P_value <- as.numeric(df$P_value)
+  df$Std_Error <- as.numeric(df$Std_Error)
+  
+  df$Locus_1 <- factor(df$Locus_1, levels = unique(df$Locus_1))
+  df$Locus_2 <- factor(df$Locus_2, levels = unique(df$Locus_2))
+  df$P_value <- df$P_value + 1/10000
+  df$P_value[df$P_value > 1] <- 1
+  
+  df$fdr <- p.adjust(df$P_value, method = "bonferroni")
+  
+  df$lab <- NA
+  df$lab[df$fdr < 0.05] <- "*"
+  df$lab[df$fdr < 0.01] <- "**"
+  df$lab[df$fdr < 0.001] <- "***"
+  tmp <- colnames(df)
+  tmp[2:3] <- c("Locus_2", "Locus_1")
+  df_tmp <- df[,tmp]
+  colnames(df_tmp) <- colnames(df)
+  df <- rbind(df, df_tmp)
+  
+  return(df)
+}
+
+
+#' Hardy-Weinberg Equilibrium test..
+#' @param data path to straf input file
+#' @param ploidy ploidy
+#' @return a table containing Genepop's HW test p-values
+#' @export
+#' @noRd
+getGenepopHW <- function(data, ploidy, n_iter = 10000) {
+  gp_tmp <- tempfile()
+  on.exit(unlink(gp_tmp))
+  
+  out_tmp <- tempfile()
+  on.exit(unlink(out_tmp))
+  
+  straf2genepop(data, gp_tmp, ploidy)
+  genepop::test_HW(
+    gp_tmp,
+    which = "Proba", 
+    out_tmp,
+    batches = 100, 
+    iterations = n_iter 
+  )
+  
+  df <- get_hw_gp(out_tmp)
+  return(df)
+}
+
+#' Parse HWE test Genepop results.
+#' @param fname path to genepop file
+#' @return a dataframe containing HWE test p-values
+#' @export
+#' @noRd
+get_hw_gp <- function(fname) {
+  tx <- readLines(fname)
+  genepop::clean_workdir()
+  
+  spl <- strsplit(tx, "\\s+")
+  
+  pop_idx <- grep("Pop", spl)
+  pop_names <- unlist(lapply(spl[pop_idx], "[", 3))
+  
+  all_idx <- grep("Fisher's", spl)
+  all_idx <- all_idx[all_idx < pop_idx[1]]
+  all_pvals <- unlist(lapply(spl[all_idx + 3], "[", 4))
+  
+  ## ln = 7 and between pop_idx, add pop_names
+  for(i in seq_along(pop_idx)) {
+    if(i == length(pop_idx)) idd <- pop_idx[i]:length(spl)
+    else idd <- pop_idx[i]:pop_idx[i+1]
+    for(ii in idd) spl[[ii]] <- c(pop_names[i], spl[[ii]])  
+  }
+
+  spl <- spl[-seq_len(pop_idx[1])]
+  ln <- lengths(spl)
+
+  
+  tb <- do.call(rbind, spl[ln == 8])
+  
+  df <- as.data.frame(tb)
+
+  colnames(df) <- c("Population", "Locus", "P_value", "Std_Error", 
+                    "Fis_WC", "Fis_RH", "Steps", "Switched")
+  # df <- tidyr::complete(df, Locus, tidyr::nesting(Population))
+  
+  # df$Population <- rep(pop_names, each = nrow(tb) / length(pop_names))
+  
+  df <- dplyr::select(df, Population, Locus, P_value)
+  
+  df$P_value <- as.numeric(df$P_value)
+  df$P_value <- df$P_value + 1/10000
+  df$P_value[df$P_value > 1] <- 1
+  
+  df_2 <- data.frame(Population = "all", Locus = unique(df$Locus), P_value = all_pvals)
+  df <- rbind(df, df_2)
+  return(df)
+  
+}

@@ -106,14 +106,20 @@ shinyServer(function(input, output) {
   )
   
   ploidy <- reactive({input$ploidy})
+  compute_hw <- reactive({input$computeHW})
+  hw_perm <- reactive({input$hw_nperm})
   barplotcolor <- reactive({input$barplotcolor})
   transparency <- reactive({input$transparency})
   cexaxis <- reactive({input$cexaxis})
   width <- reactive({input$width})
   height <- reactive({input$height})
+  input_file <- reactive({input$file1$datapath})
   
   data_Server("data_ns", getgenind, getData, barplotcolor, transparency, width, height,popnames)
-  for_popgen_Server("for_popgen", getgenind, popnames, ploidy, barplotcolor, transparency, cexaxis)
+  for_popgen_Server(
+    "for_popgen", input_file, getgenind,
+    popnames, ploidy, compute_hw, hw_perm, barplotcolor, transparency, cexaxis
+  )
   pca_mds_Server("pca_mds", getgenind)
   ref_mds_Server("ref_mds", getgenind)
   file_conv_Server("file_conv", reactive({input$file1$datapath}), ploidy)
