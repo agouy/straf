@@ -49,18 +49,18 @@ popgen_UI <- function(id) {
     
     uiOutput(ns("uiPG_HW")),
     
-    # conditionalPanel(
-    #   condition = "input.ploidy == 2",
-    #   ns = ns,
-    #   awesomeCheckbox(
-    #     ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
-    #     FALSE
-    #   ),
-    #   numericInput(
-    #     ns('hw_nperm'), 'Number of permutations for HW test',
-    #     1000, min = 100, max = 10000, step = 100
-    #   )
-    # ),
+    conditionalPanel(
+      condition = "input.ploidy == 2",
+      ns = ns,
+      awesomeCheckbox(
+        ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
+        FALSE
+      ),
+      numericInput(
+        ns('hw_nperm'), 'Number of permutations for HW test',
+        1000, min = 100, max = 10000, step = 100
+      )
+    ),
     conditionalPanel(
       condition = "input.displayDiv == true",
       ns = ns,
@@ -170,6 +170,9 @@ for_popgen_Server <- function(id, getgenind, popnames, ploidy, barplotcolor, tra
       
       reacIndices <- reactive({
         if(is.null(getgenind())) return(NULL)
+        
+        if(!ploidy() %in% c(1, 2)) stop("Error with ploidy value. Please contact
+                                       the author of the application.")
         
         DF <- getIndicesAllPop(
           getgenind(),
@@ -543,7 +546,7 @@ getIndicesAllPop <- function(data, hw = FALSE, hwperm = 1000, ploidy = 2) {
 getIndicesFromGenind <- function(data,
                                  hw = FALSE,
                                  hwperm = 1000,
-                                 ploidy = "Diploid") {
+                                 ploidy = 2) {
   
   freq <- apply(data@tab, 2, sum, na.rm = TRUE)
   
@@ -621,6 +624,7 @@ getIndicesFromGenind <- function(data,
     DF$Fis <- basicstat[names(GD), "Fis"]
   }
   
+  ploidy <- as.numeric(ploidy)
   if(ploidy == 2 & hw) {
     withProgress(message = 'Performing HW test...', value = 0, {
       DF$pHW <- pegas::hw.test(data, B = hwperm)[names(GD), 4]
