@@ -122,7 +122,7 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
           return(list(
             numericInput(
               ns('hw_nperm'), 'Number of permutations for HW test',
-              10000, min = 100, max = 50000, step = 100
+              1000, min = 100, max = 10000, step = 100
             )
           ))
         } 
@@ -371,7 +371,7 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
       
       #compute LD table
       LD_genepop_table <- reactive({
-        ld_results <- getGenepopLD(input_file(), ploidy(), 10000)
+        ld_results <- getGenepopLD(input_file(), ploidy(), 5000)
         return(ld_results)
       })
 
