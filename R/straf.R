@@ -27,6 +27,7 @@
 #' @importFrom pegas genind2loci
 #' @importFrom plotly renderPlotly plotlyOutput ggplotly
 #' @importFrom reshape2 acast
+#' @importFrom shinycssloaders withSpinner
 #' @importFrom shinyWidgets awesomeCheckbox pickerInput
 #' @importFrom stats as.dist cmdscale cov frequency ks.test qqplot qunif
 #' @importFrom tidyr gather
