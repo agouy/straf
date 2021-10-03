@@ -17,13 +17,15 @@
 #' @importClassesFrom adegenet genind
 #' @importFrom colourpicker colourInput
 #' @importFrom DT dataTableOutput renderDataTable datatable
-#' @importFrom ggplot2 ggplot geom_point labs theme_minimal aes
+#' @importFrom genepop clean_workdir test_HW test_LD
+#' @importFrom ggplot2 ggplot geom_point labs theme_minimal aes geom_tile
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom graphics abline axis barplot hist image legend par
-#' @importFrom hierfstat pairwise.WCfst genind2hierfstat
+#' @importFrom hierfstat pairwise.WCfst genind2hierfstat wc
 #' @importFrom magrittr "%>%"
 #' @importFrom openxlsx write.xlsx
-#' @importFrom pegas LD LD2 genind2loci hw.test
+#' @importFrom pegas genind2loci
+#' @importFrom plotly renderPlotly plotlyOutput ggplotly
 #' @importFrom reshape2 acast
 #' @importFrom shinyWidgets awesomeCheckbox pickerInput
 #' @importFrom stats as.dist cmdscale cov frequency ks.test qqplot qunif

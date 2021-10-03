@@ -1,6 +1,6 @@
 Package: straf
 Title: STR Analysis for Forensics
-Version: 2.0.6
+Version: 2.0.7
 Authors@R: 
     person(given = "Alexandre",
            family = "Gouy",
@@ -36,6 +36,7 @@ Imports:
     ade4,
     adegenet,
     pegas,
+    genepop,
     hierfstat,
     magrittr
 Suggests:

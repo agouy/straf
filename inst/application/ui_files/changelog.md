@@ -1,5 +1,8 @@
 ### Udpates
 
+* 2.0.7 (03/10/2021) – STRAF includes now more robust HW and LD tests. STRAF calls
+Genepop to run the tests. Graphical representations are now interactive. Minor
+bug fixes (FST matrix disappeared).
 * 2.0.0 (01/05/2021) – STRAF has been partially reimplemented as an R package, implying a lot of code refactoring. MDS with reference population improved. The STRAF book has been populated. Genepop-like format is not supported anymore and input parameters have been simplified (only the "ploidy"" input parameter remains). Overall performance has been optimised.
 * 1.4.6 (25/04/2021) – It is now possible to add custom reference frequency data to perform an MDS.
 * 1.4.5 (25/04/2021) – Genepop conversion now works for haploid data. Common alleles are displayed for MDS.

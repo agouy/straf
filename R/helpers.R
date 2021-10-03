@@ -211,7 +211,7 @@ poptree2straf <- function(fname) {
 #' @return a table containing Genepop's LD p-values
 #' @export
 #' @noRd
-getGenepopLD <- function(data, ploidy, n_iter) {
+getGenepopLD <- function(data, ploidy, n_iter = 10000) {
   
   gp_tmp <- tempfile()
   on.exit(unlink(gp_tmp))
@@ -247,29 +247,27 @@ getGenepopLD <- function(data, ploidy, n_iter) {
 #' @return a heatmap representing LD test p-values
 #' @export
 #' @noRd
-plot_ld <- function(df, pop) {
-  df <- df[df$Population == df$Population[1], ]
-  
-  plt <- ggplot(data = df, aes(Locus_1, Locus_2, fill = -log10(P_value))) +
-    geom_tile(color = "white", na.value='lightgrey') +
-    scale_fill_gradient2(low = "#fee6ce", mid = "#fdae6b", high = "#e6550d", 
+plot_ld <- function(df) {
+  plt <- ggplot2::ggplot(data = df, aes(Locus_1, Locus_2, fill = -log10(P_value))) +
+    ggplot2::geom_tile(color = "white") +
+    ggplot2::scale_fill_gradient2(low = "#fee6ce", mid = "#fdae6b", high = "#e6550d", 
                          midpoint = 2.5, limit = c(-0.1,5), space = "Lab", 
                          name="LD\nSignificance\n\n-log10(p-value)\n") +
-    theme_minimal() + 
-    scale_x_discrete(position = "top") +
-    theme(
-      axis.text.x = element_text(angle = 90, size = 9), axis.text.y = element_text(angle = 0, size = 9),
-      panel.grid.major = element_blank(),
+    ggplot2::theme_minimal() + 
+    ggplot2::scale_x_discrete(position = "top") +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 90, size = 9), axis.text.y = ggplot2::element_text(angle = 0, size = 9),
+      panel.grid.major = ggplot2::element_blank(),
       legend.position=c(1.2, 0.6),
-      plot.caption=element_text(vjust = 30, hjust = 1.5, size = 10),
-      plot.margin = margin(t = 0.2, r =  4, b = 0.2, l = 0.2, "cm")
+      plot.caption= ggplot2::element_text(vjust = 30, hjust = 1.5, size = 10),
+      plot.margin = ggplot2::margin(t = 0.2, r =  4, b = 0.2, l = 0.2, "cm")
     ) + 
-    geom_text(aes(label = plab), size = 2, col = "black") +
-    ggtitle(label = "Linkage disequilibrium between loci") +
-    xlab("") + ylab("") +
-    coord_fixed()
+    ggplot2::geom_text(aes(label = plab), size = 2, col = "black") +
+    ggplot2::ggtitle(label = "Linkage disequilibrium between loci") +
+    ggplot2::xlab("") + ggplot2::ylab("") +
+    ggplot2::coord_fixed()
   
-  plotly::ggplotly(plt)
+  return(plotly::ggplotly(plt))
   
 }
 
@@ -304,10 +302,6 @@ get_ld_gp <- function(out.name) {
   
   df$fdr <- p.adjust(df$P_value, method = "bonferroni")
   
-  df$lab <- NA
-  df$lab[df$fdr < 0.05] <- "*"
-  df$lab[df$fdr < 0.01] <- "**"
-  df$lab[df$fdr < 0.001] <- "***"
   tmp <- colnames(df)
   tmp[2:3] <- c("Locus_2", "Locus_1")
   df_tmp <- df[,tmp]
@@ -372,17 +366,11 @@ get_hw_gp <- function(fname) {
   spl <- spl[-seq_len(pop_idx[1])]
   ln <- lengths(spl)
 
-  
   tb <- do.call(rbind, spl[ln == 8])
-  
   df <- as.data.frame(tb)
-
   colnames(df) <- c("Population", "Locus", "P_value", "Std_Error", 
                     "Fis_WC", "Fis_RH", "Steps", "Switched")
-  # df <- tidyr::complete(df, Locus, tidyr::nesting(Population))
-  
-  # df$Population <- rep(pop_names, each = nrow(tb) / length(pop_names))
-  
+
   df <- dplyr::select(df, Population, Locus, P_value)
   
   df$P_value <- as.numeric(df$P_value)

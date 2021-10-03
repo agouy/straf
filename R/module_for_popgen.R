@@ -16,7 +16,7 @@ for_UI <- function(id) {
       condition = "input.displayForensics == true",
       ns = ns,
       uiOutput(ns("selectPop2")),
-      div(tableOutput(ns('forensics')), style = "font-size:75%"),
+      div(tableOutput(ns('forensics')) %>% shinycssloaders::withSpinner(color="#dd4814"), style = "font-size:75%"),
       downloadButton(ns('dlForensics'), 'Download as text (.tsv)'),
       downloadButton(ns('dlForensicsXL'), 'Download as Excel (.xlsx)'),
       tags$hr(),
@@ -57,7 +57,7 @@ popgen_UI <- function(id) {
     conditionalPanel(
       condition = "input.displayDiv == true",
       ns = ns,
-      div(tableOutput(ns('diversity')), style = "font-size:75%"),
+      div(tableOutput(ns('diversity')) %>% shinycssloaders::withSpinner(color="#dd4814"), style = "font-size:75%"),
       downloadButton(ns('dlPopgen'), 'Download as text (.txt)'),
       downloadButton(ns('dlPopgenCL'), 'Download as Excel (.xlsx)'),
       tags$hr(),
@@ -74,38 +74,13 @@ popgen_UI <- function(id) {
     conditionalPanel(
       condition = "input.displayLDtable == true",
       ns = ns,
-      div(tableOutput(ns('LDtable')), style = "font-size:75%"),
+      uiOutput(ns("selectPopLD")),
+      div(tableOutput(ns('LDtable')) %>% shinycssloaders::withSpinner(color="#dd4814"), style = "font-size:75%"),
       downloadButton(ns('dlLDtable'), 'Download as text'),
-      downloadButton(ns('dlLDtableXL'), 'Download as Excel')
+      downloadButton(ns('dlLDtableXL'), 'Download as Excel'),
+      uiOutput(ns("plotLD2"))
     ),
-    conditionalPanel(
-      condition = "output.LD30",
-      ns = ns,
-      awesomeCheckbox(
-        ns('displayLDplot'),
-        'Plot pairwise LD p-values matrix',
-        FALSE),
-      conditionalPanel(
-        condition = "input.displayLDplot == true",
-        ns = ns,
-        uiOutput(ns("plotLD2"))
-      ),
-      conditionalPanel(
-        condition = "input.displayLDplot == true | input.displayLDtable == true",
-        ns = ns,
-        awesomeCheckbox(
-          ns('displayLDpvalplot'),
-          'Plot LD p-values distribution',
-          FALSE
-        ),
-        conditionalPanel(
-          condition = "input.displayLDpvalplot == true",
-          ns = ns,
-          uiOutput(ns("plotLDpval2"))
-        )
-      )
-    ),
-    
+
     tags$hr(),
     h3("Pairwise Fst"),
     awesomeCheckbox(
@@ -127,7 +102,7 @@ popgen_UI <- function(id) {
 #' Generate the forensic parameters and population genetics tabs Server.
 #' @export
 #' @noRd
-for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compute_hw, hw_perm, barplotcolor, transparency, cexaxis) {
+for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_perm, barplotcolor, transparency, cexaxis) {
   moduleServer(
     id,
     function(input, output, session) { 
@@ -138,29 +113,16 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
       output$selectPop3 <- renderUI({
         selectInput(ns("selectPop3"), "Select a population:", popnames())
       })
-      output$HWcomp <- renderUI({
-        list(awesomeCheckbox(
-          ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
-          FALSE
-        ),
-        numericInput(
-          ns('hw_nperm'), 'Number of permutations for HW test',
-          1000, min = 100, max = 10000, step = 100
-        ))
+      output$selectPopLD <- renderUI({
+        selectInput(ns("selectPopLD"), "Select a population:", popnames()[!popnames() %in% "all"])
       })
-      
-      
       output$uiPG_HW <- renderUI({
         pl <- ploidy()
         if(pl == 2) {
           return(list(
-            awesomeCheckbox(
-              ns('computeHW'), 'Test for Hardy-Weinberg equilibrium',
-              FALSE
-            ),
             numericInput(
               ns('hw_nperm'), 'Number of permutations for HW test',
-              1000, min = 100, max = 10000, step = 100
+              10000, min = 100, max = 50000, step = 100
             )
           ))
         } 
@@ -169,21 +131,12 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
         } 
       })
       
-      
-      compute_hw <- reactive({input$computeHW})
-        
       reacIndices <- reactive({
         if(is.null(getgenind())) return(NULL)
         
-        if(!ploidy() %in% c(1, 2)) stop("Error with ploidy value. Please contact
-                                       the author of the application.")
-        
-        DF <- getIndicesAllPop(
-          getgenind(),
-          ploidy = ploidy()
-        )
-        ## get HW from gp
-        if(ploidy() == 2 & input$computeHW) {
+        DF <- getIndicesAllPop(getgenind(), ploidy())
+
+        if(ploidy() == 2 & !is.null(input$hw_nperm)) {
           hw_results <- getGenepopHW(input_file(), ploidy(), input$hw_nperm)
           for(pop in names(DF)) { # 
             df_tmp <- DF[[pop]]
@@ -207,12 +160,11 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
         return(DF)
       })
       
+      
       ### forensics table display
       output$forensics <- renderTable({
-        
-        if (is.null(getgenind())) return(NULL)
-        if(is.null(input$selectPop2)) taB <- reacIndices()[[1]]
-        else taB <- reacIndices()[[input$selectPop2]]
+        req(reacIndices_pop_for())
+        taB <- reacIndices_pop_for()
         
         if(!is.null(input$selectPop2)) {
           dat2 <- getgenind()
@@ -231,8 +183,8 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
       output$dlForensics <- downloadHandler(
         filename = function() { paste('forensics_parameters.tsv', sep = '') },
         content = function(file) {
-          if(is.null(input$selectPop2)) taB <- reacIndices()[[1]]
-          else taB <- reacIndices()[[input$selectPop2]]
+          req(reacIndices_pop_for())
+          taB <- reacIndices_pop_for()
           write.table(
             taB[, !colnames(taB) %in% c("Ht", "Fis", "Fst")],
             file, sep = "\t", row.names = FALSE
@@ -242,8 +194,8 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
       output$dlForensicsXL <- downloadHandler(
         filename = function() { paste('forensics_parameters.xlsx', sep = '') },
         content = function(file) {
-          if(is.null(input$selectPop2)) taB <- reacIndices()[[1]]
-          else taB <- reacIndices()[[input$selectPop2]]
+          req(reacIndices_pop_for())
+          taB <- reacIndices_pop_for()
           out <- taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")]
           openxlsx::write.xlsx(list(forensics_parameters = out), file, row.names = FALSE)
         }
@@ -251,8 +203,8 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
       
       ### popgen table display + download
       output$diversity <- renderTable({
-        if(is.null(input$selectPop3)) taB <- reacIndices()[[1]]
-        else taB <- reacIndices()[[input$selectPop3]]
+        req(reacIndices_pop_pg())
+        taB <- reacIndices_pop_pg()
         taB2 <- taB[, !colnames(taB) %in% c("PIC", "PD", "PE", "TPI", "PM")]
         taB2
       }, digits = 4)
@@ -262,8 +214,8 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
           paste('popgen_statistics.tsv', sep='') 
         },
         content = function(file) {
-          if(is.null(input$selectPop3)) taB <- reacIndices()[[1]]
-          else taB <- reacIndices()[[input$selectPop3]]
+          req(reacIndices_pop_pg())
+          taB <- reacIndices_pop_pg()
           taB2 <- taB[, !colnames(taB) %in% c("PIC","PD","PE","TPI", "PM")]
           write.table(taB2, file, sep = "\t", row.names = FALSE)
         }
@@ -273,8 +225,8 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
           paste('popgen_statistics.xlsx', sep='') 
         },
         content = function(file) {
-          if(is.null(input$selectPop3)) taB <- reacIndices()[[1]]
-          else taB <- reacIndices()[[input$selectPop3]]
+          req(reacIndices_pop_pg())
+          taB <- reacIndices_pop_pg()
           taB2 <- taB[, !colnames(taB) %in% c("PIC","PD","PE","TPI", "PM")]
           openxlsx::write.xlsx(
             list(popgen_parameters = taB2),
@@ -287,18 +239,27 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
       
       # reactive UI: displayed if indices are computed
       output$uiFOR <- renderUI({
-        if(is.null(input$selectPop2)) return(NULL)
-        else taB <- reacIndices()[[input$selectPop2]]
-        selectInput(ns("plotIndicesFOR"), "Select the statistic to plot:",
-                    choices = colnames(taB)[-1:-2],
-                    selected = "Nall"
+        taB <- reacIndices_pop_for()
+        selectInput(
+          ns("plotIndicesFOR"), "Select the statistic to plot:",
+          choices = colnames(taB)[-1:-2],
+          selected = "Nall"
         )
+      })
+      reacIndices_pop_for <- reactive({
+        req(reacIndices())
+        req(input$selectPop2)
+        reacIndices()[[input$selectPop2]]
+      })
+      reacIndices_pop_pg <- reactive({
+        req(reacIndices())
+        req(input$selectPop3)
+        reacIndices()[[input$selectPop3]]
       })
       
       # reactive UI: displayed if indices are computed
       output$uiPG <- renderUI({
-        if(is.null(input$selectPop3)) return(NULL)
-        else taB <- reacIndices()[[input$selectPop3]]
+        taB <- reacIndices_pop_for()
         selectInput(ns("plotIndicesPG"), "Select the statistic to plot:",
                     choices = colnames(taB)[-1:-2],
                     selected = "Nall"
@@ -350,6 +311,7 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
         if(is.null(input$plotIndicesPG)) return(NULL)
         
         par(mar = rep(input$margin, 4))
+        datpl[, input$plotIndicesPG] <- as.numeric(datpl[, input$plotIndicesPG])
         barplot(
           datpl[, input$plotIndicesPG],
           names.arg = datpl[, "locus"],
@@ -383,8 +345,8 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
       
       #display FST matrix
       output$FstMat <- renderTable({
-        if(!is.null(fstMatInput()))  matFST <- apply(fstMatInput(),1,rev)
-      }, digits = 4,include.rownames =TRUE,na="")
+        if(!is.null(fstMatInput()))  matFST <- apply(fstMatInput(), 1, rev)
+      }, digits = 4, include.rownames = TRUE, na = "")
       
       #DL fst matrix
       output$dlFstMat <- downloadHandler(
@@ -393,7 +355,7 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
         },
         content = function(file) {
           matFST <- apply(fstMatInput(),1,rev)
-          write.table(matFST, file, sep="\t", na = "",row.names = TRUE)
+          write.table(matFST, file, sep="\t", na = "", row.names = TRUE)
         }
       )
       output$dlFstMatXL <- downloadHandler(
@@ -401,118 +363,76 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
           paste('pairwise_fst.xlsx', sep='') 
         },
         content = function(file) {
-          matFST <- apply(fstMatInput(),1,rev)
-          openxlsx::write.xlsx(list(fst=matFST), file, keepNA = FALSE,row.names = TRUE)
+          matFST <- apply(fstMatInput(), 1, rev)
+          openxlsx::write.xlsx(list(fst = matFST), file, keepNA = FALSE,row.names = TRUE)
         }
       )
       # LD ---------------------------------------------------------------------------
       
       #compute LD table
+      LD_genepop_table <- reactive({
+        ld_results <- getGenepopLD(input_file(), ploidy(), 10000)
+        return(ld_results)
+      })
+
+      LD_genepop_pairwise_pop <- reactive({
+        req(LD_genepop_table_pop())
+        ld_results_sub <- LD_genepop_table_pop()
+
+        ld_results_sub <- ld_results_sub[, c("Locus_1", "Locus_2", "P_value")]
+        ld_results_sub <- tidyr::pivot_wider(
+          ld_results_sub, 
+          names_from = "Locus_2", 
+          values_from  = "P_value"
+        )
+        ld_results_sub <- as.data.frame(ld_results_sub)
+        rownames(ld_results_sub) <- ld_results_sub$Locus_1
+        ld_results_sub$Locus_1 <- NULL
+        
+        ld_results_sub <- ld_results_sub[order(rownames(ld_results_sub)), ]
+        ld_results_sub <- ld_results_sub[, order(colnames(ld_results_sub), decreasing = TRUE)]
+        
+        return(ld_results_sub)
+        
+      })        
+      LD_genepop_table_pop <- reactive({
+        req(LD_genepop_table())
+        req(input$selectPopLD)
+
+        pop <- input$selectPopLD
+        ld_results <- LD_genepop_table()
+        
+        popu <- unique(ld_results$Population)[grep(pop, popnames()[popnames() != "all"])]
+        
+        ld_results_sub <- ld_results[ld_results$Population == popu, ]
+        ld_results_sub$Population <- pop
+        
+        ld_results_sub <- ld_results_sub[, c("Locus_1", "Locus_2", "P_value", "plab")]
+        return(ld_results_sub)
+      })
+
+            
       reacLDtable <- reactive({
         if (is.null(getgenind()))
           return(NULL)
-        
-        D <- getgenind()
-        datLD <- pegas::genind2loci(D)
-        loci <- (unique(D@loc.fac))
-        nloc <- length(unique(D@loc.fac))
-        LDmat <- matrix(NA, nrow = nloc, ncol = nloc)
-        
-        npairs <- nloc * (nloc - 1) / 2
-        withProgress(message = 'LD computation', value = 0, {
-          for(i in 1:nloc){
-            for(ii in 1:nloc){
-              if(i<ii){
-                if(ploidy() == 2) lx <- pegas::LD2(datLD,
-                                                      locus=c(loci[i],loci[ii]))$T2
-                if(ploidy() == 1) lx <- pegas::LD(datLD,
-                                                     locus=c(loci[i],loci[ii]))$T2
-                LDmat[i,ii] <- lx[3]
-                LDmat[ii,i] <- lx[1]
-                incProgress(1/npairs,message="Computing LD...")
-              } 
-            }
-          }
-        })
-        rownames(LDmat) <- colnames(LDmat) <- loci
-        LDmat
+        LD_genepop_pairwise_pop()
       })
       
       output$LDtable <- renderTable({
         if (is.null(getgenind()) | !input$displayLDtable)
           return(NULL)
-        
-        M <- reacLDtable()
-        M[lower.tri(M)] <- NA
-        M <- apply(M,1,rev)
-      }, digits = 4, include.rownames =TRUE,na="")
-      
-      output$LD30 <- reactive({
-        if (is.null(getgenind()) | !input$displayLDtable) return(FALSE)
-        M <- reacLDtable()
-        return(length(M) > 30)
-      })
-      outputOptions(output, 'LD30', suspendWhenHidden=FALSE)
-      
+        LD_genepop_pairwise_pop()
+      }, digits = 4, include.rownames = TRUE,na="")
+
       #plot heatmap LP p-values
-      output$plotLD <- renderPlot({
-        if (is.null(getgenind()) | !input$displayLDplot) return(NULL)
-        
-        M <-  -log10(reacLDtable())
-        M[lower.tri(M)] <- NA
-        col <- adegenet::redpal(100)
-        
-        image(M, col = col, frame = F, xaxt = "n", yaxt = "n")
-        axis(
-          2,
-          at = seq(0, 1, length.out = ncol(M)),
-          labels = colnames(M),
-          las = 2,
-          cex.axis = 0.8
-        )
-        axis(
-          3,
-          at = seq(0, 1, length.out = nrow(M)),
-          labels = rownames(M),
-          las = 2,
-          cex.axis = 0.8
-        )
-        
+      output$plotLD <- plotly::renderPlotly({
+        df <- LD_genepop_table_pop()
+        plt <- plot_ld(df)
+        plt
       })
-      
-      output$plotLD2 <- renderUI({plotOutput(ns('plotLD'))})
-      
-      #plot p-values distribution
-      output$plotLDpval <- renderPlot({
-        if (is.null(getgenind()))
-          return(NULL)
-        
-        M <-  (reacLDtable())
-        
-        par(mfrow=c(1,2))
-        pv <- M[upper.tri(M)]
-        
-        hist(pv, xlab = "P-value", main = "LD p-values distribution")
-        
-        qqplot(
-          pv,
-          qunif(seq(0, 1, 0.01)),
-          pch = 16,
-          xlab = "Observed quantiles",
-          ylab = "Expected quantiles",
-          main = paste(
-            "KS test p-value:",
-            round(ks.test(pv, qunif(seq(0, 1, 0.01)))$p.value, digits = 4)
-          )
-        )
-        abline(0, 1, lty = 2, lwd = 2, col = "grey")
-        
-      })
-      
-      output$plotLDpval2 <- renderUI({
-        plotOutput(ns('plotLDpval'))
-      })
-      
+      # 
+      output$plotLD2 <- renderUI({plotly::plotlyOutput(ns('plotLD'))})
+
       #DL LD matrix
       output$dlLDtable <- downloadHandler(
         
@@ -521,9 +441,9 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
         },
         
         content = function(file) {
-          pairLD <- reacLDtable()
-          pairLD[lower.tri(pairLD)] <- NA
-          pairLD <- apply(pairLD, 1, rev)
+          pairLD <- LD_genepop_pairwise_pop()
+          # pairLD[lower.tri(pairLD)] <- NA
+          # pairLD <- apply(pairLD, 1, rev)
           write.table(pairLD, file, sep = "\t", na = "", row.names = TRUE)
         }
       )
@@ -534,9 +454,9 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, compu
         },
         
         content = function(file) {
-          pairLD <- reacLDtable()
-          pairLD[lower.tri(pairLD)] <- NA
-          pairLD <- apply(pairLD, 1, rev)
+          pairLD <- LD_genepop_pairwise_pop()
+          # pairLD[lower.tri(pairLD)] <- NA
+          # pairLD <- apply(pairLD, 1, rev)
           openxlsx::write.xlsx(list(LD=pairLD), file, keepNA = FALSE, row.names = TRUE)
         }
       )
@@ -562,8 +482,6 @@ getIndicesAllPop <- function(data, ploidy = 2) {
 
 #' Get forensics and popgen indices for a given population
 #' @param data A genind object.
-#' @param hw boolean, whether to compute Hardy-Weinberg test p-values (default = FALSE).
-#' @param hwperm numeric, number of permutations for Hardy-Weinberg test.
 #' @param ploidy character, ploidy, either "Diploid" or "Haploid".
 #' @export
 #' @noRd

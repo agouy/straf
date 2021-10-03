@@ -11,9 +11,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     libcurl4-openssl-dev \
     libssl-dev \
     libgdal-dev \
-    libmysqlclient-dev \
-    libmariadb-dev
-
+    libmysqlclient-dev
 
 RUN apt-get update && \
     apt-get upgrade -y && \
