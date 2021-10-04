@@ -24,12 +24,24 @@ div.interpretation {
 
 .capture {
   width:600px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 50px;
   border:3px solid #2C4443;
 }
 
 .capture_small {
   width:320px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 50px;
   border:3px solid #2C4443;
+}
+
+.small {
+  width:100px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 50px;
+  border:0px solid #2C4443;
 }

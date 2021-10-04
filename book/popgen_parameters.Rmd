@@ -1,8 +1,8 @@
-# Population genetics indices
+# Population genetics indices {#popgen-indices}
 
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo=FALSE, out.width="100%"
+    echo=FALSE, out.width="100%"
 )
 ```
 
@@ -71,7 +71,7 @@ Several __estimators__ of $F_{\textrm{ST}}$ exist (for example, Weir and Cockerh
 Hudson's $F_{\textrm{ST}}$). It's like if each population geneticist had decided 
 to develop their own estimator! 
 
-Why is that? In statistics, what we call an __estimator__ a metric aiming at estimating
+Why is that? In statistics, what we call an __estimator__ is a metric aiming at estimating
 a given quantity based on __observed data__. It is important to keep in mind that 
 these estimators rely on a specific __model__, with underlying assumptions. 
 It explains why some estimators are more or less reliable depending on the case 
@@ -86,12 +86,12 @@ different demographic models.
 
 Linkage disequilibrium is an important quantity to be measured in genetics. 
 It is defined as the __nonindependence of genotypes at distinct loci__.
-It means that it is more likely to observe the co-occurence of some genotypes
-at different loci.
+It means that it is more likely to observe the co-occurrence of some genotypes
+at different loci. This can be influenced by population history.
 
-Most of the times, this is explained by the physical proximity between loci. If
+However, most of the times, LD is explained by the physical proximity between loci. If
 two loci are next to each other on the genome, recombination events between them
-will be rare and genotypes won't be suffled. Genotypes at these loci will be correlated
+will be rare and genotypes won't be shuffled. Genotypes at these loci will be correlated
 and linkage disequilibrium will be high. On the other hand, two loci found on two different
 chromosomes are not expected to show any LD signals as genotypes will be systematically 
 shuffled at each generation.

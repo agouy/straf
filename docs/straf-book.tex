@@ -69,6 +69,8 @@
 \setcounter{secnumdepth}{5}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{float} 
+
 \usepackage{geometry}
 \geometry{a5paper}
 \usepackage{fontspec}
@@ -89,30 +91,12 @@
   coltext=boxdark,
   boxsep=5pt,
   arc=2pt}
-  
-\newenvironment{infobox}
-  {
-  \begin{itemize}
-  \renewcommand{\labelitemi}{
-    \raisebox{-.7\height}[0pt][0pt]{
-      {\setkeys{Gin}{width=3em,keepaspectratio}
-        \includegraphics{img/key3.png}}
-    }
-  }
-  \setlength{\fboxsep}{1em}
-  \begin{interpretation}
-  \item
-  }
-  {
-  \end{interpretation}
-  \end{itemize}
-  }
 \usepackage[]{natbib}
 \bibliographystyle{plainnat}
 
 \title{The STRAF Book}
 \author{Alexandre Gouy and Martin Zieger}
-\date{2021-09-26}
+\date{2021-10-04}
 
 \begin{document}
 \maketitle
@@ -137,23 +121,17 @@ for the analysis of genetic data in forensic practice.
 \section*{Forensic and population genetics, lost sisters}\label{forensic-and-population-genetics-lost-sisters}}
 \addcontentsline{toc}{section}{Forensic and population genetics, lost sisters}
 
-Genetics has many faces, and forensic and population genetics are two of them.
-If we were to summarise their respective scopes, we could say that the former
-is the application of genetics to legal matters, and the latter aims at
-understanding genetic differences within and between populations, a
-fundamental matter in evolutionary biology.
+Genetics has many faces, and population and forensic genetics are two of them.
+If we were to briefly summarise their respective scopes, we could say that the
+former aims at understanding genetic differences within and between populations
+and the latter is the application of those findings to legal matters.
 
 Forensic genetics and population genetics have always been tightly linked
 disciplines. This is likely because quite a number of questions they address
 are similar. Even though problems in forensics and population genetics seem
 different, they often correspond to the same question, simply phrased differently.
 
-For example, DNA profiling, used in criminal investigations or parental testing,
-aims at matching different DNA samples and understanding how related they are in
-terms of DNA. In population genetics, a common goal is to characterise the
-genetic diversity of a set of populations, by looking at how related individuals
-are within and between populations. Both fields aim at \textbf{understanding} and
-\textbf{quantifying} the \textbf{relatedness} of individuals based on their DNA.
+In population genetics, a common goal is to characterise the genetic diversity of a set of populations, by looking at how related individuals are within and between populations. DNA profiling used in criminal investigations aims at matching different DNA samples. To be able to evaluate the probative strength of such a match, forensic geneticists need to know how much the members of the relevant population are genetically related to each other. The same applies to the calculation of probabilities for different hypotheses of kinship, e.g.~in paternity tests. Both fields aim at \textbf{understanding} and \textbf{quantifying} the \textbf{relatedness} of individuals based on their DNA.
 
 Software and metrics developed in the population genetics for the study of the
 evolution of species are now used routinely in forensic genetics practice.
@@ -165,12 +143,12 @@ development of relevant statistical tools and metrics with a more specific purpo
 \section*{And then there was STRAF}\label{and-then-there-was-straf}}
 \addcontentsline{toc}{section}{And then there was STRAF}
 
-\textbf{STRAF} was born from the encounter of two scientists: a forensic geneticist and a
-population geneticist, in 2017, in the beautiful city of Bern (Switzerland).
+\textbf{STRAF} was born from the encounter of two scientists: a forensic geneticist
+and a population geneticist, in 2017, in the beautiful city of Bern (Switzerland).
 Martin came to visit a population genetics lab, where Alexandre was pursuing
 his Ph.D.~thesis at that time. This encounter led to a fruitful collaboration
-when they realised that some tools used in population genetics could be
-leveraged by the forensics community.
+when they realised that some tools used in population genetics should be
+made more accessible to the forensics community.
 
 This encounter led to a fruitful collaboration when they realised that some tools
 used in population genetics could be leveraged by the forensics community. The
@@ -188,7 +166,7 @@ some scripts for the analysis of STR data. Then, after we applied them to an exi
 dataset, we decided to put everything into a web application so that the forensics
 community could benefit from it.
 
-A few weeks later, STRAF was born, and after four year, STRAF had become a
+A few weeks later, STRAF was born \citep{ref_straf}, and after four year, STRAF had become a
 widely used tool by the forensics community, but not only.
 It has been used as a support for teaching population genetics, and has
 been used in evolutionary biology studies.
@@ -203,7 +181,7 @@ By reading this book, our hope is that you will:
 
 \begin{itemize}
 \item
-  Get an overview of common \textbf{concepts} in forensic and population genetics
+  Get a brief overview of common \textbf{concepts} in forensic and population genetics
 \item
   Learn how to use the \textbf{STRAF software} for STR data analysis through \textbf{practical applications}
 \item
@@ -214,37 +192,36 @@ By reading this book, our hope is that you will:
 \section*{Outline}\label{outline}}
 \addcontentsline{toc}{section}{Outline}
 
-The book is organised as follow:
+The book is organised as follows:
 
 \begin{itemize}
 \item
-  We'll start by an \textbf{Introduction} to essential forensic and population genetics concepts.
+  In \textbf{Chapter} \ref{introduction}, we'll start by an \textbf{introduction} to essential forensic and population genetics concepts.
 \item
-  In \textbf{Chapter 1}, we will focus on data, from its generation to its preparation for
+  In \textbf{Chapter} \ref{importing-data}, we will focus on data, from its generation to its preparation for
   downstream analysis in STRAF.
 \item
-  In \textbf{Chapter 2}, we will review \textbf{forensic parameters} that can be computed in STRAF,
+  In \textbf{Chapter} \ref{forensic-parameters}, we will review \textbf{forensic parameters} that can be computed in STRAF,
   and discuss their interpretation.
 \item
-  In \textbf{Chapter 3}, we will review essential population genetics concepts and
+  In \textbf{Chapter} \ref{popgen-indices}, we will review essential population genetics concepts and
   describe \textbf{population genetics indices} that can be computed in STRAF.
 \item
-  In \textbf{Chapter 4}, we will focus on \textbf{multivariate statistics} and how they can provide
+  In \textbf{Chapter} \ref{pca-mds}, we will focus on \textbf{multivariate statistics} and how they can provide
   insights into population structure, with a particular focus on Principal Component
   Analysis (PCA) and Multidimensional Scaling (MDS), two widely used approaches in genetics.
 \item
-  In \textbf{Chapter 5}, we will explain how to compare samples of interest to
+  In \textbf{Chapter} \ref{ref-pop}, we will explain how to compare samples of interest to
   \textbf{reference populations} by loading reference allele frequencies into the
   software and performing a Multidimensional Scaling analysis.
 \item
-  In \textbf{Chapter 6}, we gather recommendations around potential next analysis steps
+  In \textbf{Chapter} \ref{file-conversion}, we gather recommendations around potential next analysis steps
   by presenting STRAF's \textbf{file conversion} capabilities and useful methods implemented in
   \textbf{other software}.
 \end{itemize}
 
 \hypertarget{introduction}{%
-\chapter*{Introduction}\label{introduction}}
-\addcontentsline{toc}{chapter}{Introduction}
+\chapter{Introduction}\label{introduction}}
 
 In this chapter, we will briefly introduce some essential concepts in genetics.
 
@@ -254,8 +231,8 @@ In this chapter, we will briefly introduce some essential concepts in genetics.
 
 Each of our cells contains 23 pairs of \textbf{chromosomes}, composed of a long \textbf{DNA}
 (deoxyribonucleic acid) molecule. Under this somewhat barbaric name
-is hiding a simple concept. This molecule is the support of the information
-used by the body to function and development. This information is encoded by a
+is hiding a simple concept. This molecule is the carrier of the information
+the body need for its function and development. This information is encoded by a
 chain of \textbf{nucleotides} of four types that can be referred to using the letters
 A (Adenine), T (Thymine), C (Cytosine) and G (Guanine).
 
@@ -279,11 +256,10 @@ There can also be \textbf{insertions} and \textbf{deletions} (sometimes referred
 Finally, other markers of genetic variation are \textbf{Copy Number Variants} (\textbf{CNVs}),
 when a sequence is repeated a certain number of times.
 They can contain more or less repetitive units. These units can contain more or
-less nucleotides. \textbf{Short Tandem Repeats} (\textbf{STRs}) a type of genetic
+less nucleotides. \textbf{Short Tandem Repeats} (\textbf{STRs}) are a type of genetic
 polymorphism consisting in short sequences from 2 to 7 base pairs that are
-repeated. The \textbf{number of repeats varies} among individuals, therefore characterizing
-their length can be useful to identify individuals. STRs are still nowadays one of
-the most commons markers used in forensic genetics.
+repeated several times. The \textbf{number of repeats varies} among individuals, therefore characterizing
+the length of those repeats regions can be useful to identify individuals. STRs are the most common markers used in forensic genetics.
 
 \hypertarget{polymorphism-and-forensics}{%
 \section*{Polymorphism and forensics}\label{polymorphism-and-forensics}}
@@ -299,11 +275,9 @@ answering include:
 
 \begin{itemize}
 \item
-  What is the probability that a randomly-picked person in a population would
-  match the individual of interest in terms of DNA?
+  What is the probability that a DNA profile at a crime scene does not only match the person of interest, but also a person picked randomly from the relevant population?
 \item
-  Which proportion of the population has the same combination of
-  genetic variants as the sample of interest?
+  Based on the detected genetic variants: Is it more likely to detect these combinations if the two persons of interest are brother and sister or if they are unrelated?
 \end{itemize}
 
 \hypertarget{the-role-of-population-genetics}{%
@@ -311,29 +285,12 @@ answering include:
 \addcontentsline{toc}{subsection}{The role of population genetics}
 
 To answer these questions, it is crucial to first get a good characterisation
-of \textbf{genetic variants} (or \textbf{alleles}) frequencies in populations of interest,
+of \textbf{genetic variant} (or \textbf{allele}) frequencies in populations of interest,
 at different \textbf{loci} across the genome. Indeed, these frequencies can vary
 widely among populations.
 
 In this context, STRAF has been designed to facilitate the analysis of
 \textbf{population data} in forensic genetics.
-
-\textbf{Digression - Why STRs and not other markers?}
-
-Nowadays, it is easier and cheaper to generate whole-genome sequences. One could
-wonder why STRs are still so popular in forensic practice, and have not been replaced
-by SNPs that are easily generated from Next-Generation Sequencing (NGS) data.
-
-This is mainly due to the fact that STRs have a high mutation rate, therefore
-are more diverse in human populations. This explains their high \textbf{power of discrimination}.
-
-Furthermore, they can also be used in deciphering mixture components, a very common
-case in forensics.
-
-Finally, they can be combined in multiplex assays, which is convenient when low
-amounts of biological material can be recovered.
-
-For all these reasons, STRs remain the dominant marker used in forensic genetics.
 
 \hypertarget{importing-data}{%
 \chapter{Importing data}\label{importing-data}}
@@ -356,11 +313,11 @@ markers are diploid, that is two copies are present per sample.
 \item
   The first column, named \textbf{ind}, needs to contain the sample ID
 \item
-  The second column, , named \textbf{pop}, contains the population ID (this column must exist even if a single population is studied)
+  The second column, named \textbf{pop}, contains the population ID (this column must exist even if a single population is studied)
 \item
   The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)
 \item
-  Genotypes must be encoded as numbers (STRAF accepts point alleles)
+  Genotypes must be encoded as numbers (STRAF accepts point alleles, e.g.~9.3 in TH01)
 \item
   Missing data (e.g.~null alleles) must be indicated with a ``0''.
 \end{itemize}
@@ -398,12 +355,12 @@ It only takes a few steps to generate an input file in a format that is suitable
 for use in STRAF. From Excel, for example, we can start from a spreadsheet looking
 like this:
 
-\includegraphics[width=0.8\linewidth]{img/capture_excel_1}
+\includegraphics[width=1\linewidth]{img/capture_excel_1}
 
 Then, one simply needs to save this table as a tab-delimited text file. This can be
 achieved by clicking on \texttt{Save\ As} \textgreater{} \texttt{Text\ (Tab-delimited)\ (*.txt)}
 
-\includegraphics[width=0.8\linewidth]{img/capture_excel_2}
+\includegraphics[width=1\linewidth]{img/capture_excel_2}
 
 \hypertarget{uploading-the-data-to-straf}{%
 \section{Uploading the data to STRAF}\label{uploading-the-data-to-straf}}
@@ -416,11 +373,11 @@ autosomal markers, and \emph{Haploid} for Y-chromosome markers). After that, you
 upload the file by clicking on \emph{Browse} and selecting the file on your computer.
 
 Once the file is uploaded, a preview will be displayed on the right and all the
-analyses will be available. If not, it is likely that an error has occured. If the error
+analyses will be available. If not, it is likely that an error has occurred. If the error
 message is not explicit, you can refer to the \textbf{Input file checklist} below that
 gathers common issues with the input file.
 
-\includegraphics[width=0.8\linewidth]{img/capture_import_1}
+\includegraphics[width=1\linewidth]{img/capture_import_1}
 
 \hypertarget{common-issues}{%
 \section{Common issues}\label{common-issues}}
@@ -429,6 +386,8 @@ Even though you've been very careful in the generation of STRAF's input file,
 it is possible that you still run into an error after uploading the file to STRAF.
 In case STRAF cannot read your input file, we've put together a checklist to identify
 common issues with the input file.
+
+\begin{interpretation}
 
 \textbf{Input file checklist}
 
@@ -452,13 +411,16 @@ common issues with the input file.
   Check if the first two columns are names ``ind'' and ``pop''
 \end{itemize}
 
+
+\end{interpretation}
+
 \hypertarget{having-a-first-look-at-the-data}{%
 \section{Having a first look at the data}\label{having-a-first-look-at-the-data}}
 
 Below the dataset preview, you will be able to generate a plot of allele frequencies
 at each locus.
 
-\includegraphics[width=0.8\linewidth]{img/capture_import_2}
+\includegraphics[width=1\linewidth]{img/capture_import_2}
 
 You can also generate an allele frequency table, which is standard practice when
 reporting new population data in a forensics journal. You can either download
@@ -466,7 +428,7 @@ the allele frequencies in a text format (TSV), or as an Excel (XLSX) file. Note
 that you have the ability to select a specific population using the drop-down menu
 above the table.
 
-\includegraphics[width=0.8\linewidth]{img/capture_import_3}
+\includegraphics[width=1\linewidth]{img/capture_import_3}
 
 \hypertarget{forensic-parameters}{%
 \chapter{Forensic parameters}\label{forensic-parameters}}
@@ -479,17 +441,17 @@ this chapter is to translate each of them into plain English.
 \hypertarget{how-to-compute-forensic-parameters-in-straf}{%
 \section{How to compute forensic parameters in STRAF}\label{how-to-compute-forensic-parameters-in-straf}}
 
-Once your data has bee uploaded, you can go to the \textbf{Forensic parameters} tab
+Once your data has been uploaded, you can go to the \textbf{Forensic parameters} tab
 and check the \emph{Compute forensics statistics} box. The computation will be performed
 and a table containing the values per locus will be displayed. The computation is done
 per population and overall, a drop-down menu is present to select the population.
 
-\includegraphics[width=0.8\linewidth]{img/capture_forensics_parameters_1}
+\includegraphics[width=1\linewidth]{img/capture_forensics_parameters_1}
 
 Below the forensic parameters table, You can select the metric you would like
 to represent using the drop-down menu.
 
-\includegraphics[width=0.8\linewidth]{img/capture_forensics_parameters_2}
+\includegraphics[width=1\linewidth]{img/capture_forensics_parameters_2}
 
 \hypertarget{details-on-the-forensic-parameters}{%
 \section{Details on the forensic parameters}\label{details-on-the-forensic-parameters}}
@@ -498,7 +460,7 @@ to represent using the drop-down menu.
 \subsection{Random match probability (PM)}\label{random-match-probability-pm}}
 
 The \textbf{Random match probability}, or probability of matching (PM), is defined as
-the probability of observing a random match between two individuals.
+the probability of observing a random match between two unrelated individuals.
 
 \textbf{Formula}
 
@@ -554,21 +516,21 @@ interested in the probability of ``not matching'', i.e.~the probability of discr
   H_{\mathrm{exp}} = GD = \frac{n}{n - 1} \left( 1 - \sum_{i=1}^{n}(p_i)^2 \right),
 \]
 
-where \(n\) is the number of gene copies sampled and \(p_i\) is the
+where \(n\) is the number of gene copies sampled (i.e., the sample size for haploid samples, and twice the sample size for diploid samples) and \(p_i\) is the
 frequency of the \(i^{th}\) allele in the population.
 
 \textbf{Interpretation}
 
 It is the probability that an individual will be heterozygous at a given locus.
 
-As an example, a value of \(GD\) of 0.6 mean that 60\% chance of being
+As an example, a value of \(GD\) of 0.6 means that there is a 60\% chance of being
 heterozygote at this locus.
 
 It depends directly on the genetic diversity at this locus, which itself depends on
 allele frequencies in your population.
 
 Say we have two alleles in a given population, genetic diversity will be higher
-in a population aith allele frequencies 0.5 and 0.5 than in a population where
+in a population with allele frequencies 0.5 and 0.5 than in a population where
 frequencies are 0.1 and 0.9 (as less heterozygotes can be made with rare
 alleles). This rationale can be extended to any number of alleles.
 
@@ -613,16 +575,13 @@ proportion of homozygous individuals in the population sample.
 
 \textbf{Interpretation}
 
-The power of exclusion depends on the observed proportions of heterozygous and
-homozygous individuals in a population. These proportions, multiplied as in the
-equation above, give the \textbf{probability that two persons do not have the same genotype
-in the population}.
+The power of exclusion depends on the observed proportions of heterozygous and homozygous individuals in a population. These proportions, multiplied as in the equation above, give the \textbf{mean exclusion probability for a paternity test}. Intuitively, the more diverse the population is, the greater this value is, as diversity is related to heterozygosity (see above).
 
 \hypertarget{typical-paternity-index-tpi}{%
 \section{Typical Paternity Index (TPI)}\label{typical-paternity-index-tpi}}
 
 Finally, the typical paternity index (\(TPI\)) reflects the ``mean PI for
-random non-excluded men`` for a given locus.
+random non-excluded men`` in trio cases (father-mother-child) for a given locus.
 
 \textbf{Formula}
 
@@ -640,8 +599,8 @@ twice the frequency of homozygotes in the population. This is an \textbf{odds ra
 measuring how many times more likely that a possible father is the actual
 father than a randomly selected man in the population, on average (\emph{typical} case).
 
-\hypertarget{population-genetics-indices}{%
-\chapter{Population genetics indices}\label{population-genetics-indices}}
+\hypertarget{popgen-indices}{%
+\chapter{Population genetics indices}\label{popgen-indices}}
 
 In this chapter, we will see how to compute some population genetics indices in STRAF.
 
@@ -652,7 +611,7 @@ Once you have uploaded your genotypes in STRAF, you can go to the \textbf{Popula
 tab to compute relevant population genetics indices. It is also possible to perform
 a Hardy-Weinberg equilibrium test by checking the relevant box.
 
-\includegraphics[width=0.8\linewidth]{img/capture_popgen_parameters_1}
+\includegraphics[width=1\linewidth]{img/capture_popgen_parameters_1}
 
 \hypertarget{details-on-population-genetics-indices}{%
 \section{Details on population genetics indices}\label{details-on-population-genetics-indices}}
@@ -714,7 +673,7 @@ Several \textbf{estimators} of \(F_{\textrm{ST}}\) exist (for example, Weir and 
 Hudson's \(F_{\textrm{ST}}\)). It's like if each population geneticist had decided
 to develop their own estimator!
 
-Why is that? In statistics, what we call an \textbf{estimator} a metric aiming at estimating
+Why is that? In statistics, what we call an \textbf{estimator} is a metric aiming at estimating
 a given quantity based on \textbf{observed data}. It is important to keep in mind that
 these estimators rely on a specific \textbf{model}, with underlying assumptions.
 It explains why some estimators are more or less reliable depending on the case
@@ -732,12 +691,12 @@ different demographic models.
 
 Linkage disequilibrium is an important quantity to be measured in genetics.
 It is defined as the \textbf{nonindependence of genotypes at distinct loci}.
-It means that it is more likely to observe the co-occurence of some genotypes
-at different loci.
+It means that it is more likely to observe the co-occurrence of some genotypes
+at different loci. This can be influenced by population history.
 
-Most of the times, this is explained by the physical proximity between loci. If
+However, most of the times, LD is explained by the physical proximity between loci. If
 two loci are next to each other on the genome, recombination events between them
-will be rare and genotypes won't be suffled. Genotypes at these loci will be correlated
+will be rare and genotypes won't be shuffled. Genotypes at these loci will be correlated
 and linkage disequilibrium will be high. On the other hand, two loci found on two different
 chromosomes are not expected to show any LD signals as genotypes will be systematically
 shuffled at each generation.
@@ -749,7 +708,7 @@ It is possible to test for the presence of LD in the dataset you uploaded using
 STRAF. After checking the \emph{Display pairwise LD p-values matrix}, LD tests between
 each pair of loci will be performed and p-values will be reported.
 
-\includegraphics[width=0.8\linewidth]{img/capture_popgen_parameters_2}
+\includegraphics[width=1\linewidth]{img/capture_popgen_parameters_2}
 
 \textbf{Important note}: Other population genetics software,
 \textbf{Genepop} and \textbf{Arlequin}, implement more reliable
@@ -757,8 +716,8 @@ versions of the LD test that should be preferred. They are currently not impleme
 in STRAF because of performance limitations. If you need to perform such a test, the
 \textbf{File conversion} utilities (cf.~Chapter 6) should facilitate the workflow.
 
-\hypertarget{multivariate-statistics}{%
-\chapter{Multivariate statistics}\label{multivariate-statistics}}
+\hypertarget{pca-mds}{%
+\chapter{Multivariate statistics}\label{pca-mds}}
 
 In this chapter, we will describe the two multivariate statistics methods implemented
 in STRAF, \textbf{Principal Component Analysis} (\textbf{PCA}) and \textbf{Multidimensional Scaling} (\textbf{MDS}).
@@ -786,16 +745,16 @@ axes capturing most of the variation (PCs).
 In STRAF, you can perform a PCA by going into the \textbf{PCA - MDS} tab and checking
 the following \emph{Run and plot a PCA} checkbox.
 
-\includegraphics[width=0.8\linewidth]{img/capture_pca_1}
+\includegraphics[width=1\linewidth]{img/capture_pca_1}
 
 It will trigger the PCA computation and return a graph. You are also able to
-download to coordinates on different PCs (also called eigenvectors).
+download the coordinates of the samples on different PCs (also called eigenvectors).
 
 \begin{interpretation}
 \textbf{Interpreting PCA results}
 
 PCA has become a popular tool in population genetics, as the relationships between
-individuals on the PCA projection tends to reflect their genetic \textbf{relatedness}. The
+individuals on the PCA projection tend to reflect their genetic \textbf{relatedness}. The
 closer individuals are on the PCA projection, the more genetically related they tend to be.
 
 It can also be used as a \textbf{quality control} tool. For example, if a sample is very far
@@ -803,7 +762,7 @@ from all the others, including the ones that are part of the same population,
 it is possible that there is an issue with the data. One would need to inspect
 the raw data and check if any strange pattern can be found.
 
-It is important to be aware of the influence of non demographic processes on
+It is important to be aware of the influence of non-demographic processes on
 the PCA projection. For example, \textbf{imbalanced sample sizes} between populations
 can drive some patterns. When populations are sampled unevenly, the projection will
 be \textbf{distorted} and distances observed on the projection can be driven by these
@@ -819,11 +778,11 @@ any major conclusions on the relationships between populations and individuals.
 \section{Multidimensional Scaling (MDS)}\label{multidimensional-scaling-mds}}
 
 An \textbf{MDS} is conceptually similar to a PCA. One of the main differences is
-that it takes as input data in a different format. As PCA uses raw genotypes and
+that it requires input data to be in a different format. As PCA uses raw genotypes and
 can accommodate data at the individual level, \textbf{pairwise distances} between data
 points are used for an MDS.
 
-In forensics practice, it is typically used to compare \textbf{populations} and not
+In forensics, it is typically used to compare \textbf{populations} and not
 \textbf{individuals}, even though it would be theoretically possible.
 
 As \textbf{pairwise distances between populations} are used, and MDS can be based on
@@ -834,13 +793,13 @@ Based on these distances, the MDS will \textbf{project} the populations onto a
 \textbf{lower-dimensional space}. This projection facilitates the interpretation of
 relationships between populations.
 
-\includegraphics[width=0.8\linewidth]{img/capture_mds_1}
+\includegraphics[width=1\linewidth]{img/capture_mds_1}
 
 \begin{interpretation}
 \textbf{Interpreting MDS results}
 
-Just like with a PCA, populations the \textbf{closer} populations are on the MDS projection,
-the more \textbf{genetically related} the tend to be, based on the markers that have been
+Just like with a PCA, the \textbf{closer} populations are on the MDS projection,
+the more \textbf{genetically related} they tend to be, based on the markers that have been
 used to compute their pairwise genetic distances.
 
 Again, like for the PCA, the MDS should remain an
@@ -849,8 +808,8 @@ any major conclusions on the relationships between populations and individuals.
 
 \end{interpretation}
 
-\hypertarget{reference-populations-analysis}{%
-\chapter{Reference populations analysis}\label{reference-populations-analysis}}
+\hypertarget{ref-pop}{%
+\chapter{Reference populations analysis}\label{ref-pop}}
 
 In this chapter, we will see how to compare the uploaded populations to
 reference populations (based on allele frequencies).
@@ -859,7 +818,7 @@ reference populations (based on allele frequencies).
 \section{MDS on reference frequencies}\label{mds-on-reference-frequencies}}
 
 STRAF implements an MDS computation based on allele frequency data. By default,
-allele frequencies from the STRiDER database are used (loci with less than 10
+allele frequencies from the STRiDER database \citep{ref_strider} are used (loci with less than 10
 populations have been excluded). If you are not familiar with the MDS method and
 interpretation, you can find details in \textbf{Chapter 4}.
 
@@ -867,18 +826,18 @@ You can see the output of the MDS in the \textbf{Reference population} tab. It i
 MDS projection in two dimensions for 19 European populations, as well as the population
 tree.
 
-\includegraphics[width=0.8\linewidth]{img/capture_ref_pop_1}
+\includegraphics[width=1\linewidth]{img/capture_ref_pop_1}
 
 The drop-down menu below the plots allows one to select or unselect populations
 to be used in the MDS analysis.
 
-\includegraphics[width=0.8\linewidth]{img/capture_ref_pop_2}
+\includegraphics[width=1\linewidth]{img/capture_ref_pop_2}
 
 Provided that some loci are in common between the reference allele frequencies and
 the genotypes you uploaded, it is possible to add your own populations to the existing MDS
 by checking the \emph{Include uploaded data to the MDS} box.
 
-\includegraphics[width=0.8\linewidth]{img/capture_ref_pop_3}
+\includegraphics[width=1\linewidth]{img/capture_ref_pop_3}
 
 You will then see your populations added to the MDS plots.
 
@@ -904,7 +863,7 @@ Allele & Switzerland & Germany & France\tabularnewline
 \textbf{D2S1338} & & &\tabularnewline
 Allele & Switzerland & Germany & France\tabularnewline
 19 & 0.40 & 0.38 & 0.42\tabularnewline
-20 & 0.42 & 0.26 & 0.28\tabularnewline
+20 & 0.29 & 0.26 & 0.28\tabularnewline
 21 & 0.31 & 0.36 & 0.3\tabularnewline
 \bottomrule
 \end{longtable}
@@ -912,12 +871,12 @@ Allele & Switzerland & Germany & France\tabularnewline
 Starting from an Excel file for example, we can start with a spreadsheet that looks
 like this:
 
-\includegraphics[width=0.8\linewidth]{img/capture_ref_excel_1}
+\includegraphics[width=1\linewidth]{img/capture_ref_excel_1}
 
 Then, one simply needs to save this table as a CSV (Comma-Separated Values) file. This can be
-achieved by clicking on \texttt{Save\ As} \textgreater{} \texttt{CSV\ (Comma-delimited)\ (*.csv)}
+achieved by clicking on \texttt{Save\ As} \textgreater{} \texttt{CSV\ (Comma-delimited)\ (*.csv)}.
 
-\includegraphics[width=0.8\linewidth]{img/capture_ref_excel_2}
+\includegraphics[width=1\linewidth]{img/capture_ref_excel_2}
 
 Then, you can upload your data and use it as described for the STRIDER database.
 
@@ -934,16 +893,16 @@ all available in the \textbf{File conversion} tab of the application.
 \hypertarget{how-to-convert-a-file-in-straf}{%
 \section{How to convert a file in STRAF}\label{how-to-convert-a-file-in-straf}}
 
-Once you have imported your file, it is straightforward to conevrt it to another
+Once you have imported your file, it is straightforward to convert it to another
 format. You can go to the \textbf{File conversion} tab and click on one of the following
 buttons to download your genotypes in another format.
 
-\includegraphics[width=0.8\linewidth]{img/capture_file_conversion_1}
+\includegraphics[width=1\linewidth]{img/capture_file_conversion_1}
 
 \hypertarget{genepop-and-arlequin-formats}{%
 \section{Genepop and Arlequin formats}\label{genepop-and-arlequin-formats}}
 
-\textbf{Genepop} and \textbf{Arlequin} softwares implement several population genetics methods,
+\textbf{Genepop} \citep{ref_genepop} and \textbf{Arlequin} \citep{ref_arlequin} softwares implement several population genetics methods,
 including ones that are part of standard forensics practice:
 
 \begin{itemize}
@@ -961,6 +920,183 @@ are overall preferable to the HW and LD tests implemented in STRAF.
 \section{Familias}\label{familias}}
 
 Here a file containing allele frequencies is created. This file can be used in
-Familias to provide allele frequencies reference.
+Familias \citep{ref_familias} to provide allele frequency reference
+data for relationship testing.
+
+\hypertarget{snp-analysis}{%
+\chapter{Analysing SNP data}\label{snp-analysis}}
+
+\hypertarget{strs-vs.-snps}{%
+\section{STRs vs.~SNPs}\label{strs-vs.-snps}}
+
+STRs have been and remain the dominant marker used in forensic genetics.
+
+This is mainly due to the fact that STRs have a high mutation rate, therefore
+are more diverse in human populations. This explains their high \textbf{power of discrimination}.
+Furthermore, they can also be used in deciphering mixture components, a very common
+case in forensics. Finally, they can be combined in multiplex assays, which is convenient when lowamounts of biological material can be recovered.
+
+Even though STRs will still remain the standard markers in forensic genetics
+for many years, the application of sequencing data, especially the analyses
+of SNPs became more and more popular in recent years.
+
+Indeed, it nowadays easier and cheaper to generate whole-genome sequences than before.
+One could wonder why STRs are still so popular in forensic practice, and have not been replaced by SNPs that are easily generated from Next-Generation Sequencing (NGS) data.
+
+The advantages of SNPs are a higher multiplex capacity (with STRs and CE we can
+analyse not much more than 25 markers in parallel) and therefore a higher
+discriminative power and shorter amplicon size (interesting for degraded samples).
+
+\hypertarget{how-to-analyse-snp-data-in-straf}{%
+\section{How to analyse SNP data in STRAF?}\label{how-to-analyse-snp-data-in-straf}}
+
+It is in theory possible to use any marker type in STRAF, as long as the input
+format corresponds to what is expected from the software, that is:
+
+\begin{itemize}
+\item
+  2 columns per locus for diploid data, 1 for haploid;
+\item
+  alleles are encoded by a number: for example, a diallelic SNP could be encoded as
+  100 for the reference allele, and 101 for the alternative allele.
+\end{itemize}
+
+The main challenge remains encoding these values and converting from the initial
+data format. As an example, a genotype table is easier to convert than raw sequences
+or bioinformatics-specific formats such as the Variant Calling Format (VCF).
+
+\hypertarget{conclusion}{%
+\chapter{Conclusion}\label{conclusion}}
+
+You have now reached the end of the STRAF Book. This book has been written to give
+a broad overview of the concepts and tools you can find in the application.
+We hope it has been useful to you.
+
+If you want to know more about STRAF, you will find more information about the
+software in the \textbf{Appendix} section.
+
+You can now go back to \url{straf.fr} and use the application for your
+forensics project! Any feedback is always welcome and you can contact us anytime.
+STRAF is continuously improving thanks to your precious feedback!
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{img/straf-logo} \caption{The STRAF logo.}\label{fig:straf-logo}
+\end{figure}
+
+\hypertarget{references}{%
+\chapter{References}\label{references}}
+
+\hypertarget{refs}{}
+
+\hypertarget{acknowledgments}{%
+\chapter{Acknowledgments}\label{acknowledgments}}
+
+We thank STRAF's users for their useful comments and for giving the software
+a reason to exist and be maintained. In particular, we would like to thank
+Peter Vallone, Peter de Knijff, Guanglin He, Martin Bodner,
+Nur Afiqah binti Hj Latip, Ritu Yadav, and Ömer Karataş.
+We are grateful to them for sending their valuable feedback.
+
+We are grateful to the University of Bern for covering the costs of STRAF hosting.
+
+\hypertarget{appendix-appendix}{%
+\appendix}
+
+
+\hypertarget{technical-details}{%
+\chapter{Technical details}\label{technical-details}}
+
+\hypertarget{basic-information}{%
+\section{Basic information}\label{basic-information}}
+
+\begin{itemize}
+\item
+  STRAF is hosted on an Amazon Web Services (\textbf{AWS}) server located in \textbf{Ireland}.
+\item
+  STRAF has \textbf{2 CPUs} and \textbf{4 gigabytes of memory} available on the server. It is
+  enough for the vast majority of cases, but might not be enough if your dataset
+  is too large (too many samples, or too many loci).
+\item
+  The web application is based on the \textbf{R-Shiny framework}. \textbf{R} is an open source
+  programming language particularly popular in data science. \href{https://www.rstudio.com/products/shiny/}{Shiny} is an
+  open source \textbf{R} package that provides a web framework for building web
+  applications using R.
+\end{itemize}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{img/r-logo} \caption{The R logo.}\label{fig:r-logo}
+\end{figure}
+
+\hypertarget{understanding-strafs-performance}{%
+\section{Understanding STRAF's performance}\label{understanding-strafs-performance}}
+
+When you open STRAF, a new session. When you close your browser or the tab,
+the session is closed and your data and computations are deleted.
+
+STRAF can accept an unlimited number of user connections at the same time.
+However, the computational resources are shared between users. In other words,
+multiple users can connect at the same time, but computations will be ran one after
+the other. If you wait longer than usual for a given task, it is likely
+that someone else is using the server. Please keep this in mind and try to avoid
+unnecessary computations!
+
+STRAF has limited resources, as described above, and this can be limiting if your
+dataset is too large because you have too many samples or loci. In that case,
+you could consider trying to run STRAF locally as outlined in \textbf{Chapter} \ref{local-computer}. You could even host it on your own institution's server, in that
+case feel free to contact us as we would be happy to help in the process.
+
+\hypertarget{external-dependencies}{%
+\section{External dependencies}\label{external-dependencies}}
+
+STRAF wouldn't exist without the amazing community of R developers who contributed
+great resources and packages.
+
+The application uses several genetics packages:
+
+\begin{itemize}
+\item
+  \texttt{genepop}
+\item
+  \texttt{edegenet}
+\item
+  \texttt{hierfstat}
+\item
+  \texttt{pegas}
+\end{itemize}
+
+More generic data science packages are also used:
+
+\begin{itemize}
+\item
+  Shiny-related packages: \texttt{shiny}, \texttt{colourpicker}, \texttt{shinycssloaders}, \texttt{shinyWidgets}
+\item
+  The ``tidyverse'': \texttt{dplyr}, \texttt{tidyr}, \texttt{ggplot2}, \texttt{magrittr}, \texttt{openxlsx}, \texttt{reshape2}, \texttt{ggrepel}
+\end{itemize}
+
+\hypertarget{strafs-commitments}{%
+\chapter{STRAF's commitments}\label{strafs-commitments}}
+
+\hypertarget{straf-will-always-remain-free-and-open-source}{%
+\section{STRAF will always remain free and open source}\label{straf-will-always-remain-free-and-open-source}}
+
+STRAF is a \textbf{free} and \textbf{open-source} software. As free software advocates, we believe
+anyone should be able to \textbf{run} the software, \textbf{study} the software,
+\textbf{modify} the software, and to \textbf{share} copies of the software. That is why
+STRAF is licensed under the permissive \textbf{GNU General Public License version 3}.
+Here is the \href{https://www.gnu.org/licenses/gpl-3.0.txt}{full text of the GPL-3 license}.
+
+For the most curious of you, you can view all the \href{https://github.com/agouy/straf}{source code of STRAF on GitHub}.
+
+\hypertarget{straf-is-carbon-neutral}{%
+\section{STRAF is carbon-neutral}\label{straf-is-carbon-neutral}}
+
+Hosting a web application onto a server requires energy, and energy is becoming
+more and more precious. For that reason, STRAF is hosted on a server that is
+on a carbon-neutral data center and that will be fully powered by renewable energies by 2025.
+
+This book and STRAF's code source are hosted onto GitHub servers, which are
+carbon-neutral as well since 2019.
+
+  \bibliography{references.bib}
 
 \end{document}

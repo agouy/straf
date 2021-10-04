@@ -1,4 +1,4 @@
-# Reference populations analysis
+# Reference populations analysis {#ref-pop}
 
 
 
@@ -8,7 +8,7 @@ reference populations (based on allele frequencies).
 ## MDS on reference frequencies
 
 STRAF implements an MDS computation based on allele frequency data. By default, 
-allele frequencies from the STRiDER database are used (loci with less than 10 
+allele frequencies from the STRiDER database [@ref_strider] are used (loci with less than 10 
 populations have been excluded). If you are not familiar with the MDS method and
 interpretation, you can find details in __Chapter 4__.
 
@@ -55,7 +55,7 @@ The data must be formatted as follows:
 | __D2S1338__ |        |         |        |
 | Allele | Switzerland | Germany | France |
 | 19     | 0.40        | 0.38    | 0.42   |
-| 20     | 0.42        | 0.26    | 0.28   |
+| 20     | 0.29        | 0.26    | 0.28   |
 | 21     | 0.31        | 0.36    | 0.3    |
 
 
@@ -67,7 +67,7 @@ like this:
 :::
 
 Then, one simply needs to save this table as a CSV (Comma-Separated Values) file. This can be
-achieved by clicking on `Save As` > `CSV (Comma-delimited) (*.csv)`
+achieved by clicking on `Save As` > `CSV (Comma-delimited) (*.csv)`.
 
 :::{.capture}
 <img src="img/capture_ref_excel_2.png" width="100%" />

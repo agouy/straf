@@ -1,5 +1,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{float} 
+
 \usepackage{geometry}
 \geometry{a5paper}
 \usepackage{fontspec}
@@ -20,21 +22,3 @@
   coltext=boxdark,
   boxsep=5pt,
   arc=2pt}
-  
-\newenvironment{infobox}
-  {
-  \begin{itemize}
-  \renewcommand{\labelitemi}{
-    \raisebox{-.7\height}[0pt][0pt]{
-      {\setkeys{Gin}{width=3em,keepaspectratio}
-        \includegraphics{img/key3.png}}
-    }
-  }
-  \setlength{\fboxsep}{1em}
-  \begin{interpretation}
-  \item
-  }
-  {
-  \end{interpretation}
-  \end{itemize}
-  }

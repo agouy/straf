@@ -15,4 +15,7 @@ rmd_files:
     "pca_mds.Rmd",
     "reference_pop.Rmd",
     "file_conversion.Rmd",
+    "analysing_snp.Rmd",
+    "conclusion.Rmd",
+    "appendix.Rmd"
   ]

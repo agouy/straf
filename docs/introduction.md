@@ -1,4 +1,4 @@
-# Introduction {-}
+# Introduction {#introduction}
 
 
 
@@ -8,8 +8,8 @@ In this chapter, we will briefly introduce some essential concepts in genetics.
 
 Each of our cells contains 23 pairs of __chromosomes__, composed of a long __DNA__ 
 (deoxyribonucleic acid) molecule. Under this somewhat barbaric name
-is hiding a simple concept. This molecule is the support of the information 
-used by the body to function and development. This information is encoded by a 
+is hiding a simple concept. This molecule is the carrier of the information 
+the body need for its function and development. This information is encoded by a 
 chain of __nucleotides__ of four types that can be referred to using the letters
 A (Adenine), T (Thymine), C (Cytosine) and G (Guanine).
 
@@ -31,11 +31,10 @@ There can also be __insertions__ and __deletions__ (sometimes referred to as
 Finally, other markers of genetic variation are __Copy Number Variants__ (**CNVs**), 
 when a sequence is repeated a certain number of times. 
 They can contain more or less repetitive units. These units can contain more or 
-less nucleotides. __Short Tandem Repeats__ (**STRs**) a type of genetic 
+less nucleotides. __Short Tandem Repeats__ (**STRs**) are a type of genetic 
 polymorphism consisting in short sequences from 2 to 7 base pairs that are 
-repeated. The __number of repeats varies__ among individuals, therefore characterizing 
-their length can be useful to identify individuals. STRs are still nowadays one of 
-the most commons markers used in forensic genetics.
+repeated several times. The __number of repeats varies__ among individuals, therefore characterizing 
+the length of those repeats regions can be useful to identify individuals. STRs are the most common markers used in forensic genetics.
 
 ## Polymorphism and forensics {-}
 
@@ -45,38 +44,17 @@ As DNA varies between individuals, DNA typing became a central element of the fo
 scientist toolkit. For example, typical questions forensic genetics aims at
 answering include:
 
-* What is the probability that a randomly-picked person in a population would 
-match the individual of interest in terms of DNA?
+* What is the probability that a DNA profile at a crime scene does not only match the person of interest, but also a person picked randomly from the relevant population?
 
-* Which proportion of the population has the same combination of
-genetic variants as the sample of interest?
+* Based on the detected genetic variants: Is it more likely to detect these combinations if the two persons of interest are brother and sister or if they are unrelated?
+
 
 ### The role of population genetics {-}
 
 To answer these questions, it is crucial to first get a good characterisation 
-of __genetic variants__ (or **alleles**) frequencies in populations of interest,
+of __genetic variant__ (or **allele**) frequencies in populations of interest,
 at different __loci__ across the genome. Indeed, these frequencies can vary 
 widely among populations.
 
 In this context, STRAF has been designed to facilitate the analysis of 
 __population data__ in forensic genetics.
-
-
-:::digression
-__Digression - Why STRs and not other markers?__
-
-Nowadays, it is easier and cheaper to generate whole-genome sequences. One could
-wonder why STRs are still so popular in forensic practice, and have not been replaced
-by SNPs that are easily generated from Next-Generation Sequencing (NGS) data.
-
-This is mainly due to the fact that STRs have a high mutation rate, therefore
-are more diverse in human populations. This explains their high __power of discrimination__.
-
-Furthermore, they can also be used in deciphering mixture components, a very common
-case in forensics.
-
-Finally, they can be combined in multiplex assays, which is convenient when low 
-amounts of biological material can be recovered.
-
-For all these reasons, STRs remain the dominant marker used in forensic genetics.
-:::

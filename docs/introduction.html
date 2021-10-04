@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Introduction | The STRAF Book</title>
+<title>Chapter 1 Introduction | The STRAF Book</title>
 <meta name="author" content="Alexandre Gouy and Martin Zieger">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -32,13 +32,20 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Preface</a></li>
-<li><a class="active" href="introduction.html">Introduction</a></li>
-<li><a class="" href="importing-data.html"><span class="header-section-number">1</span> Importing data</a></li>
-<li><a class="" href="forensic-parameters.html"><span class="header-section-number">2</span> Forensic parameters</a></li>
-<li><a class="" href="population-genetics-indices.html"><span class="header-section-number">3</span> Population genetics indices</a></li>
-<li><a class="" href="multivariate-statistics.html"><span class="header-section-number">4</span> Multivariate statistics</a></li>
-<li><a class="" href="reference-populations-analysis.html"><span class="header-section-number">5</span> Reference populations analysis</a></li>
-<li><a class="" href="file-conversion.html"><span class="header-section-number">6</span> File conversion</a></li>
+<li><a class="active" href="introduction.html"><span class="header-section-number">1</span> Introduction</a></li>
+<li><a class="" href="importing-data.html"><span class="header-section-number">2</span> Importing data</a></li>
+<li><a class="" href="forensic-parameters.html"><span class="header-section-number">3</span> Forensic parameters</a></li>
+<li><a class="" href="popgen-indices.html"><span class="header-section-number">4</span> Population genetics indices</a></li>
+<li><a class="" href="pca-mds.html"><span class="header-section-number">5</span> Multivariate statistics</a></li>
+<li><a class="" href="ref-pop.html"><span class="header-section-number">6</span> Reference populations analysis</a></li>
+<li><a class="" href="file-conversion.html"><span class="header-section-number">7</span> File conversion</a></li>
+<li><a class="" href="snp-analysis.html"><span class="header-section-number">8</span> Analysing SNP data</a></li>
+<li><a class="" href="conclusion.html"><span class="header-section-number">9</span> Conclusion</a></li>
+<li><a class="" href="references.html"><span class="header-section-number">10</span> References</a></li>
+<li><a class="" href="acknowledgments.html"><span class="header-section-number">11</span> Acknowledgments</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="technical-details.html"><span class="header-section-number">A</span> Technical details</a></li>
+<li><a class="" href="strafs-commitments.html"><span class="header-section-number">B</span> STRAF’s commitments</a></li>
 </ul>
 
         <div class="book-extra">
@@ -46,8 +53,9 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="introduction" class="section level1 unnumbered">
-<h1>Introduction<a class="anchor" aria-label="anchor" href="#introduction"><i class="fas fa-link"></i></a>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="introduction" class="section level1">
+<h1>
+<span class="header-section-number">1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction"><i class="fas fa-link"></i></a>
 </h1>
 <p>In this chapter, we will briefly introduce some essential concepts in genetics.</p>
 <div id="dna-and-genetic-variation" class="section level2 unnumbered">
@@ -55,8 +63,8 @@
 </h2>
 <p>Each of our cells contains 23 pairs of <strong>chromosomes</strong>, composed of a long <strong>DNA</strong>
 (deoxyribonucleic acid) molecule. Under this somewhat barbaric name
-is hiding a simple concept. This molecule is the support of the information
-used by the body to function and development. This information is encoded by a
+is hiding a simple concept. This molecule is the carrier of the information
+the body need for its function and development. This information is encoded by a
 chain of <strong>nucleotides</strong> of four types that can be referred to using the letters
 A (Adenine), T (Thymine), C (Cytosine) and G (Guanine).</p>
 <p>Developments in biotechnologies enabled the characterisation of the DNA of
@@ -76,11 +84,10 @@ different nucleotides in a population at a single position.</p>
 <p>Finally, other markers of genetic variation are <strong>Copy Number Variants</strong> (<strong>CNVs</strong>),
 when a sequence is repeated a certain number of times.
 They can contain more or less repetitive units. These units can contain more or
-less nucleotides. <strong>Short Tandem Repeats</strong> (<strong>STRs</strong>) a type of genetic
+less nucleotides. <strong>Short Tandem Repeats</strong> (<strong>STRs</strong>) are a type of genetic
 polymorphism consisting in short sequences from 2 to 7 base pairs that are
-repeated. The <strong>number of repeats varies</strong> among individuals, therefore characterizing
-their length can be useful to identify individuals. STRs are still nowadays one of
-the most commons markers used in forensic genetics.</p>
+repeated several times. The <strong>number of repeats varies</strong> among individuals, therefore characterizing
+the length of those repeats regions can be useful to identify individuals. STRs are the most common markers used in forensic genetics.</p>
 </div>
 <div id="polymorphism-and-forensics" class="section level2 unnumbered">
 <h2>Polymorphism and forensics<a class="anchor" aria-label="anchor" href="#polymorphism-and-forensics"><i class="fas fa-link"></i></a>
@@ -92,45 +99,30 @@ the most commons markers used in forensic genetics.</p>
 scientist toolkit. For example, typical questions forensic genetics aims at
 answering include:</p>
 <ul>
-<li><p>What is the probability that a randomly-picked person in a population would
-match the individual of interest in terms of DNA?</p></li>
-<li><p>Which proportion of the population has the same combination of
-genetic variants as the sample of interest?</p></li>
+<li><p>What is the probability that a DNA profile at a crime scene does not only match the person of interest, but also a person picked randomly from the relevant population?</p></li>
+<li><p>Based on the detected genetic variants: Is it more likely to detect these combinations if the two persons of interest are brother and sister or if they are unrelated?</p></li>
 </ul>
 </div>
 <div id="the-role-of-population-genetics" class="section level3 unnumbered">
 <h3>The role of population genetics<a class="anchor" aria-label="anchor" href="#the-role-of-population-genetics"><i class="fas fa-link"></i></a>
 </h3>
 <p>To answer these questions, it is crucial to first get a good characterisation
-of <strong>genetic variants</strong> (or <strong>alleles</strong>) frequencies in populations of interest,
+of <strong>genetic variant</strong> (or <strong>allele</strong>) frequencies in populations of interest,
 at different <strong>loci</strong> across the genome. Indeed, these frequencies can vary
 widely among populations.</p>
 <p>In this context, STRAF has been designed to facilitate the analysis of
 <strong>population data</strong> in forensic genetics.</p>
-<div class="digression">
-<p><strong>Digression - Why STRs and not other markers?</strong></p>
-<p>Nowadays, it is easier and cheaper to generate whole-genome sequences. One could
-wonder why STRs are still so popular in forensic practice, and have not been replaced
-by SNPs that are easily generated from Next-Generation Sequencing (NGS) data.</p>
-<p>This is mainly due to the fact that STRs have a high mutation rate, therefore
-are more diverse in human populations. This explains their high <strong>power of discrimination</strong>.</p>
-<p>Furthermore, they can also be used in deciphering mixture components, a very common
-case in forensics.</p>
-<p>Finally, they can be combined in multiplex assays, which is convenient when low
-amounts of biological material can be recovered.</p>
-<p>For all these reasons, STRs remain the dominant marker used in forensic genetics.</p>
-</div>
 
 </div>
 </div>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="index.html">Preface</a></div>
-<div class="next"><a href="importing-data.html"><span class="header-section-number">1</span> Importing data</a></div>
+<div class="next"><a href="importing-data.html"><span class="header-section-number">2</span> Importing data</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#introduction">Introduction</a></li>
+<li><a class="nav-link" href="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
 <li><a class="nav-link" href="#dna-and-genetic-variation">DNA and genetic variation</a></li>
 <li><a class="nav-link" href="#markers-of-polymorphism">Markers of polymorphism</a></li>
 <li>
@@ -155,7 +147,7 @@ amounts of biological material can be recovered.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-09-26.</p>
+    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-10-04.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

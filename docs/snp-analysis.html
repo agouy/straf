@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 7 File conversion | The STRAF Book</title>
+<title>Chapter 8 Analysing SNP data | The STRAF Book</title>
 <meta name="author" content="Alexandre Gouy and Martin Zieger">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -38,8 +38,8 @@
 <li><a class="" href="popgen-indices.html"><span class="header-section-number">4</span> Population genetics indices</a></li>
 <li><a class="" href="pca-mds.html"><span class="header-section-number">5</span> Multivariate statistics</a></li>
 <li><a class="" href="ref-pop.html"><span class="header-section-number">6</span> Reference populations analysis</a></li>
-<li><a class="active" href="file-conversion.html"><span class="header-section-number">7</span> File conversion</a></li>
-<li><a class="" href="snp-analysis.html"><span class="header-section-number">8</span> Analysing SNP data</a></li>
+<li><a class="" href="file-conversion.html"><span class="header-section-number">7</span> File conversion</a></li>
+<li><a class="active" href="snp-analysis.html"><span class="header-section-number">8</span> Analysing SNP data</a></li>
 <li><a class="" href="conclusion.html"><span class="header-section-number">9</span> Conclusion</a></li>
 <li><a class="" href="references.html"><span class="header-section-number">10</span> References</a></li>
 <li><a class="" href="acknowledgments.html"><span class="header-section-number">11</span> Acknowledgments</a></li>
@@ -53,61 +53,54 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="file-conversion" class="section level1">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="snp-analysis" class="section level1">
 <h1>
-<span class="header-section-number">7</span> File conversion<a class="anchor" aria-label="anchor" href="#file-conversion"><i class="fas fa-link"></i></a>
+<span class="header-section-number">8</span> Analysing SNP data<a class="anchor" aria-label="anchor" href="#snp-analysis"><i class="fas fa-link"></i></a>
 </h1>
-<p>As STRAF is a web application and can be used simultaneously by multiple users,
-computing resources are limited. Therefore, the most computationally intensive analyses
-are not available in STRAF. In order to ease the path to other software,
-file conversion utilities have been implemented. It is possible to convert
-the input file to the <strong>Genepop</strong>, <strong>Arlequin</strong> and <strong>Familias</strong> formats. They are
-all available in the <strong>File conversion</strong> tab of the application.</p>
-<div id="how-to-convert-a-file-in-straf" class="section level2">
+<div id="strs-vs.-snps" class="section level2">
 <h2>
-<span class="header-section-number">7.1</span> How to convert a file in STRAF<a class="anchor" aria-label="anchor" href="#how-to-convert-a-file-in-straf"><i class="fas fa-link"></i></a>
+<span class="header-section-number">8.1</span> STRs vs. SNPs<a class="anchor" aria-label="anchor" href="#strs-vs.-snps"><i class="fas fa-link"></i></a>
 </h2>
-<p>Once you have imported your file, it is straightforward to convert it to another
-format. You can go to the <strong>File conversion</strong> tab and click on one of the following
-buttons to download your genotypes in another format.</p>
-<div class="capture">
-<div class="inline-figure"><img src="img/capture_file_conversion_1.png" width="100%"></div>
+<p>STRs have been and remain the dominant marker used in forensic genetics.</p>
+<p>This is mainly due to the fact that STRs have a high mutation rate, therefore
+are more diverse in human populations. This explains their high <strong>power of discrimination</strong>.
+Furthermore, they can also be used in deciphering mixture components, a very common
+case in forensics. Finally, they can be combined in multiplex assays, which is convenient when lowamounts of biological material can be recovered.</p>
+<p>Even though STRs will still remain the standard markers in forensic genetics
+for many years, the application of sequencing data, especially the analyses
+of SNPs became more and more popular in recent years.</p>
+<p>Indeed, it nowadays easier and cheaper to generate whole-genome sequences than before.
+One could wonder why STRs are still so popular in forensic practice, and have not been replaced by SNPs that are easily generated from Next-Generation Sequencing (NGS) data.</p>
+<p>The advantages of SNPs are a higher multiplex capacity (with STRs and CE we can
+analyse not much more than 25 markers in parallel) and therefore a higher
+discriminative power and shorter amplicon size (interesting for degraded samples).</p>
 </div>
-</div>
-<div id="genepop-and-arlequin-formats" class="section level2">
+<div id="how-to-analyse-snp-data-in-straf" class="section level2">
 <h2>
-<span class="header-section-number">7.2</span> Genepop and Arlequin formats<a class="anchor" aria-label="anchor" href="#genepop-and-arlequin-formats"><i class="fas fa-link"></i></a>
+<span class="header-section-number">8.2</span> How to analyse SNP data in STRAF?<a class="anchor" aria-label="anchor" href="#how-to-analyse-snp-data-in-straf"><i class="fas fa-link"></i></a>
 </h2>
-<p><strong>Genepop</strong> <span class="citation">(Rousset <a href="references.html#ref-ref_genepop" role="doc-biblioref">2008</a>)</span> and <strong>Arlequin</strong> <span class="citation">(Excoffier and Lischer <a href="references.html#ref-ref_arlequin" role="doc-biblioref">2010</a>)</span> softwares implement several population genetics methods,
-including ones that are part of standard forensics practice:</p>
+<p>It is in theory possible to use any marker type in STRAF, as long as the input
+format corresponds to what is expected from the software, that is:</p>
 <ul>
-<li><p>linkage disequilibrium computation</p></li>
-<li><p>Hardy-Weinberg tests</p></li>
+<li><p>2 columns per locus for diploid data, 1 for haploid;</p></li>
+<li><p>alleles are encoded by a number: for example, a diallelic SNP could be encoded as
+100 for the reference allele, and 101 for the alternative allele.</p></li>
 </ul>
-<p>STRAF currently implements these computations, however the ones implemented in
-Genepop are overall more reliable as they can rely on more permutations. They
-are overall preferable to the HW and LD tests implemented in STRAF.</p>
-</div>
-<div id="familias" class="section level2">
-<h2>
-<span class="header-section-number">7.3</span> Familias<a class="anchor" aria-label="anchor" href="#familias"><i class="fas fa-link"></i></a>
-</h2>
-<p>Here a file containing allele frequencies is created. This file can be used in
-Familias <span class="citation">(Kling, Tillmar, and Egeland <a href="references.html#ref-ref_familias" role="doc-biblioref">2014</a>)</span> to provide allele frequency reference
-data for relationship testing.</p>
+<p>The main challenge remains encoding these values and converting from the initial
+data format. As an example, a genotype table is easier to convert than raw sequences
+or bioinformatics-specific formats such as the Variant Calling Format (VCF).</p>
 
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="ref-pop.html"><span class="header-section-number">6</span> Reference populations analysis</a></div>
-<div class="next"><a href="snp-analysis.html"><span class="header-section-number">8</span> Analysing SNP data</a></div>
+<div class="prev"><a href="file-conversion.html"><span class="header-section-number">7</span> File conversion</a></div>
+<div class="next"><a href="conclusion.html"><span class="header-section-number">9</span> Conclusion</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#file-conversion"><span class="header-section-number">7</span> File conversion</a></li>
-<li><a class="nav-link" href="#how-to-convert-a-file-in-straf"><span class="header-section-number">7.1</span> How to convert a file in STRAF</a></li>
-<li><a class="nav-link" href="#genepop-and-arlequin-formats"><span class="header-section-number">7.2</span> Genepop and Arlequin formats</a></li>
-<li><a class="nav-link" href="#familias"><span class="header-section-number">7.3</span> Familias</a></li>
+<li><a class="nav-link" href="#snp-analysis"><span class="header-section-number">8</span> Analysing SNP data</a></li>
+<li><a class="nav-link" href="#strs-vs.-snps"><span class="header-section-number">8.1</span> STRs vs. SNPs</a></li>
+<li><a class="nav-link" href="#how-to-analyse-snp-data-in-straf"><span class="header-section-number">8.2</span> How to analyse SNP data in STRAF?</a></li>
 </ul>
 
       <div class="book-extra">

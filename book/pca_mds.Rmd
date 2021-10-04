@@ -1,8 +1,8 @@
-# Multivariate statistics
+# Multivariate statistics {#pca-mds}
 
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo=FALSE, out.width="100%"
+    echo=FALSE, out.width="100%"
 )
 ```
 
@@ -38,13 +38,13 @@ knitr::include_graphics("img/capture_pca_1.png")
 :::
 
 It will trigger the PCA computation and return a graph. You are also able to 
-download to coordinates on different PCs (also called eigenvectors).
+download the coordinates of the samples on different PCs (also called eigenvectors).
 
 ::: {.interpretation data-latex=""}
 __Interpreting PCA results__
 
 PCA has become a popular tool in population genetics, as the relationships between
-individuals on the PCA projection tends to reflect their genetic __relatedness__. The
+individuals on the PCA projection tend to reflect their genetic __relatedness__. The
 closer individuals are on the PCA projection, the more genetically related they tend to be.
 
 It can also be used as a __quality control__ tool. For example, if a sample is very far
@@ -52,7 +52,7 @@ from all the others, including the ones that are part of the same population,
 it is possible that there is an issue with the data. One would need to inspect
 the raw data and check if any strange pattern can be found.
 
-It is important to be aware of the influence of non demographic processes on
+It is important to be aware of the influence of non-demographic processes on
 the PCA projection. For example, __imbalanced sample sizes__ between populations
 can drive some patterns. When populations are sampled unevenly, the projection will
 be __distorted__ and distances observed on the projection can be driven by these
@@ -67,11 +67,11 @@ any major conclusions on the relationships between populations and individuals.
 ## Multidimensional Scaling (MDS)
 
 An __MDS__ is conceptually similar to a PCA. One of the main differences is 
-that it takes as input data in a different format. As PCA uses raw genotypes and
+that it requires input data to be in a different format. As PCA uses raw genotypes and
 can accommodate data at the individual level, __pairwise distances__ between data 
 points are used for an MDS. 
 
-In forensics practice, it is typically used to compare __populations__ and not 
+In forensics, it is typically used to compare __populations__ and not 
 __individuals__, even though it would be theoretically possible.
 
 As __pairwise distances between populations__ are used, and MDS can be based on
@@ -91,8 +91,8 @@ knitr::include_graphics("img/capture_mds_1.png")
 ::: {.interpretation data-latex=""}
 __Interpreting MDS results__
 
-Just like with a PCA, populations the __closer__ populations are on the MDS projection,
-the more __genetically related__ the tend to be, based on the markers that have been 
+Just like with a PCA, the __closer__ populations are on the MDS projection,
+the more __genetically related__ they tend to be, based on the markers that have been 
 used to compute their pairwise genetic distances.
 
 Again, like for the PCA, the MDS should remain an 

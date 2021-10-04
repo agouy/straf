@@ -1,8 +1,8 @@
-# Importing data
+# Importing data {#importing-data}
 
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo=FALSE, out.width="100%"
+    echo=FALSE, out.width="100%"
 )
 ```
 
@@ -21,11 +21,11 @@ __STRAF's input file__ is a __text__ file containing the genotypes of each sampl
 
 * The first column, named __ind__, needs to contain the sample ID 
 
-* The second column, , named __pop__, contains the population ID (this column must exist even if a single population is studied)
+* The second column, named __pop__, contains the population ID (this column must exist even if a single population is studied)
 
 * The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name)
 
-* Genotypes must be encoded as numbers (STRAF accepts point alleles)
+* Genotypes must be encoded as numbers (STRAF accepts point alleles, e.g. 9.3 in TH01)
 
 * Missing data (e.g. null alleles) must be indicated with a “0”.
 
@@ -76,7 +76,7 @@ autosomal markers, and _Haploid_ for Y-chromosome markers). After that, you can
 upload the file by clicking on _Browse_ and selecting the file on your computer.
 
 Once the file is uploaded, a preview will be displayed on the right and all the
-analyses will be available. If not, it is likely that an error has occured. If the error
+analyses will be available. If not, it is likely that an error has occurred. If the error
 message is not explicit, you can refer to the __Input file checklist__ below that
 gathers common issues with the input file.
 
@@ -94,7 +94,7 @@ it is possible that you still run into an error after uploading the file to STRA
 In case STRAF cannot read your input file, we've put together a checklist to identify
 common issues with the input file.
 
-:::interpretation
+::: {.interpretation data-latex=""}
 __Input file checklist__
 
 * Check input parameters in the sidebar: do they actually correspond to the input data?

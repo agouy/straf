@@ -1,4 +1,4 @@
-# Forensic parameters
+# Forensic parameters {#forensic-parameters}
 
 
 
@@ -9,7 +9,7 @@ this chapter is to translate each of them into plain English.
 
 ## How to compute forensic parameters in STRAF
 
-Once your data has bee uploaded, you can go to the __Forensic parameters__ tab
+Once your data has been uploaded, you can go to the __Forensic parameters__ tab
 and check the _Compute forensics statistics_ box. The computation will be performed
 and a table containing the values per locus will be displayed. The computation is done
 per population and overall, a drop-down menu is present to select the population.
@@ -31,7 +31,7 @@ to represent using the drop-down menu.
 ### Random match probability (PM)
 
 The __Random match probability__, or probability of matching (PM), is defined as
-the probability of observing a random match between two individuals.
+the probability of observing a random match between two unrelated individuals.
 
 __Formula__
 
@@ -85,21 +85,21 @@ $$
   H_{\mathrm{exp}} = GD = \frac{n}{n - 1} \left( 1 - \sum_{i=1}^{n}(p_i)^2 \right),
 $$
 
-where $n$ is the number of gene copies sampled and $p_i$ is the
+where $n$ is the number of gene copies sampled (i.e., the sample size for haploid samples, and twice the sample size for diploid samples) and $p_i$ is the
 frequency of the $i^{th}$ allele in the population.
 
 __Interpretation__
 
 It is the probability that an individual will be heterozygous at a given locus.
 
-As an example, a value of $GD$ of 0.6 mean that 60% chance of being
+As an example, a value of $GD$ of 0.6 means that there is a 60% chance of being
 heterozygote at this locus.
 
 It depends directly on the genetic diversity at this locus, which itself depends on 
 allele frequencies in your population.
 
 Say we have two alleles in a given population, genetic diversity will be higher
-in a population aith allele frequencies 0.5 and 0.5 than in a population where
+in a population with allele frequencies 0.5 and 0.5 than in a population where
 frequencies are 0.1 and 0.9 (as less heterozygotes can be made with rare
 alleles). This rationale can be extended to any number of alleles.
 
@@ -140,15 +140,12 @@ proportion of homozygous individuals in the population sample.
 
 __Interpretation__
 
-The power of exclusion depends on the observed proportions of heterozygous and 
-homozygous individuals in a population. These proportions, multiplied as in the 
-equation above, give the __probability that two persons do not have the same genotype
-in the population__.
+The power of exclusion depends on the observed proportions of heterozygous and homozygous individuals in a population. These proportions, multiplied as in the equation above, give the __mean exclusion probability for a paternity test__. Intuitively, the more diverse the population is, the greater this value is, as diversity is related to heterozygosity (see above).
 
 ## Typical Paternity Index (TPI)
 
 Finally, the typical paternity index ($TPI$) reflects the “mean PI for
-random non-excluded men“ for a given locus. 
+random non-excluded men“ in trio cases (father-mother-child) for a given locus. 
 
 __Formula__
 

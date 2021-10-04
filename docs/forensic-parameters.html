@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 2 Forensic parameters | The STRAF Book</title>
+<title>Chapter 3 Forensic parameters | The STRAF Book</title>
 <meta name="author" content="Alexandre Gouy and Martin Zieger">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -32,13 +32,20 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Preface</a></li>
-<li><a class="" href="introduction.html">Introduction</a></li>
-<li><a class="" href="importing-data.html"><span class="header-section-number">1</span> Importing data</a></li>
-<li><a class="active" href="forensic-parameters.html"><span class="header-section-number">2</span> Forensic parameters</a></li>
-<li><a class="" href="population-genetics-indices.html"><span class="header-section-number">3</span> Population genetics indices</a></li>
-<li><a class="" href="multivariate-statistics.html"><span class="header-section-number">4</span> Multivariate statistics</a></li>
-<li><a class="" href="reference-populations-analysis.html"><span class="header-section-number">5</span> Reference populations analysis</a></li>
-<li><a class="" href="file-conversion.html"><span class="header-section-number">6</span> File conversion</a></li>
+<li><a class="" href="introduction.html"><span class="header-section-number">1</span> Introduction</a></li>
+<li><a class="" href="importing-data.html"><span class="header-section-number">2</span> Importing data</a></li>
+<li><a class="active" href="forensic-parameters.html"><span class="header-section-number">3</span> Forensic parameters</a></li>
+<li><a class="" href="popgen-indices.html"><span class="header-section-number">4</span> Population genetics indices</a></li>
+<li><a class="" href="pca-mds.html"><span class="header-section-number">5</span> Multivariate statistics</a></li>
+<li><a class="" href="ref-pop.html"><span class="header-section-number">6</span> Reference populations analysis</a></li>
+<li><a class="" href="file-conversion.html"><span class="header-section-number">7</span> File conversion</a></li>
+<li><a class="" href="snp-analysis.html"><span class="header-section-number">8</span> Analysing SNP data</a></li>
+<li><a class="" href="conclusion.html"><span class="header-section-number">9</span> Conclusion</a></li>
+<li><a class="" href="references.html"><span class="header-section-number">10</span> References</a></li>
+<li><a class="" href="acknowledgments.html"><span class="header-section-number">11</span> Acknowledgments</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="technical-details.html"><span class="header-section-number">A</span> Technical details</a></li>
+<li><a class="" href="strafs-commitments.html"><span class="header-section-number">B</span> STRAF’s commitments</a></li>
 </ul>
 
         <div class="book-extra">
@@ -48,7 +55,7 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="forensic-parameters" class="section level1">
 <h1>
-<span class="header-section-number">2</span> Forensic parameters<a class="anchor" aria-label="anchor" href="#forensic-parameters"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3</span> Forensic parameters<a class="anchor" aria-label="anchor" href="#forensic-parameters"><i class="fas fa-link"></i></a>
 </h1>
 <p>In this chapter, we’ll show how to compute forensic parameters using STRAF, and
 provide details on how they are computed and should be interpreted.
@@ -56,9 +63,9 @@ We’ll introduce a few equations, but please do not be afraid! The goal of
 this chapter is to translate each of them into plain English.</p>
 <div id="how-to-compute-forensic-parameters-in-straf" class="section level2">
 <h2>
-<span class="header-section-number">2.1</span> How to compute forensic parameters in STRAF<a class="anchor" aria-label="anchor" href="#how-to-compute-forensic-parameters-in-straf"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.1</span> How to compute forensic parameters in STRAF<a class="anchor" aria-label="anchor" href="#how-to-compute-forensic-parameters-in-straf"><i class="fas fa-link"></i></a>
 </h2>
-<p>Once your data has bee uploaded, you can go to the <strong>Forensic parameters</strong> tab
+<p>Once your data has been uploaded, you can go to the <strong>Forensic parameters</strong> tab
 and check the <em>Compute forensics statistics</em> box. The computation will be performed
 and a table containing the values per locus will be displayed. The computation is done
 per population and overall, a drop-down menu is present to select the population.</p>
@@ -73,14 +80,14 @@ to represent using the drop-down menu.</p>
 </div>
 <div id="details-on-the-forensic-parameters" class="section level2">
 <h2>
-<span class="header-section-number">2.2</span> Details on the forensic parameters<a class="anchor" aria-label="anchor" href="#details-on-the-forensic-parameters"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2</span> Details on the forensic parameters<a class="anchor" aria-label="anchor" href="#details-on-the-forensic-parameters"><i class="fas fa-link"></i></a>
 </h2>
 <div id="random-match-probability-pm" class="section level3">
 <h3>
-<span class="header-section-number">2.2.1</span> Random match probability (PM)<a class="anchor" aria-label="anchor" href="#random-match-probability-pm"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2.1</span> Random match probability (PM)<a class="anchor" aria-label="anchor" href="#random-match-probability-pm"><i class="fas fa-link"></i></a>
 </h3>
 <p>The <strong>Random match probability</strong>, or probability of matching (PM), is defined as
-the probability of observing a random match between two individuals.</p>
+the probability of observing a random match between two unrelated individuals.</p>
 <p><strong>Formula</strong></p>
 <p><span class="math display">\[
 PM = \sum_i (G_i)^2,
@@ -103,7 +110,7 @@ in our population.</p>
 </div>
 <div id="power-of-discrimination-pd" class="section level2">
 <h2>
-<span class="header-section-number">2.3</span> Power of Discrimination (PD)<a class="anchor" aria-label="anchor" href="#power-of-discrimination-pd"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3</span> Power of Discrimination (PD)<a class="anchor" aria-label="anchor" href="#power-of-discrimination-pd"><i class="fas fa-link"></i></a>
 </h2>
 <p>The power of discrimination (PD) is defined as the probability of
 discriminating between two unrelated individuals.</p>
@@ -117,7 +124,7 @@ interested in the probability of “not matching”, i.e. the probability of di
 </div>
 <div id="gene-diversity" class="section level2">
 <h2>
-<span class="header-section-number">2.4</span> Gene diversity<a class="anchor" aria-label="anchor" href="#gene-diversity"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.4</span> Gene diversity<a class="anchor" aria-label="anchor" href="#gene-diversity"><i class="fas fa-link"></i></a>
 </h2>
 <p><strong>Gene diversity</strong> (<span class="math inline">\(GD\)</span>, sometimes simply <span class="math inline">\(D\)</span>), also called <strong>expected heterozygosity</strong>
 (<span class="math inline">\(H_{\mathrm{exp}}\)</span>), is computed using the following estimator:</p>
@@ -125,22 +132,22 @@ interested in the probability of “not matching”, i.e. the probability of di
 <p><span class="math display">\[
   H_{\mathrm{exp}} = GD = \frac{n}{n - 1} \left( 1 - \sum_{i=1}^{n}(p_i)^2 \right),
 \]</span></p>
-<p>where <span class="math inline">\(n\)</span> is the number of gene copies sampled and <span class="math inline">\(p_i\)</span> is the
+<p>where <span class="math inline">\(n\)</span> is the number of gene copies sampled (i.e., the sample size for haploid samples, and twice the sample size for diploid samples) and <span class="math inline">\(p_i\)</span> is the
 frequency of the <span class="math inline">\(i^{th}\)</span> allele in the population.</p>
 <p><strong>Interpretation</strong></p>
 <p>It is the probability that an individual will be heterozygous at a given locus.</p>
-<p>As an example, a value of <span class="math inline">\(GD\)</span> of 0.6 mean that 60% chance of being
+<p>As an example, a value of <span class="math inline">\(GD\)</span> of 0.6 means that there is a 60% chance of being
 heterozygote at this locus.</p>
 <p>It depends directly on the genetic diversity at this locus, which itself depends on
 allele frequencies in your population.</p>
 <p>Say we have two alleles in a given population, genetic diversity will be higher
-in a population aith allele frequencies 0.5 and 0.5 than in a population where
+in a population with allele frequencies 0.5 and 0.5 than in a population where
 frequencies are 0.1 and 0.9 (as less heterozygotes can be made with rare
 alleles). This rationale can be extended to any number of alleles.</p>
 </div>
 <div id="polymorphism-information-content-pic" class="section level2">
 <h2>
-<span class="header-section-number">2.5</span> Polymorphism Information Content (PIC)<a class="anchor" aria-label="anchor" href="#polymorphism-information-content-pic"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.5</span> Polymorphism Information Content (PIC)<a class="anchor" aria-label="anchor" href="#polymorphism-information-content-pic"><i class="fas fa-link"></i></a>
 </h2>
 <p><strong>Formula</strong></p>
 <p>The <strong>Polymorphism Information Content</strong> (PIC) is computed as follow:</p>
@@ -159,7 +166,7 @@ parent has transmitted to the child.</p></li>
 </div>
 <div id="power-of-exclusion-pe" class="section level2">
 <h2>
-<span class="header-section-number">2.6</span> Power of Exclusion (PE)<a class="anchor" aria-label="anchor" href="#power-of-exclusion-pe"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.6</span> Power of Exclusion (PE)<a class="anchor" aria-label="anchor" href="#power-of-exclusion-pe"><i class="fas fa-link"></i></a>
 </h2>
 <p><strong>Formula</strong></p>
 <p>The <strong>power of exclusion</strong> (<span class="math inline">\(PE\)</span>) is defined as:</p>
@@ -169,17 +176,14 @@ PE = h^2\left(1 - 2hH^2\right),
 <p>where <span class="math inline">\(h\)</span> is the proportion of heterozygous individuals and <span class="math inline">\(H\)</span> the
 proportion of homozygous individuals in the population sample.</p>
 <p><strong>Interpretation</strong></p>
-<p>The power of exclusion depends on the observed proportions of heterozygous and
-homozygous individuals in a population. These proportions, multiplied as in the
-equation above, give the <strong>probability that two persons do not have the same genotype
-in the population</strong>.</p>
+<p>The power of exclusion depends on the observed proportions of heterozygous and homozygous individuals in a population. These proportions, multiplied as in the equation above, give the <strong>mean exclusion probability for a paternity test</strong>. Intuitively, the more diverse the population is, the greater this value is, as diversity is related to heterozygosity (see above).</p>
 </div>
 <div id="typical-paternity-index-tpi" class="section level2">
 <h2>
-<span class="header-section-number">2.7</span> Typical Paternity Index (TPI)<a class="anchor" aria-label="anchor" href="#typical-paternity-index-tpi"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.7</span> Typical Paternity Index (TPI)<a class="anchor" aria-label="anchor" href="#typical-paternity-index-tpi"><i class="fas fa-link"></i></a>
 </h2>
 <p>Finally, the typical paternity index (<span class="math inline">\(TPI\)</span>) reflects the “mean PI for
-random non-excluded men“ for a given locus.</p>
+random non-excluded men“ in trio cases (father-mother-child) for a given locus.</p>
 <p><strong>Formula</strong></p>
 <p>Let <span class="math inline">\(H\)</span> be the frequency of homozygotes, then</p>
 <p><span class="math display">\[
@@ -195,21 +199,21 @@ father than a randomly selected man in the population, on average (<em>typical</
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="importing-data.html"><span class="header-section-number">1</span> Importing data</a></div>
-<div class="next"><a href="population-genetics-indices.html"><span class="header-section-number">3</span> Population genetics indices</a></div>
+<div class="prev"><a href="importing-data.html"><span class="header-section-number">2</span> Importing data</a></div>
+<div class="next"><a href="popgen-indices.html"><span class="header-section-number">4</span> Population genetics indices</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#forensic-parameters"><span class="header-section-number">2</span> Forensic parameters</a></li>
-<li><a class="nav-link" href="#how-to-compute-forensic-parameters-in-straf"><span class="header-section-number">2.1</span> How to compute forensic parameters in STRAF</a></li>
+<li><a class="nav-link" href="#forensic-parameters"><span class="header-section-number">3</span> Forensic parameters</a></li>
+<li><a class="nav-link" href="#how-to-compute-forensic-parameters-in-straf"><span class="header-section-number">3.1</span> How to compute forensic parameters in STRAF</a></li>
 <li>
-<a class="nav-link" href="#details-on-the-forensic-parameters"><span class="header-section-number">2.2</span> Details on the forensic parameters</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#random-match-probability-pm"><span class="header-section-number">2.2.1</span> Random match probability (PM)</a></li></ul>
+<a class="nav-link" href="#details-on-the-forensic-parameters"><span class="header-section-number">3.2</span> Details on the forensic parameters</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#random-match-probability-pm"><span class="header-section-number">3.2.1</span> Random match probability (PM)</a></li></ul>
 </li>
-<li><a class="nav-link" href="#power-of-discrimination-pd"><span class="header-section-number">2.3</span> Power of Discrimination (PD)</a></li>
-<li><a class="nav-link" href="#gene-diversity"><span class="header-section-number">2.4</span> Gene diversity</a></li>
-<li><a class="nav-link" href="#polymorphism-information-content-pic"><span class="header-section-number">2.5</span> Polymorphism Information Content (PIC)</a></li>
-<li><a class="nav-link" href="#power-of-exclusion-pe"><span class="header-section-number">2.6</span> Power of Exclusion (PE)</a></li>
-<li><a class="nav-link" href="#typical-paternity-index-tpi"><span class="header-section-number">2.7</span> Typical Paternity Index (TPI)</a></li>
+<li><a class="nav-link" href="#power-of-discrimination-pd"><span class="header-section-number">3.3</span> Power of Discrimination (PD)</a></li>
+<li><a class="nav-link" href="#gene-diversity"><span class="header-section-number">3.4</span> Gene diversity</a></li>
+<li><a class="nav-link" href="#polymorphism-information-content-pic"><span class="header-section-number">3.5</span> Polymorphism Information Content (PIC)</a></li>
+<li><a class="nav-link" href="#power-of-exclusion-pe"><span class="header-section-number">3.6</span> Power of Exclusion (PE)</a></li>
+<li><a class="nav-link" href="#typical-paternity-index-tpi"><span class="header-section-number">3.7</span> Typical Paternity Index (TPI)</a></li>
 </ul>
 
       <div class="book-extra">
@@ -226,7 +230,7 @@ father than a randomly selected man in the population, on average (<em>typical</
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-09-26.</p>
+    <p>"<strong>The STRAF Book</strong>" was written by Alexandre Gouy and Martin Zieger. It was last built on 2021-10-04.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

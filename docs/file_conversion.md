@@ -1,4 +1,4 @@
-# File conversion
+# File conversion {#file-conversion}
 
 
 
@@ -11,7 +11,7 @@ all available in the __File conversion__ tab of the application.
 
 ## How to convert a file in STRAF
 
-Once you have imported your file, it is straightforward to conevrt it to another 
+Once you have imported your file, it is straightforward to convert it to another 
 format. You can go to the __File conversion__ tab and click on one of the following
 buttons to download your genotypes in another format.
 
@@ -21,7 +21,7 @@ buttons to download your genotypes in another format.
 
 ## Genepop and Arlequin formats
 
-__Genepop__ and __Arlequin__ softwares implement several population genetics methods, 
+__Genepop__ [@ref_genepop] and __Arlequin__ [@ref_arlequin] softwares implement several population genetics methods, 
 including ones that are part of standard forensics practice:
 
 * linkage disequilibrium computation
@@ -35,4 +35,5 @@ are overall preferable to the HW and LD tests implemented in STRAF.
 ## Familias
 
 Here a file containing allele frequencies is created. This file can be used in
-Familias to provide allele frequencies reference.
+Familias [@ref_familias] to provide allele frequency reference
+data for relationship testing.
