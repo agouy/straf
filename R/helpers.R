@@ -334,7 +334,7 @@ getGenepopHW <- function(data, ploidy, n_iter = 10000) {
     iterations = n_iter 
   )
   
-  df <- get_hw_gp(out_tmp)
+  df <- get_hw_gp(out_tmp, n_iter)
   return(df)
 }
 
@@ -343,7 +343,7 @@ getGenepopHW <- function(data, ploidy, n_iter = 10000) {
 #' @return a dataframe containing HWE test p-values
 #' @export
 #' @noRd
-get_hw_gp <- function(fname) {
+get_hw_gp <- function(fname, n_iter) {
   tx <- readLines(fname)
   genepop::clean_workdir()
   
@@ -353,7 +353,7 @@ get_hw_gp <- function(fname) {
   pop_names <- unlist(lapply(spl[pop_idx], "[", 3))
   
   all_idx <- grep("Fisher's", spl)
-  all_idx <- all_idx[all_idx < pop_idx[1]]
+  if(length(pop_idx) > 1) all_idx <- all_idx[all_idx < pop_idx[1]]
   all_pvals <- unlist(lapply(spl[all_idx + 3], "[", 4))
   
   ## ln = 7 and between pop_idx, add pop_names
@@ -374,10 +374,15 @@ get_hw_gp <- function(fname) {
   df <- dplyr::select(df, Population, Locus, P_value)
   
   df$P_value <- as.numeric(df$P_value)
-  df$P_value <- df$P_value + 1/10000
+  df$P_value <- df$P_value + (1 / n_iter)
   df$P_value[df$P_value > 1] <- 1
   
-  df_2 <- data.frame(Population = "all", Locus = unique(df$Locus), P_value = all_pvals)
+  if(length(pop_idx) > 1) {
+    df_2 <- data.frame(Population = "all", Locus = unique(df$Locus), P_value = all_pvals)
+  } else {
+    df_2 <- df
+    df_2[["Population"]] <- "all"
+  }
   df <- rbind(df, df_2)
   return(df)
   

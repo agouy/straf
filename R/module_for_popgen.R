@@ -135,8 +135,9 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
         if(is.null(getgenind())) return(NULL)
         
         DF <- getIndicesAllPop(getgenind(), ploidy())
-
+        
         if(ploidy() == 2 & !is.null(input$hw_nperm)) {
+          if(input$hw_nperm > 10000) stop("Number of permutations should not be greater than 10000.")
           hw_results <- getGenepopHW(input_file(), ploidy(), input$hw_nperm)
           for(pop in names(DF)) { # 
             df_tmp <- DF[[pop]]

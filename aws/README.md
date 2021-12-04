@@ -24,7 +24,6 @@ Don't forget to add a 3838 rule.
 
 ```
 sudo mkdir /srv/shiny-server/app
-echo $'library(straf)\ndir <- system.file("application", package = "straf")\nsetwd(dir)\nshiny::shinyAppDir(".")' > /srv/shiny-server/app/app.R
 
 git clone https://github.com/agouy/straf
 sudo cp ./straf/app.R /srv/shiny-server/app/app.R
@@ -35,10 +34,9 @@ sudo systemctl reload shiny-server
 
 sudo -su shiny
 R -e "dir.create(path = Sys.getenv('R_LIBS_USER'), showWarnings = FALSE, recursive = TRUE)"
-R -e "install.packages(c('remotes', 'dbplyr', 'RSQLite'), lib = Sys.getenv('R_LIBS_USER'), repos = 'https://cran.rstudio.com/')"
+R -e "install.packages(c('remotes', 'dbplyr', 'RSQLite', 'markdown', 'rmarkdown'), lib = Sys.getenv('R_LIBS_USER'), repos = 'https://cran.rstudio.com/')"
 
-
-R -e "remotes::install_github('agouy/straf')"
+R -e "remotes::install_github('agouy/straf', ref='c91f047f1cbd92af88c32e6655711842e549c503')"
 exit
 
 sudo systemctl reload shiny-server
@@ -54,11 +52,19 @@ sudo nginx -t
 
 cd /etc/nginx/sites-enabled
 sudo ln -s /etc/nginx/sites-available/shiny.conf .
+cd ~
 ```
 
 ## Install certificates
 
+See [this tutorial](https://www.charlesbordet.com/en/guide-shiny-aws/#3-install-r-and-r-shiny-on-your-new-server).
 
+```
+sudo snap install core; sudo snap refresh core
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo certbot certonly --nginx -d straf.fr
+```
 
 ## Update STRAF on the server
 
@@ -66,6 +72,14 @@ One simply needs to update the R package from GitHub.
 
 ```
 sudo -su shiny
-sudo R -e "remotes::install_github('agouy/straf')"
+R -e "remotes::install_github('agouy/straf')"
+exit
 sudo systemctl reload shiny-server
 ```
+
+## Checking app logs
+
+```
+sudo ls -Art /var/log/shiny-server | tail -n 1
+```
+
