@@ -1,24 +1,18 @@
-FROM rocker/shiny:latest
+FROM rocker/shiny-verse:4.1.2
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-    libxml2-dev \
-    libcairo2-dev \
-    libsqlite3-dev \
-    libmariadbd-dev \
-    libpq-dev \
-    libssh2-1-dev \
-    unixodbc-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
     libgdal-dev \
+    libglpk-dev \
     libmysqlclient-dev
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get clean
+# RUN apt-get update && \
+#    apt-get upgrade -y && \
+#    apt-get clean
 
 RUN Rscript -e "install.packages(c('remotes'))"
-RUN Rscript -e "remotes::install_github('agouy/straf')"
+RUN Rscript -e "remotes::install_github('agouy/straf', ref = '2.0.8')"
+
+RUN Rscript -e "install.packages(c('markdown'))"
 
 COPY /app.R ./app.R
 
