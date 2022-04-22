@@ -11,3 +11,4 @@ book
 ^app\.R$
 ^rsconnect$
 ^cran-comments\.md$
+^\.github$

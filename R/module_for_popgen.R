@@ -443,8 +443,6 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
         
         content = function(file) {
           pairLD <- LD_genepop_pairwise_pop()
-          # pairLD[lower.tri(pairLD)] <- NA
-          # pairLD <- apply(pairLD, 1, rev)
           write.table(pairLD, file, sep = "\t", na = "", row.names = TRUE)
         }
       )
@@ -456,8 +454,6 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
         
         content = function(file) {
           pairLD <- LD_genepop_pairwise_pop()
-          # pairLD[lower.tri(pairLD)] <- NA
-          # pairLD <- apply(pairLD, 1, rev)
           openxlsx::write.xlsx(list(LD=pairLD), file, keepNA = FALSE, row.names = TRUE)
         }
       )

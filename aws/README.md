@@ -46,7 +46,7 @@ sudo systemctl reload shiny-server
 
 ```
 sudo apt install -y nginx
-sudo cp ./straf/aws/shiny.conf /etc/nginx/sites-available/shiny.conf
+sudo cp ./straf/aws/shiny_1.conf /etc/nginx/sites-available/shiny.conf
 
 sudo nginx -t
 

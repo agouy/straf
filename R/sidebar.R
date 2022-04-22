@@ -42,13 +42,16 @@ sidebarUI <- function() {
     
     tags$hr(),
     h4('The STRAF Book'),
-    p('Click on the image below to open our online book with a lot more details about the software!'),
+    p('Click on the image below to read our online book with a lot more details about the software!'),
     HTML("<div align='center'><a href='https://agouy.github.io/straf/' target='_blank'><img src='cover.png' align='center' width='169' /></a></div>"),
     tags$hr(),
     
     h4('Contact'),
-    p('Please address your questions and bug reports to Alexandre Gouy
-              (alexandre.gouy [at] protonmail.com). Any suggestions are welcome!'),
+    p('For any question, feature request or bug report, you can open an issue here:'),
+    HTML("<div align='center'><a href='https://github.com/agouy/straf/issues' target='_blank'>Create an issue on GitHub</a></div>"),
+    p('Any feedback is welcome!'),
+    tags$hr(),
+    
     h4('Citation'),
     p("Gouy, A., & Zieger, M. (2017). STRAF - A convenient online tool for STR data evaluation in forensic genetics. Forensic Science International: Genetics, 30, 148-151.")
   )

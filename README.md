@@ -1,3 +1,7 @@
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/agouy/straf/workflows/R-CMD-check/badge.svg)](https://github.com/agouy/straf/actions)
+<!-- badges: end -->
+
 # STRAF - STR Analysis for Forensics <a href='http://straf.fr'><img src='inst/application/www/STRAF_logo.png' align="right" height="139" /></a>
 
 ### What is STRAF?
