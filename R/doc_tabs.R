@@ -1,6 +1,6 @@
 #' Generate "Documentation" panel.
 #' @export
-#' @noRd
+#' @keywords internal
 documentation_tab <- function() {
   tabPanel(
     "Documentation",
@@ -14,7 +14,7 @@ documentation_tab <- function() {
 
 #' Generate "About" panel.
 #' @export
-#' @noRd
+#' @keywords internal
 about_tab <- function() {
   tabPanel(
     "About STRAF",

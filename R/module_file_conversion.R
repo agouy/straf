@@ -1,6 +1,6 @@
 #' Generate file conversion tab UI.
 #' @export
-#' @noRd
+#' @keywords internal
 file_conv_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -19,7 +19,7 @@ file_conv_UI <- function(id) {
 
 #' Generate file conversion tab Server
 #' @export
-#' @noRd
+#' @keywords internal
 file_conv_Server <- function(id, fpath, ploidy) {
   moduleServer(
     id,
@@ -57,7 +57,7 @@ file_conv_Server <- function(id, fpath, ploidy) {
 
 #' Convert STRAF file to the Genepop format.
 #' @export
-#' @noRd
+#' @keywords internal
 straf2genepop <- function(input_file, output_file, ploidy = 2) {
   df <- readLines(input_file)
   
@@ -124,7 +124,7 @@ straf2genepop <- function(input_file, output_file, ploidy = 2) {
 
 #' Convert STRAF file to the Familias format.
 #' @export
-#' @noRd
+#' @keywords internal
 straf2familias <- function(input_file, output_file) {
   
   df <- readLines(input_file)
@@ -167,7 +167,7 @@ straf2familias <- function(input_file, output_file) {
 #' @param fname Input file name in the STRAF format.
 #' @return NULL
 #' @export
-#' @noRd
+#' @keywords internal
 straf2arlequin <- function(input_file, output_file) {
   df <- readLines(input_file)
   
@@ -234,14 +234,14 @@ GenotypicData=1\nGameticPhase=0\nMissingData="?"\nLocusSeparator=WHITESPACE\n\n[
 #' @param fname Input file name in the STRAF format.
 #' @return NULL
 #' @export
-#' @noRd
+#' @keywords internal
 poptree2straf <- function(input_file, output_file) {
   
   fname <- input_file
   if(tools::file_ext(fname) %in% c("xls", "xlsx")) {
     df <- readxl::read_excel(fname, sheet = 1, skip = 0, col_names = FALSE)
   } else {
-    no_col <- max(count.fields(fname, sep = ""))
+    no_col <- max(utils::count.fields(fname, sep = ""))
     df <- read.table(fname, 
                      comment.char = "",
                      header = T, sep = "\t", col.names = 1:no_col, fill = TRUE)

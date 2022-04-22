@@ -1,6 +1,6 @@
 #' Generate the forensic parameters UI.
 #' @export
-#' @noRd
+#' @keywords internal
 for_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -29,7 +29,7 @@ for_UI <- function(id) {
 
 #' Generate the population genetics indices UI.
 #' @export
-#' @noRd
+#' @keywords internal
 popgen_UI <- function(id) {
   ns <- NS(id)    
   tabPanel(
@@ -101,7 +101,7 @@ popgen_UI <- function(id) {
 
 #' Generate the forensic parameters and population genetics tabs Server.
 #' @export
-#' @noRd
+#' @keywords internal
 for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_perm, barplotcolor, transparency, cexaxis) {
   moduleServer(
     id,
@@ -464,7 +464,7 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
 #' Get forensics and popgen indices for all populations
 #' @inheritParams getIndicesFromGenind
 #' @export
-#' @noRd
+#' @keywords internal
 getIndicesAllPop <- function(data, ploidy = 2) {
   ind <- list()
   ind$all <- getIndicesFromGenind(data,ploidy)
@@ -481,7 +481,7 @@ getIndicesAllPop <- function(data, ploidy = 2) {
 #' @param data A genind object.
 #' @param ploidy character, ploidy, either "Diploid" or "Haploid".
 #' @export
-#' @noRd
+#' @keywords internal
 getIndicesFromGenind <- function(data, ploidy = 2) {
   
   freq <- apply(data@tab, 2, sum, na.rm = TRUE)
@@ -569,6 +569,6 @@ getIndicesFromGenind <- function(data, ploidy = 2) {
 #' @param b second value
 #' @return Computes 2 * a^2 * b^2
 #' @export
-#' @noRd
+#' @keywords internal
 get_2p2q2 <- function(a, b) {2 * (a ^ 2) * (b ^ 2)}
 

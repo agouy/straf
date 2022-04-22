@@ -12,3 +12,4 @@ book
 ^rsconnect$
 ^cran-comments\.md$
 ^\.github$
+Dockerfile

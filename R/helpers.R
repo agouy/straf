@@ -3,7 +3,7 @@
 #' @param ploidy Ploidy ("Haploid" or "Diploid").
 #' @return An object of class genind.
 #' @export
-#' @noRd
+#' @keywords internal
 createGenind <- function(Ifile, ploidy) {
   
   if(ploidy == 2) {
@@ -68,7 +68,7 @@ createGenind <- function(Ifile, ploidy) {
 #' @param data a genind object
 #' @return an allele frequency table
 #' @export
-#' @noRd
+#' @keywords internal
 getFreqAllPop <- function(data) {
   freq <- list()
   freq$all <- getFreqFromGenind(data)
@@ -85,7 +85,7 @@ getFreqAllPop <- function(data) {
 #' @param data a genind object
 #' @return an allele frequency table
 #' @export
-#' @noRd
+#' @keywords internal
 getFreqFromGenind <- function(data) {
   freq <- apply(data@tab, 2, sum, na.rm = TRUE)
   nam <- strsplit(names(freq), split = "[.]")
@@ -121,7 +121,7 @@ getFreqFromGenind <- function(data) {
 
 #' Plot PCA.
 #' @export
-#' @noRd
+#' @keywords internal
 plotPCA <- function(pca, popus, coul, axis) {
   
   var1 <- round(100 * (pca$eig / sum(pca$eig))[axis[1]], 2)
@@ -177,9 +177,8 @@ plotPCA <- function(pca, popus, coul, axis) {
 #' @param fname Input file path
 #' @return An object of class genind.
 #' @export
-#' @noRd
+#' @keywords internal
 poptree2straf <- function(fname) {
-  # df <- readxl::read_excel(fname, sheet = 1, skip = 0, col_names = FALSE)
   df <- readlines(fname)
   
   popnames <- df[[1]]
@@ -210,7 +209,7 @@ poptree2straf <- function(fname) {
 #' @param data a genind object
 #' @return a table containing Genepop's LD p-values
 #' @export
-#' @noRd
+#' @keywords internal
 getGenepopLD <- function(data, ploidy, n_iter = 10000) {
   
   gp_tmp <- tempfile()
@@ -246,8 +245,9 @@ getGenepopLD <- function(data, ploidy, n_iter = 10000) {
 #' @param pop string, population to represent
 #' @return a heatmap representing LD test p-values
 #' @export
-#' @noRd
+#' @keywords internal
 plot_ld <- function(df) {
+  Locus_1 <- Locus_2 <- P_value <- plab <- NULL
   plt <- ggplot2::ggplot(data = df, aes(Locus_1, Locus_2, fill = -log10(P_value))) +
     ggplot2::geom_tile(color = "white") +
     ggplot2::scale_fill_gradient2(low = "#fee6ce", mid = "#fdae6b", high = "#e6550d", 
@@ -275,7 +275,7 @@ plot_ld <- function(df) {
 #' @param out.name path to genepop file
 #' @return a dataframe containing LD test p-values
 #' @export
-#' @noRd
+#' @keywords internal
 get_ld_gp <- function(out.name) {
   tx <- readLines(out.name)
   genepop::clean_workdir()
@@ -300,7 +300,7 @@ get_ld_gp <- function(out.name) {
   df$P_value <- df$P_value + 1/10000
   df$P_value[df$P_value > 1] <- 1
   
-  df$fdr <- p.adjust(df$P_value, method = "bonferroni")
+  df$fdr <- stats::p.adjust(df$P_value, method = "bonferroni")
   
   tmp <- colnames(df)
   tmp[2:3] <- c("Locus_2", "Locus_1")
@@ -317,7 +317,7 @@ get_ld_gp <- function(out.name) {
 #' @param ploidy ploidy
 #' @return a table containing Genepop's HW test p-values
 #' @export
-#' @noRd
+#' @keywords internal
 getGenepopHW <- function(data, ploidy, n_iter = 10000) {
   gp_tmp <- tempfile()
   on.exit(unlink(gp_tmp))
@@ -342,8 +342,9 @@ getGenepopHW <- function(data, ploidy, n_iter = 10000) {
 #' @param fname path to genepop file
 #' @return a dataframe containing HWE test p-values
 #' @export
-#' @noRd
+#' @keywords internal
 get_hw_gp <- function(fname, n_iter) {
+  Population <- Locus <- P_value <- NULL
   tx <- readLines(fname)
   genepop::clean_workdir()
   

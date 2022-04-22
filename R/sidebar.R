@@ -1,6 +1,6 @@
 #' Generate the sidebar UI.
 #' @export
-#' @noRd
+#' @keywords internal
 sidebarUI <- function() {
   sidebarPanel(
     width = 3,

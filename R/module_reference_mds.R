@@ -1,6 +1,6 @@
 #' Generate the reference population tab UI.
 #' @export
-#' @noRd
+#' @keywords internal
 ref_mds_UI <- function(id) {
   ns <- NS(id)
   
@@ -23,7 +23,7 @@ ref_mds_UI <- function(id) {
 
 #' Generate the reference population tab Server.
 #' @export
-#' @noRd
+#' @keywords internal
 ref_mds_Server <- function(id, getgenind) {
   moduleServer(
     id,
@@ -157,7 +157,7 @@ ref_mds_Server <- function(id, getgenind) {
 
 #' Convert allele frequencies to a format suitable for MDS analysis.
 #' @export
-#' @noRd
+#' @keywords internal
 freq_to_mds <- function(fname) {
   ln <- readLines(fname)
   ln2 <- lapply(ln, function(x) strsplit(x, ",")[[1]])

@@ -15,6 +15,7 @@
 #' @importFrom ade4 dudi.pca
 #' @importFrom adegenet as.genind df2genind pop<- locNames genind2genpop transp funky dist.genpop loadingplot makefreq pop
 #' @importClassesFrom adegenet genind
+#' @importFrom ape as.phylo
 #' @importFrom colourpicker colourInput
 #' @importFrom DT dataTableOutput renderDataTable datatable
 #' @importFrom genepop clean_workdir test_HW test_LD
@@ -26,11 +27,12 @@
 #' @importFrom openxlsx write.xlsx
 #' @importFrom pegas genind2loci
 #' @importFrom plotly renderPlotly plotlyOutput ggplotly
+#' @importFrom readxl read_excel
 #' @importFrom reshape2 acast
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinyWidgets awesomeCheckbox pickerInput
-#' @importFrom stats as.dist cmdscale cov frequency ks.test qqplot qunif
+#' @importFrom stats as.dist cmdscale cov frequency hclust ks.test qqplot qunif p.adjust
 #' @importFrom tidyr gather
-#' @importFrom utils read.table write.table
+#' @importFrom utils read.table write.table count.fields
 NULL
 #> NULL

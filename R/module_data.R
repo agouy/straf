@@ -1,6 +1,6 @@
 #' Generate input data tab UI.
 #' @export
-#' @noRd
+#' @keywords internal
 data_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -41,7 +41,7 @@ data_UI <- function(id) {
 
 #' Generate input data tab Server.
 #' @export
-#' @noRd
+#' @keywords internal
 data_Server <- function(id, getgenind, getData, barplotcolor, transparency, width, height, popnames) {
   moduleServer(
     id,

@@ -1,6 +1,6 @@
 #' Generate the PCA UI.
 #' @export
-#' @noRd
+#' @keywords internal
 pca_mds_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
@@ -49,8 +49,9 @@ pca_mds_UI <- function(id) {
 
 #' Generate the PCA server.
 #' @export
-#' @noRd
+#' @keywords internal
 pca_mds_Server <- function(id, getgenind) {
+  
   moduleServer(
     id,
     function(input, output, session) {
@@ -118,7 +119,7 @@ pca_mds_Server <- function(id, getgenind) {
         req(do.dist())
         if (!input$displayMDS)  return(NULL)
         dst <- do.dist()
-        hc <- hclust(dst)
+        hc <- stats::hclust(dst)
         plot(ape::as.phylo(hc), cex = 0.9)        
       })
       do.dist <- reactive({
