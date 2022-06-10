@@ -93,8 +93,14 @@ $$
   H_{\mathrm{exp}} = GD = \frac{n}{n - 1} \left( 1 - \sum_{i=1}^{n}(p_i)^2 \right),
 $$
 
-where $n$ is the number of gene copies sampled (i.e., the sample size for haploid samples, and twice the sample size for diploid samples) and $p_i$ is the
+where $n$ is the number of gene copies sampled (i.e., the sample size 
+for haploid samples, and twice the sample size for diploid samples) and $p_i$ is the
 frequency of the $i^{th}$ allele in the population.
+
+__NB__: This statistic is sometimes called __expected heterozygosity__ as it has first been
+developed to study diploid organisms. As this metric is a quantification of
+genetic diversity and can also be computed for haploid samples, __gene diversity__ (GD)
+is a more generic term.
 
 __Interpretation__
 

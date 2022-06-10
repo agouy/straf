@@ -51,13 +51,11 @@ development of relevant statistical tools and metrics with a more specific purpo
 __STRAF__ was born from the encounter of two scientists: a forensic geneticist
 and a  population geneticist, in 2017, in the beautiful city of Bern (Switzerland).
 Martin came to visit a population genetics lab, where Alexandre was pursuing 
-his Ph.D. thesis at that time. This encounter led to a fruitful collaboration 
+his Ph.D. thesis at that time. This led to a fruitful collaboration 
 when they realised that some tools used in population genetics should be 
 made more accessible to the forensics community.
 
-This encounter led to a fruitful collaboration when they realised that some tools
-used in population genetics could be leveraged by the forensics community. The
-most striking example is the computation of forensics parameters, that describe
+The most striking example is the computation of forensics parameters, that describe
 for example how good are our loci at discriminating samples. These 
 parameters were typically computed using a spreadsheet that had been created by 
 one of the suppliers of assays used to genotype samples. It is the mythical 
@@ -114,3 +112,8 @@ software and performing a Multidimensional Scaling analysis.
 * In __Chapter__ \@ref(file-conversion), we gather recommendations around potential next analysis steps
 by presenting STRAF's __file conversion__ capabilities and useful methods implemented in
 __other software__.
+
+* In __Chapter__ \@ref(snp-analysis), we discuss how to analyse Single Nucleotide Polymorphism (SNP)
+data using the software.
+
+* Finally, more details about the STRAF softwatre are presented in the Appendix. 

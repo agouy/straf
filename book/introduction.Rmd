@@ -11,8 +11,7 @@ In this chapter, we will briefly introduce some essential concepts in genetics.
 ## DNA and genetic variation {-}
 
 Each of our cells contains 23 pairs of __chromosomes__, composed of a long __DNA__ 
-(deoxyribonucleic acid) molecule. Under this somewhat barbaric name
-is hiding a simple concept. This molecule is the carrier of the information 
+(deoxyribonucleic acid) molecule. This molecule is the carrier of the information 
 the body need for its function and development. This information is encoded by a 
 chain of __nucleotides__ of four types that can be referred to using the letters
 A (Adenine), T (Thymine), C (Cytosine) and G (Guanine).
@@ -34,11 +33,11 @@ There can also be __insertions__ and __deletions__ (sometimes referred to as
 
 Finally, other markers of genetic variation are __Copy Number Variants__ (**CNVs**), 
 when a sequence is repeated a certain number of times. 
-They can contain more or less repetitive units. These units can contain more or 
+They can be composed of more or less repetitive units. These units can contain more or 
 less nucleotides. __Short Tandem Repeats__ (**STRs**) are a type of genetic 
 polymorphism consisting in short sequences from 2 to 7 base pairs that are 
 repeated several times. The __number of repeats varies__ among individuals, therefore characterizing 
-the length of those repeats regions can be useful to identify individuals. STRs are the most common markers used in forensic genetics.
+the length of those repeat regions can be useful to identify individuals. STRs are the most common markers used in forensic genetics.
 
 ## Polymorphism and forensics {-}
 
