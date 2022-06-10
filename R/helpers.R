@@ -388,3 +388,34 @@ get_hw_gp <- function(fname, n_iter) {
   return(df)
   
 }
+
+#' Plot Pairwise Distance between haplotypes. 
+#' @param df a table containing LD test results
+#' @return a heatmap representing LD test p-values
+#' @export
+#' @keywords internal
+plot_hap_div <- function(df) {
+  hap_1 <- hap_2 <- value <- NULL
+  midpoint <- median(df$value)
+  plt <- ggplot2::ggplot(data = df, aes(hap_1, hap_2, fill = value)) +
+    ggplot2::geom_tile(color = "white") +
+    ggplot2::scale_fill_gradient2(low = "#ffffff", mid = "#fdae6b", high = "#e6550d", 
+                                  space = "Lab", midpoint = midpoint,
+                                  name= "# differences") +
+    ggplot2::theme_minimal() + 
+    ggplot2::scale_x_discrete(position = "top") +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 90, size = 9), axis.text.y = ggplot2::element_text(angle = 0, size = 9),
+      panel.grid.major = ggplot2::element_blank(),
+      legend.position = c(1.2, 0.6),
+      plot.caption= ggplot2::element_text(vjust = 30, hjust = 1.5, size = 10),
+      plot.margin = ggplot2::margin(t = 0.2, r =  4, b = 0.2, l = 0.2, "cm")
+    ) + 
+    ggplot2::geom_text(aes(label = value), size = 2, col = "black") +
+    ggplot2::ggtitle(label = "Number of pairwise differences between haplotypes") +
+    ggplot2::xlab("") + ggplot2::ylab("") +
+    ggplot2::coord_fixed()
+  
+  return(plotly::ggplotly(plt))
+  
+}
