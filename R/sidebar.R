@@ -43,7 +43,7 @@ sidebarUI <- function() {
     tags$hr(),
     h4('The STRAF Book'),
     p('Click on the image below to read our online book with a lot more details about the software!'),
-    HTML("<div align='center'><a href='https://agouy.github.io/straf/' target='_blank'><img src='cover.png' align='center' width='169' /></a></div>"),
+    HTML("<div align='center'><a href='https://agouy.github.io/straf_book/' target='_blank'><img src='cover.png' align='center' width='169' /></a></div>"),
     tags$hr(),
     
     h4('Contact'),

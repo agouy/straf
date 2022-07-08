@@ -24,10 +24,10 @@ Alternatively, you can use the following link:
 
 Click on the image below to access our online book with a lot more details about the software:
 
-<div align='center'><a href='https://agouy.github.io/straf/' target='_blank'><img class='link' src='./img/cover.png' width='269'></a></div>
+<div align='center'><a href='https://agouy.github.io/straf_book/' target='_blank'><img class='link' src='./img/cover.png' width='269'></a></div>
 
 Alternatively, you can use the following link:
 
-<center><a href='https://agouy.github.io/straf/' target='_blank'>https://agouy.github.io/straf/</a></center>
+<center><a href='https://agouy.github.io/straf_book/' target='_blank'>https://agouy.github.io/straf_book/</a></center>
 
 

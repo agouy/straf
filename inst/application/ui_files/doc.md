@@ -5,7 +5,7 @@ STRAF is a browser-based application that allows to perform forensics and popula
 
 Click on the image below to access our online book with a lot more details about the software!
 
-<div align='center'><a href='https://agouy.github.io/straf/' target='_blank'><img src='cover.png' align='center' width='269' /></a></div>
+<div align='center'><a href='https://agouy.github.io/straf_book/' target='_blank'><img src='cover.png' align='center' width='269' /></a></div>
 
 ### Input file format
 

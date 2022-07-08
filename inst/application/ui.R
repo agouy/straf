@@ -8,7 +8,6 @@ shinyUI(
       "Analysis",
       fluidPage(
         theme = "bootstrap.css",
-        tags$head(includeHTML(("./www/googleanalytics.html"))),
         tags$head(tags$style(type="text/css", ".container-fluid {max-width: 1200px}")),
         tags$head(tags$style('body {font-family: Arial;}')),
         tags$head(tags$style('table {font-family: Arial;}')),
