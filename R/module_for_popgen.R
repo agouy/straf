@@ -95,7 +95,8 @@ popgen_UI <- function(id) {
       downloadButton(ns('dlFstMat'), 'Download as text (.txt)'),
       downloadButton(ns('dlFstMatXL'), 'Download as Excel (.xlsx)')
     ),
-    tags$hr()
+    tags$hr(),
+    uiOutput(ns("haplo_UI"))
   )
 }
 
@@ -294,7 +295,7 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
           yaxis = list(title = "Locus")
         )
         
-        (fig)
+        fig
       })
       
       output$plotFOR <- renderUI({
@@ -334,28 +335,31 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
       
       #reactive function to compute FST matrix
       fstMatInput <- reactive({
-        if (!input$displayFstMat)  return(NULL)
-        dat2 <- getgenind()
+        if(!input$displayFstMat)  return(NULL)
+        data <- getgenind()
         
-        if (length(unique(dat2@pop)) == 1)
-          stop("Multiple populations are required to perform this analysis")
-        matFST <- hierfstat::pairwise.WCfst(hierfstat::genind2hierfstat(dat2))
-        matFST[lower.tri(matFST)] <- NA
-        matFST
+        if(length(unique(data@pop)) == 1) {
+          stop("Multiple populations are required to perform this analysis.")
+        }
+        fst_mat <- hierfstat::pairwise.WCfst(hierfstat::genind2hierfstat(data))
+        fst_mat[lower.tri(fst_mat)] <- NA
+        fst_mat <- apply(fst_mat, 1, rev)
+        fst_mat
       })
       
       #display FST matrix
       output$FstMat <- renderTable({
-        if(!is.null(fstMatInput()))  matFST <- apply(fstMatInput(), 1, rev)
+        req(fstMatInput())
+        fstMatInput()
       }, digits = 4, include.rownames = TRUE, na = "")
       
       #DL fst matrix
       output$dlFstMat <- downloadHandler(
         filename = function() { 
-          paste('pairwise_fst.tsv', sep='') 
+          paste('pairwise_fst.tsv', sep='')
         },
         content = function(file) {
-          matFST <- apply(fstMatInput(),1,rev)
+          matFST <- fstMatInput()
           write.table(matFST, file, sep="\t", na = "", row.names = TRUE)
         }
       )
@@ -364,8 +368,8 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
           paste('pairwise_fst.xlsx', sep='') 
         },
         content = function(file) {
-          matFST <- apply(fstMatInput(), 1, rev)
-          openxlsx::write.xlsx(list(fst = matFST), file, keepNA = FALSE,row.names = TRUE)
+          matFST <- fstMatInput()
+          openxlsx::write.xlsx(list(fst = matFST), file, keepNA = FALSE, row.names = TRUE)
         }
       )
       # LD ---------------------------------------------------------------------------
@@ -457,6 +461,44 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
           openxlsx::write.xlsx(list(LD=pairLD), file, keepNA = FALSE, row.names = TRUE)
         }
       )
+      
+      
+      output$haplo_UI <- renderUI({
+        if(ploidy() == 2) {
+            list()
+        } else {
+          list(
+            h3("Haploid data statistics"),
+            uiOutput(ns("selectPopHaplo")),
+            tableOutput(ns("haplo.stats")),
+            tags$hr()
+          )
+        }
+      })
+
+      output$selectPopHaplo <- renderUI({
+        selectInput(ns("selectPopHaplo"), "Select a population:", popnames())
+      })
+      
+      haploStats_pop <- reactive({
+        req(haploStats())
+        req(input$selectPopHaplo)
+        haploStats()[[input$selectPopHaplo]]$hap_data
+      })
+      
+      haploStats <- reactive({
+        data <- getgenind()
+        req(data)
+        df <- getHaploStatsAllPop(data)
+        return(df)
+      })
+      
+      output$haplo.stats <- renderTable({
+        req(haploStats_pop())
+        haplo_stats <- haploStats_pop()
+        haplo_stats
+      }, digits = 4)
+      
     }
   )
 }
