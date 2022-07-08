@@ -8,13 +8,13 @@ indices_diploid <- straf::getIndicesAllPop(dat_diploid)
 
 input_haploid <- list(datapath="./exampleSTRAFhaplo.txt")
 dat_haploid <- straf::createGenind(input_haploid, ploidy = 1)
-freq_haploid <- straf::getFreqAllPop(dat_diploid)
-indices_haploid <- straf::getIndicesAllPop(dat_diploid)
+freq_haploid <- straf::getFreqAllPop(dat_haploid)
+indices_haploid <- straf::getIndicesAllPop(dat_haploid)
 
 input_haploid_point <- list(datapath="./exampleSTRAFhaplo_point.txt")
 dat_haploid_point <- straf::createGenind(input_haploid_point, ploidy = 1)
-freq_haploid_point <- straf::getFreqAllPop(dat_diploid)
-indices_haploid_point <- straf::getIndicesAllPop(dat_diploid)
+freq_haploid_point <- straf::getFreqAllPop(dat_haploid_point)
+indices_haploid_point <- straf::getIndicesAllPop(dat_haploid_point)
 
 expected <- readRDS("./expectations.rds")
 
