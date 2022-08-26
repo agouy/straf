@@ -32,11 +32,20 @@ getHaploStatsFromGenind <- function(data) {
   h_div <- (h_n / (h_n - 1)) * sum(h_freq ^ 2)
   
   ## haplotype level table
+  hap_sq <- seq_along(h_count)
+  hap_labels <- paste0(
+    "H",
+    formatC(
+      hap_sq,
+      width = max(nchar(hap_sq)),
+      flag = "0"
+    )
+  )
   hap_data <- tibble::tibble(
-    haplotype_id = paste0("H", seq_along(h_count)),
-    h_value = names(h_count),
+    haplotype_id = hap_labels,
     h_count = h_count,
-    h_freq = h_freq
+    h_freq = h_freq,
+    h_value = gsub("_", "|", names(h_count))
   )
   
   ## population level table
@@ -46,8 +55,8 @@ getHaploStatsFromGenind <- function(data) {
   
   ## number of pairwise differences
   compdist <- function(a, b) {
-    x <- strsplit(a, "_")[[1]]
-    y <- strsplit(b, "_")[[1]]
+    x <- strsplit(a, "|")[[1]]
+    y <- strsplit(b, "|")[[1]]
     return(sum(x != y))
   }
   d_mat <- outer(X = hap_data$h_value, Y = hap_data$h_value, Vectorize(compdist))

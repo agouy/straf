@@ -471,7 +471,10 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
             h3("Haploid data statistics"),
             uiOutput(ns("selectPopHaplo")),
             tableOutput(ns("haplo.stats")),
-            tags$hr()
+            tags$hr(),
+            textOutput(ns("haplo.div")),
+            tags$hr(),
+            plotlyOutput(ns("haplo.dist"))
           )
         }
       })
@@ -481,9 +484,18 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
       })
       
       haploStats_pop <- reactive({
-        req(haploStats())
-        req(input$selectPopHaplo)
+        req(haploStats(), input$selectPopHaplo)
         haploStats()[[input$selectPopHaplo]]$hap_data
+      })
+      
+      haploStats_div <- reactive({
+        req(haploStats(), input$selectPopHaplo)
+        haploStats()[[input$selectPopHaplo]]$hap_pop_data$h_div
+      })
+      
+      haploStats_dist <- reactive({
+        req(haploStats(), input$selectPopHaplo)
+        haploStats()[[input$selectPopHaplo]]$d_mat
       })
       
       haploStats <- reactive({
@@ -498,6 +510,22 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
         haplo_stats <- haploStats_pop()
         haplo_stats
       }, digits = 4)
+      
+      output$haplo.div <- renderText({
+        req(haploStats_pop())
+        paste0("Haplotype diversity: ", round(haploStats_div(), digits = 3))
+      })
+      
+      output$haplo.dist <- plotly::renderPlotly({
+        req(haploStats_dist())
+        d_mat_tmp <- haploStats_dist()
+        d_mat_tmp[lower.tri(d_mat_tmp)] <- NA
+        d_mat_2 <- as.data.frame(d_mat_tmp)
+        d_mat_2$hap_1 <- rownames(d_mat_2)
+        df_dist <- tidyr::pivot_longer(d_mat_2, cols = colnames(d_mat_tmp), names_to = "hap_2")
+        plt <- plot_hap_dist(df_dist)
+        plt
+      })
       
     }
   )

@@ -248,7 +248,7 @@ getGenepopLD <- function(data, ploidy, n_iter = 10000) {
 #' @keywords internal
 plot_ld <- function(df) {
   Locus_1 <- Locus_2 <- P_value <- plab <- NULL
-  plt <- ggplot2::ggplot(data = df, aes(Locus_1, Locus_2, fill = -log10(P_value))) +
+  plt <- ggplot2::ggplot(data = df, ggplot2::aes(Locus_1, Locus_2, fill = -log10(P_value))) +
     ggplot2::geom_tile(color = "white") +
     ggplot2::scale_fill_gradient2(low = "#fee6ce", mid = "#fdae6b", high = "#e6550d", 
                          midpoint = 2.5, limit = c(-0.1,5), space = "Lab", 
@@ -262,7 +262,7 @@ plot_ld <- function(df) {
       plot.caption= ggplot2::element_text(vjust = 30, hjust = 1.5, size = 10),
       plot.margin = ggplot2::margin(t = 0.2, r =  4, b = 0.2, l = 0.2, "cm")
     ) + 
-    ggplot2::geom_text(aes(label = plab), size = 2, col = "black") +
+    ggplot2::geom_text(ggplot2::aes(label = plab), size = 2, col = "black") +
     ggplot2::ggtitle(label = "Linkage disequilibrium between loci") +
     ggplot2::xlab("") + ggplot2::ylab("") +
     ggplot2::coord_fixed()
@@ -270,6 +270,36 @@ plot_ld <- function(df) {
   return(plotly::ggplotly(plt))
   
 }
+
+#' Plot pairwise distance between haplotypes.
+#' @param df a table containing pairwise distance between haplotypes
+#' @return a heatmap representing pairwise distance between haplotypes
+#' @export
+#' @keywords internal
+plot_hap_dist <- function(df) {
+  hap_1 <- hap_2 <- value <- NULL
+  plt <- ggplot2::ggplot(data = df, ggplot2::aes(hap_1, hap_2, fill = value)) +
+    ggplot2::geom_tile(color = "white") +
+    ggplot2::scale_fill_gradient2(low = "#fee6ce", mid = "#fdae6b", high = "#e6550d", 
+                                  space = "Lab", #midpoint = 2.5, limit = c(-0.1,5), 
+                                  name="Pairwise\ndifferences") +
+    ggplot2::theme_minimal() + 
+    ggplot2::scale_x_discrete(position = "top") +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 90, size = 9), axis.text.y = ggplot2::element_text(angle = 0, size = 9),
+      panel.grid.major = ggplot2::element_blank(),
+      legend.position=c(1.2, 0.6),
+      plot.caption= ggplot2::element_text(vjust = 30, hjust = 1.5, size = 10),
+      plot.margin = ggplot2::margin(t = 0.2, r =  4, b = 0.2, l = 0.2, "cm")
+    ) + 
+    ggplot2::geom_text(ggplot2::aes(label = value), size = 2, col = "black") +
+    ggplot2::ggtitle(label = "Pairwise distance between haplotypes") +
+    ggplot2::xlab("") + ggplot2::ylab("") +
+    ggplot2::coord_fixed()
+  
+  return(plotly::ggplotly(plt))
+}
+
 
 #' Parse Linkage Disequilibrium Genepop results.
 #' @param out.name path to genepop file

@@ -1,5 +1,6 @@
 ### Udpates
 
+* 2.1.0 (26/08/2022) – Added haplotype statistics for haploid data and unit tests. Fully refactored deployment material.
 * 2.0.8 (04/12/2021) – Bug fix in HWE computation for single population.
 * 2.0.7 (03/10/2021) – STRAF includes now more robust HW and LD tests. STRAF calls
 Genepop to run the tests. Graphical representations are now interactive. Minor
