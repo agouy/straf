@@ -426,7 +426,7 @@ get_hw_gp <- function(fname, n_iter) {
 #' @keywords internal
 plot_hap_div <- function(df) {
   hap_1 <- hap_2 <- value <- NULL
-  midpoint <- median(df$value)
+  midpoint <- stats::median(df$value)
   plt <- ggplot2::ggplot(data = df, aes(hap_1, hap_2, fill = value)) +
     ggplot2::geom_tile(color = "white") +
     ggplot2::scale_fill_gradient2(low = "#ffffff", mid = "#fdae6b", high = "#e6550d", 

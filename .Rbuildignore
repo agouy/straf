@@ -13,3 +13,5 @@ book
 ^cran-comments\.md$
 ^\.github$
 Dockerfile
+y_hap_pred
+tests/shiny*

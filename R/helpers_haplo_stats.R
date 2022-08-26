@@ -41,7 +41,7 @@ getHaploStatsFromGenind <- function(data) {
       flag = "0"
     )
   )
-  hap_data <- tibble::tibble(
+  hap_data <- data.frame(
     haplotype_id = hap_labels,
     h_count = h_count,
     h_freq = h_freq,
@@ -49,7 +49,7 @@ getHaploStatsFromGenind <- function(data) {
   )
   
   ## population level table
-  hap_pop_data <- tibble::tibble(
+  hap_pop_data <- data.frame(
     h_div = h_div
   )
   

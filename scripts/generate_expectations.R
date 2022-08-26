@@ -1,21 +1,21 @@
 library(straf)
 
-input_diploid <- list(datapath="./tests/input_files/exampleSTRAFdiplo.txt")
+input_diploid <- list(datapath="./tests/testthat/exampleSTRAFdiplo.txt")
 dat_diploid <- straf::createGenind(input_diploid, ploidy = 2)
 freq_diploid <- straf::getFreqAllPop(dat_diploid)
 indices_diploid <- straf::getIndicesAllPop(dat_diploid)
 
 
-input_haploid <- list(datapath="./tests/input_files/exampleSTRAFhaplo.txt")
+input_haploid <- list(datapath="./tests/testthat/exampleSTRAFhaplo.txt")
 dat_haploid <- straf::createGenind(input_haploid, ploidy = 1)
-freq_haploid <- straf::getFreqAllPop(dat_diploid)
-indices_haploid <- straf::getIndicesAllPop(dat_diploid)
+freq_haploid <- straf::getFreqAllPop(dat_haploid)
+indices_haploid <- straf::getIndicesAllPop(dat_haploid)
 
 
-input_haploid_point <- list(datapath="./tests/input_files/exampleSTRAFhaplo_point.txt")
+input_haploid_point <- list(datapath="./tests/testthat/exampleSTRAFhaplo_point.txt")
 dat_haploid_point <- straf::createGenind(input_haploid_point, ploidy = 1)
-freq_haploid_point <- straf::getFreqAllPop(dat_diploid)
-indices_haploid_point <- straf::getIndicesAllPop(dat_diploid)
+freq_haploid_point <- straf::getFreqAllPop(dat_haploid_point)
+indices_haploid_point <- straf::getIndicesAllPop(dat_haploid_point)
 
 expectations <- list(
   dat_diploid=dat_diploid,
@@ -29,4 +29,4 @@ expectations <- list(
   indices_haploid_point=indices_haploid_point
 )
 
-saveRDS(expectations, file = "./tests/expectations.rds")
+saveRDS(expectations, file = "./tests/testthat/expectations.rds")
