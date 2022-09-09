@@ -12,8 +12,7 @@
 #' @docType package
 #' @name straf
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
-#' @importFrom ade4 dudi.pca
-#' @importFrom adegenet as.genind df2genind pop<- locNames genind2genpop transp funky dist.genpop loadingplot makefreq pop
+#' @importFrom adegenet as.genind df2genind pop<- locNames genind2genpop dist.genpop makefreq pop transp
 #' @importClassesFrom adegenet genind
 #' @importFrom ape as.phylo
 #' @importFrom colourpicker colourInput

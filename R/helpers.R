@@ -125,59 +125,6 @@ getFreqFromGenind <- function(data) {
   return(matr)
 }
 
-#' Plot PCA.
-#' @export
-#' @keywords internal
-plotPCA <- function(pca, popus, coul, axis) {
-  
-  var1 <- round(100 * (pca$eig / sum(pca$eig))[axis[1]], 2)
-  var2 <- round(100 * (pca$eig / sum(pca$eig))[axis[2]], 2)
-  
-  plot(pca$li[, axis[1]],
-       pca$li[, axis[2]],
-       col = transp(coul[popus], 0.5),
-       pch = 16, cex = 1.7,
-       xlab = paste0("PC", axis[1], " (", var1, " %)"),
-       ylab = paste0("PC", axis[2], " (", var2, " %)"),
-       cex.lab = 1.5,
-       cex.axis = 1.5,
-       cex.main = 1.5,
-       bty = "l",
-       main = "PCA projection"
-  )
-  
-  sapply(unique(popus), function(x) {
-    car::ellipse(
-      c(mean(pca$li[popus %in% x, axis[1]]), mean(pca$li[popus %in% x, axis[2]])),
-      cov(pca$li[, axis[1:2]]),
-      0.95,
-      col = transp(coul[x], 1),
-      lty = 1,
-      lwd = 2,
-      center.pch = 0,
-      fill = TRUE,
-      fill.alpha = 0.2,
-      segments = 100
-    )
-  })
-  
-  invisible(sapply(unique(popus), function(x) {
-    legend(
-      mean(pca$li[popus %in% x, axis[1]]),
-      mean(pca$li[popus %in% x, axis[2]]),
-      x,
-      xjust = 0.5,
-      yjust = 0.5,
-      text.col=coul[x],
-      text.font = 2,
-      box.col = NA,
-      bg = transp("white", 0.5),
-      adj = 0.2
-    )
-  }))
-  
-}
-
 
 #' Convert a POPTREE file to a format suitable for use in STRAF
 #' @param fname Input file path

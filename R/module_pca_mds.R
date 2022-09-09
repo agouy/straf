@@ -13,20 +13,14 @@ pca_mds_UI <- function(id) {
     ),
     conditionalPanel(
       condition = "input.displayPCA == true", ns = ns,
-      checkboxGroupInput(ns('PCAaxis'), 'PCA axis', c(1,2,3), c(1,2), inline = TRUE)
+      selectInput(ns('PCAaxis1'), 'PC on x axis', 1:5, 1),
+      selectInput(ns('PCAaxis2'), 'PC on y axis', 1:5, 2)
     ),
     conditionalPanel(
       condition = "input.displayPCA == true", ns = ns,
       uiOutput(ns('plotPCA')),
-      verbatimTextOutput(ns('info')),
       downloadButton(ns('dlPCAeigen'), 'Download PCA eigenvectors'),
-      downloadButton(ns('dlPCAcoord'), 'Download PCA coordinates'),
-      awesomeCheckbox(ns('displayloadings'), 'Plot loadings (alleles contributions)', FALSE)
-    ),
-    conditionalPanel(
-      condition = "input.displayPCA == true & input.displayloadings == true",
-      ns = ns,
-      uiOutput(ns('plotLoadings'))
+      downloadButton(ns('dlPCAcoord'), 'Download PCA coordinates')
     ),
     
     tags$hr(),
@@ -56,43 +50,42 @@ pca_mds_Server <- function(id, getgenind) {
     id,
     function(input, output, session) {
       ns <- session$ns
-      output$runPCA <- renderPlot({
+      output$runPCA <- renderPlotly({
         if (!input$displayPCA)  return(NULL)
         dat2 <- getgenind()
-        pca.obj <- do.pca()
+        pc <- do.pca()
         
-        if(length(input$PCAaxis)==2){
-          par(mfrow=c(1,1))
-          coul <- transp(funky(length(unique(pop(dat2)))),.6)
-          plotPCA(
-            pca = pca.obj,
-            popus = pop(dat2),
-            coul = coul,
-            axis = c(as.numeric(input$PCAaxis[1]), as.numeric(input$PCAaxis[2]))
-          )
-        }
-        if(length(input$PCAaxis)==3){
-          
-          par(mfrow = c(1,2))
-          coul <- transp(funky(length(unique(pop(dat2)))),.6)
-          plotPCA(
-            pca = pca.obj,
-            popus = pop(dat2),
-            coul = coul,
-            axis = c(as.numeric(input$PCAaxis[1]), as.numeric(input$PCAaxis[2]))
-          )
-          plotPCA(
-            pca = pca.obj,
-            popus = pop(dat2),
-            coul = coul,
-            axis = c(as.numeric(input$PCAaxis[1]), as.numeric(input$PCAaxis[3]))
-          )
-          
-        }
+        df_tmp <- pc$x
+        
+        pc_var <- summary(pc)$importance["Proportion of Variance", ]
+        
+        ax_1 <- as.numeric(input$PCAaxis1)
+        ax_2 <- as.numeric(input$PCAaxis2)
+        
+        axes_labels <- paste0(colnames(df_tmp), " (", round(pc_var * 100, 2), " %)")
+        df <- as.data.frame(df_tmp) %>%
+          dplyr::mutate(Population = pop(dat2), ID = rownames(dat2$tab))
+        
+        plt <- suppressWarnings(
+          ggplot2::ggplot(
+            df,
+            ggplot2::aes_string(
+              x = colnames(df)[ax_1],
+              y = colnames(df)[ax_2],
+              color = "Population"
+            )
+          ) +
+            ggplot2::geom_point(ggplot2::aes(text = ID)) +
+            ggplot2::stat_ellipse() + 
+            ggplot2::theme_minimal() +
+            ggplot2::labs(x = axes_labels[ax_1], y = axes_labels[ax_2]) 
+        )
+        
+        plotly::ggplotly(plt)
       })
       
       output$plotPCA <- renderUI({
-        plotOutput(ns('runPCA'), click = ns("plot_click"))
+        plotlyOutput(ns('runPCA'))
       })
       output$plotMDS <- renderUI({
         plotOutput(ns('runMDS'))
@@ -115,6 +108,7 @@ pca_mds_Server <- function(id, getgenind) {
       output$plotMDStree <- renderUI({
         plotOutput(ns('runMDStree'))
       })
+      
       output$runMDStree <- renderPlot({
         req(do.dist())
         if (!input$displayMDS)  return(NULL)
@@ -122,6 +116,7 @@ pca_mds_Server <- function(id, getgenind) {
         hc <- stats::hclust(dst)
         plot(ape::as.phylo(hc), cex = 0.9)        
       })
+      
       do.dist <- reactive({
         if (!input$displayMDS)  return(NULL)
         dat2 <- getgenind()
@@ -135,10 +130,10 @@ pca_mds_Server <- function(id, getgenind) {
       
       do.pca <- reactive({
         freq.tab <- makefreq(getgenind(), missing = "mean", quiet = TRUE)
-        pca.obj <- dudi.pca(freq.tab, nf = 3, scannf = FALSE)
-        
+        pca.obj <- prcomp(freq.tab, scale = TRUE, center = TRUE)
         return(pca.obj)
       })
+      
       # DL principal components
       output$dlPCAeigen <- downloadHandler(
         filename = function() {
@@ -147,7 +142,7 @@ pca_mds_Server <- function(id, getgenind) {
         content = function(file) {
           if (!input$displayPCA)  return(NULL)
           pca.obj <- do.pca()
-          write.table(pca.obj$c1, file, sep = "\t", na = "",row.names = TRUE)
+          write.table(pca.obj$rotation, file, sep = "\t", na = "",row.names = TRUE)
         }
       )
       output$dlPCAcoord <- downloadHandler(
@@ -157,30 +152,9 @@ pca_mds_Server <- function(id, getgenind) {
         content = function(file) {
           if (!input$displayPCA)  return(NULL)
           pca.obj <- do.pca()
-          write.table(pca.obj$li, file, sep = "\t", na = "",row.names = TRUE)
+          write.table(pca.obj$x, file, sep = "\t", na = "",row.names = TRUE)
         }
       )
-      output$info <- renderPrint({
-        if (!input$displayPCA)  return(NULL)
-        pca.obj <- do.pca()
-        if(length(input$PCAaxis) == 2){
-          cat("Click on a point to get its ID and coordinates\n\n")
-          ta <- c("Axis1","Axis2","Axis3")
-          if(!is.null(input$plot_click)){
-            nearPoints(pca.obj$li, input$plot_click, 
-                       xvar = ta[as.numeric(input$PCAaxis[1])], 
-                       yvar = ta[as.numeric(input$PCAaxis[2])])
-          }
-        }
-      })
-      output$loadings <- renderPlot({
-        if (!input$displayPCA) return(NULL)
-        pca.obj <- do.pca()
-        loadingplot(pca.obj$c1 ^ 2)
-      })
-      output$plotLoadings <- renderUI({
-        plotOutput(ns('loadings'))
-      })
       
     }
   )

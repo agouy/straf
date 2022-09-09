@@ -83,7 +83,7 @@ file_conv_Server <- function(id, fpath, ploidy, getgenind, popnames) {
           write.table(matr[-nrow(matr), ], file, sep = ",", na = "", row.names = FALSE, quote = FALSE)
         }
       )
-      
+      # 
       output$dlSTRmix <- downloadHandler(
         filename = function() { 
           paste(input$selectPopAF, '_', 'STRmix.csv', sep = '') 
