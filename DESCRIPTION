@@ -1,6 +1,6 @@
 Package: straf
 Title: STR Analysis for Forensics
-Version: 2.1.0
+Version: 2.1.1
 Authors@R: 
     person(given = "Alexandre",
            family = "Gouy",

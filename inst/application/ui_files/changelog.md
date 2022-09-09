@@ -1,5 +1,6 @@
 ### Udpates
 
+* 2.1.1 (09/09/2022) – Added conversion to Euroformix, LRMix and STRMix formats.
 * 2.1.0 (26/08/2022) – Added haplotype statistics for haploid data and unit tests. Fully refactored deployment material.
 * 2.0.8 (04/12/2021) – Bug fix in HWE computation for single population.
 * 2.0.7 (03/10/2021) – STRAF includes now more robust HW and LD tests. STRAF calls
@@ -24,10 +25,3 @@ bug fixes (FST matrix disappeared).
 * 1.0.2 (20/10/2017) - forensics parameters and population genetics indices can be computed for each population separately; PCA coordinates and eigenvectors can be downloaded
 * 1.0.1 (22/09/2017) - allele frequencies can now be computed and downloaded for each population separately
 * 1.0.0 (02/06/2017) - STRAF 1.0.0 release
-
-### Future improvements
-
-* Genepop call for LD and HW exact tests
-* HGDP database integration to references
-* HGPD matching probabilities
-* Formal testing procedures

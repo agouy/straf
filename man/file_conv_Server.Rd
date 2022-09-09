@@ -4,7 +4,7 @@
 \alias{file_conv_Server}
 \title{Generate file conversion tab Server}
 \usage{
-file_conv_Server(id, fpath, ploidy)
+file_conv_Server(id, fpath, ploidy, getgenind, popnames)
 }
 \description{
 Generate file conversion tab Server

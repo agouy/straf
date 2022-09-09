@@ -116,6 +116,12 @@ getFreqFromGenind <- function(data) {
     ] <- DAT[DAT$alle==i, ]$frequency
   }
   
+  matr <- rbind(matr, N[colnames(matr)])
+  rownames(matr)[nrow(matr)] <- "N"
+  
+  Allele <- rownames(matr)
+  matr <- cbind(Allele, matr)
+  
   return(matr)
 }
 

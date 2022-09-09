@@ -13,17 +13,28 @@ file_conv_UI <- function(id) {
     tags$br(),
     h3("Arlequin (diploid data only)"),
     downloadButton(ns('dlArlequin'), 'Download file in the Arlequin format'),
+    tags$br(),
+    h3("Allele frequencies - reference datasets"),
+    uiOutput(ns("selectPopAF")),
+    downloadButton(ns('dlEuroformix'), 'Download file in the Euroformix format'),
+    tags$br(),
+    downloadButton(ns('dlSTRmix'), 'Download file in the STRmix format'),
+    tags$br(),
+    downloadButton(ns('dlLRmix'), 'Download file in the LRmix format'),
     tags$br()
+    
   )
 }
 
 #' Generate file conversion tab Server
 #' @export
 #' @keywords internal
-file_conv_Server <- function(id, fpath, ploidy) {
+file_conv_Server <- function(id, fpath, ploidy, getgenind, popnames) {
   moduleServer(
     id,
     function(input, output, session) {
+      
+      ns <- session$ns
       
       #### FILE CONVERSION
       output$dlGenepop <- downloadHandler(
@@ -52,6 +63,49 @@ file_conv_Server <- function(id, fpath, ploidy) {
           straf2familias(fpath(), output_file = file)
         }
       )
+      
+      alleleFreqTabsAF <- reactive({
+        req(getgenind())
+        getFreqAllPop(getgenind())
+      })
+      
+      output$selectPopAF <- renderUI({
+        selectInput(ns("selectPopAF"), "Select a population:", popnames())
+      })
+
+      output$dlEuroformix <- downloadHandler(
+        filename = function() { 
+          paste(input$selectPopAF, '_', 'Euroformix.csv', sep = '') 
+        },
+        content = function(file) {
+          if(input$selectPopAF == "") matr <- alleleFreqTabsAF()[[1]]
+          else matr <- alleleFreqTabsAF()[[input$selectPopAF]]
+          write.table(matr[-nrow(matr), ], file, sep = ",", na = "", row.names = FALSE, quote = FALSE)
+        }
+      )
+      
+      output$dlSTRmix <- downloadHandler(
+        filename = function() { 
+          paste(input$selectPopAF, '_', 'STRmix.csv', sep = '') 
+        },
+        content = function(file) {
+          if(input$selectPopAF == "") matr <- alleleFreqTabsAF()[[1]]
+          else matr <- alleleFreqTabsAF()[[input$selectPopAF]]
+          write.table(matr, file, sep = ",", na = "0", row.names = FALSE, quote = FALSE)
+        }
+      )
+      
+      output$dlLRmix <- downloadHandler(
+        filename = function() { 
+          paste(input$selectPopAF, '_', 'LRmix.csv', sep = '') 
+        },
+        content = function(file) {
+          if(input$selectPopAF == "") matr <- alleleFreqTabsAF()[[1]]
+          else matr <- alleleFreqTabsAF()[[input$selectPopAF]]
+          write.table(matr[-nrow(matr), ], file, sep = ",", na = "", row.names = FALSE, quote = FALSE)
+        }
+      )
+      
     }
   )}
 
@@ -255,7 +309,7 @@ poptree2straf <- function(input_file, output_file) {
   
   a <- grep("locus", df[[1]])
   b <- grep("#", df[[1]])
-  if(length(a) != length(b)) stop("problem")
+  if(length(a) != length(b)) stop("There has been an issue with file conversion.")
   str_out <- c()
   for(i in seq_along(a)) {
     

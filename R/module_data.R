@@ -76,10 +76,8 @@ data_Server <- function(id, getgenind, getData, barplotcolor, transparency, widt
         
         ###depending on the number of loci, different number of columns:
         nL <- length(unique(DAT$loc))
-        if(nL <= 5) n_col <- 2
-        if(nL >= 6) n_col <- 3
-        if(nL >= 10) n_col <- 4
-        
+        n_col <- 2 + (nL %/% 5)
+
         par(mfrow = c(ceiling(nL / n_col), n_col), mar = rep(2, 4))
         for(i in unique(DAT$loc)) {
           barplot(

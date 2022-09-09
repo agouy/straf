@@ -18,15 +18,15 @@ freq_haploid_point <- straf::getFreqAllPop(dat_haploid_point)
 indices_haploid_point <- straf::getIndicesAllPop(dat_haploid_point)
 
 expectations <- list(
-  dat_diploid=dat_diploid,
-  freq_diploid=freq_diploid,
-  indices_diploid=indices_diploid,
-  dat_haploid=dat_haploid,
-  freq_haploid=freq_haploid,
-  indices_haploid=indices_haploid,
-  dat_haploid_point=dat_haploid_point,
-  freq_haploid_point=freq_haploid_point,
-  indices_haploid_point=indices_haploid_point
+  dat_diploid = dat_diploid,
+  freq_diploid = freq_diploid,
+  indices_diploid = indices_diploid,
+  dat_haploid = dat_haploid,
+  freq_haploid = freq_haploid,
+  indices_haploid = indices_haploid,
+  dat_haploid_point = dat_haploid_point,
+  freq_haploid_point = freq_haploid_point,
+  indices_haploid_point = indices_haploid_point
 )
 
 saveRDS(expectations, file = "./tests/testthat/expectations.rds")
