@@ -122,4 +122,15 @@ shinyServer(function(input, output) {
   pca_mds_Server("pca_mds", getgenind)
   ref_mds_Server("ref_mds", getgenind)
   file_conv_Server("file_conv", reactive({input$file1$datapath}), ploidy, getgenind, popnames)
+  
+  autoInvalidate <- reactiveTimer(30000)
+  timeout <- reactiveValues(counter = 0)
+  observe({
+    autoInvalidate()
+    timeout$counter <- isolate(timeout$counter) + 1
+    if(timeout$counter < 10) {
+      cat(".")
+    } 
+  })
+  
 })

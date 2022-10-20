@@ -1,6 +1,6 @@
 Package: straf
 Title: STR Analysis for Forensics
-Version: 2.1.2
+Version: 2.1.3
 Authors@R: 
     person(given = "Alexandre",
            family = "Gouy",
@@ -32,8 +32,6 @@ Imports:
     tidyr,
     ggplot2,
     ggrepel,
-    car,
-    ade4,
     adegenet,
     ape,
     pegas,

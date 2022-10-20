@@ -30,7 +30,7 @@
 #' @importFrom reshape2 acast
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinyWidgets awesomeCheckbox pickerInput
-#' @importFrom stats as.dist cmdscale cov frequency hclust ks.test median qqplot qunif p.adjust
+#' @importFrom stats as.dist cmdscale cov frequency hclust ks.test median qqplot qunif p.adjust prcomp
 #' @importFrom tidyr gather
 #' @importFrom utils read.table write.table count.fields
 NULL

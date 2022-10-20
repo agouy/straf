@@ -130,7 +130,7 @@ pca_mds_Server <- function(id, getgenind) {
       
       do.pca <- reactive({
         freq.tab <- makefreq(getgenind(), missing = "mean", quiet = TRUE)
-        pca.obj <- prcomp(freq.tab, scale = TRUE, center = TRUE)
+        pca.obj <- stats::prcomp(freq.tab, scale = TRUE, center = TRUE)
         return(pca.obj)
       })
       
