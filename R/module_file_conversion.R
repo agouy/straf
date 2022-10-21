@@ -5,22 +5,27 @@ file_conv_UI <- function(id) {
   ns <- NS(id)
   tabPanel(
     "File conversion",
-    h3("Genepop"),
+    h3("Population genetics software"),
     downloadButton(ns('dlGenepop'), 'Download file in the Genepop format'),
     tags$br(),
-    h3("Familias"),
-    downloadButton(ns('dlFamilias'), 'Download file in the Familias format'),
     tags$br(),
-    h3("Arlequin (diploid data only)"),
-    downloadButton(ns('dlArlequin'), 'Download file in the Arlequin format'),
+    downloadButton(ns('dlArlequin'), 'Download file in the Arlequin format (diploid data only)'),
+    tags$br(),
     tags$br(),
     h3("Allele frequencies - reference datasets"),
     uiOutput(ns("selectPopAF")),
+    tags$br(),
+    downloadButton(ns('dlFamilias'), 'Download file in the Familias format'),
+    tags$br(),
+    tags$br(),
     downloadButton(ns('dlEuroformix'), 'Download file in the Euroformix format'),
+    tags$br(),
     tags$br(),
     downloadButton(ns('dlSTRmix'), 'Download file in the STRmix format'),
     tags$br(),
+    tags$br(),
     downloadButton(ns('dlLRmix'), 'Download file in the LRmix format'),
+    tags$br(),
     tags$br()
     
   )
@@ -57,10 +62,10 @@ file_conv_Server <- function(id, fpath, ploidy, getgenind, popnames) {
       
       output$dlFamilias <- downloadHandler(
         filename = function() { 
-          paste('straf2familias.txt', sep='')
+          paste(input$selectPopAF, '_', 'Familias.csv', sep = '') 
         },
         content = function(file) {
-          straf2familias(fpath(), output_file = file)
+          straf2familias(fpath(), output_file = file, pop = input$selectPopAF)
         }
       )
       
@@ -72,7 +77,7 @@ file_conv_Server <- function(id, fpath, ploidy, getgenind, popnames) {
       output$selectPopAF <- renderUI({
         selectInput(ns("selectPopAF"), "Select a population:", popnames())
       })
-
+      
       output$dlEuroformix <- downloadHandler(
         filename = function() { 
           paste(input$selectPopAF, '_', 'Euroformix.csv', sep = '') 
@@ -179,14 +184,18 @@ straf2genepop <- function(input_file, output_file, ploidy = 2) {
 #' Convert STRAF file to the Familias format.
 #' @export
 #' @keywords internal
-straf2familias <- function(input_file, output_file) {
+straf2familias <- function(input_file, output_file, pop = "all") {
   
   df <- readLines(input_file)
+  df <- df[df != ""]
   
   spt <- do.call("rbind", strsplit(df, "\t"))
   colnames(spt) <- spt[1, ]
   df <- as.data.frame(spt[-1, ])
   
+  if(pop != "all") {
+    df <- df[df$pop == pop, ]
+  }
   df_tmp <- df[, -1:-2]
   
   idx <- seq_len(length(df_tmp))
@@ -323,7 +332,7 @@ poptree2straf <- function(input_file, output_file) {
     str_out <- c(str_out, Locus, df_tmp3)
   }
   str_out <- gsub(",[.]", ",0." , str_out)
-
+  
   output <- paste(str_out, "\n", collapse = "")
   cat(output, file = output_file)
   return(NULL)
