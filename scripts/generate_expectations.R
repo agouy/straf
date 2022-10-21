@@ -6,6 +6,12 @@ freq_diploid <- straf::getFreqAllPop(dat_diploid)
 indices_diploid <- straf::getIndicesAllPop(dat_diploid)
 
 
+input_diploid2 <- list(datapath="./tests/testthat/exampleSTRAFdiplo_empty_lines.txt")
+dat_diploid2 <- straf::createGenind(input_diploid2, ploidy = 2)
+freq_diploid2 <- straf::getFreqAllPop(dat_diploid2)
+indices_diploid2 <- straf::getIndicesAllPop(dat_diploid2)
+
+
 input_haploid <- list(datapath="./tests/testthat/exampleSTRAFhaplo.txt")
 dat_haploid <- straf::createGenind(input_haploid, ploidy = 1)
 freq_haploid <- straf::getFreqAllPop(dat_haploid)
@@ -21,6 +27,9 @@ expectations <- list(
   dat_diploid = dat_diploid,
   freq_diploid = freq_diploid,
   indices_diploid = indices_diploid,
+  dat_diploid2 = dat_diploid2,
+  freq_diploid2 = freq_diploid2,
+  indices_diploid2 = indices_diploid2,
   dat_haploid = dat_haploid,
   freq_haploid = freq_haploid,
   indices_haploid = indices_haploid,

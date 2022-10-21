@@ -9,6 +9,7 @@ createGenind <- function(Ifile, ploidy) {
   if(ploidy == 2) {
     
     mat <- readLines(Ifile$datapath)
+    mat <- mat[mat != ""]
     mat <- strsplit(mat, "[\t]")
     
     mat <- matrix(unlist(mat), nrow = length(mat), ncol = length(mat[[1]]),
