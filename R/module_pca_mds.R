@@ -24,10 +24,21 @@ pca_mds_UI <- function(id) {
     ),
     
     tags$hr(),
-    h3("Multidimensional Scaling (MDS) based on Nei's distance"),
+    h3("Multidimensional Scaling (MDS)"),
+    selectInput(
+      ns("mds.dist"),
+      label = "Select genetic distance measure:",
+      choices = c(
+        "Nei's distance" = 1,
+        "Angular - Edwards' distance" = 2,
+        "Coancestrality coefficient - Reynolds' distance" = 3,
+        "Euclidean - Rogers' distance" = 4,
+        "Absolute genetics - Provesti 's distance " = 5
+      )
+    ),
     awesomeCheckbox(
       ns('displayMDS'),
-      "Compute Nei's genetic distance between populations and run MDS",
+      "Run MDS",
       FALSE
     ),
     conditionalPanel(
@@ -100,7 +111,7 @@ pca_mds_Server <- function(id, getgenind) {
         p <- ggplot(MDS, aes(x = .data$ax1, y = .data$ax2, color = pop, label = pop)) +
           geom_point() +
           geom_text_repel() + 
-          labs(x = "MDS Axis 1", y = "MDS Axis 2", title = "MDS based on Nei's distance")  +
+          labs(x = "MDS Axis 1", y = "MDS Axis 2", title = "Multidimensional Scaling")  +
           theme_minimal()
         plot(p)
       })
@@ -118,11 +129,12 @@ pca_mds_Server <- function(id, getgenind) {
       })
       
       do.dist <- reactive({
+        req(input$mds.dist)
         if (!input$displayMDS)  return(NULL)
         dat2 <- getgenind()
         if(length(levels(pop(dat2))) < 2) stop("Multiple populations are required for the MDS.")
         obj <- genind2genpop(dat2, quiet = TRUE)
-        dst <- dist.genpop(obj, method = 1)
+        dst <- dist.genpop(obj, method = input$mds.dist)
 
         return(dst)
       })
