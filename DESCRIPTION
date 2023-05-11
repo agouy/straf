@@ -39,6 +39,8 @@ Imports:
     shinycssloaders,
     hierfstat,
     magrittr,
+    markdown,
+    MASS,
     readxl
 Suggests:
     testthat (>= 3.0.0),

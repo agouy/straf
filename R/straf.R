@@ -22,6 +22,7 @@
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom graphics abline axis barplot hist image legend par
 #' @importFrom hierfstat pairwise.WCfst genind2hierfstat wc
+#' @importFrom MASS isoMDS
 #' @importFrom magrittr "%>%"
 #' @importFrom openxlsx write.xlsx
 #' @importFrom pegas genind2loci

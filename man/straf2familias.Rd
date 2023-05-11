@@ -4,7 +4,7 @@
 \alias{straf2familias}
 \title{Convert STRAF file to the Familias format.}
 \usage{
-straf2familias(input_file, output_file)
+straf2familias(input_file, output_file, pop = "all")
 }
 \description{
 Convert STRAF file to the Familias format.

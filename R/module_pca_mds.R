@@ -102,11 +102,15 @@ pca_mds_Server <- function(id, getgenind) {
         plotOutput(ns('runMDS'))
       })
       output$runMDS <- renderPlot({
-        if (!input$displayMDS)  return(NULL)
-        req(do.dist())
-        dst <- do.dist()
-        MDS <- cmdscale(dst)
-        MDS <- data.frame(ax1 = MDS[, 1], ax2 = MDS[, 2], pop = rownames(MDS))
+        # if (!input$displayMDS)  return(NULL)
+        req(input$displayMDS, do.mds())
+        MDS <- do.mds()
+        print(stressMDS())
+        MDS <- data.frame(
+          ax1 = MDS$points[, 1],
+          ax2 = MDS$points[, 2],
+          pop = rownames(MDS$points)
+        )
         .data <- NA
         p <- ggplot(MDS, aes(x = .data$ax1, y = .data$ax2, color = pop, label = pop)) +
           geom_point() +
@@ -114,6 +118,18 @@ pca_mds_Server <- function(id, getgenind) {
           labs(x = "MDS Axis 1", y = "MDS Axis 2", title = "Multidimensional Scaling")  +
           theme_minimal()
         plot(p)
+      })
+      
+      stressMDS <- reactive({
+        req(input$mds.dist)
+        req(do.mds())
+        do.mds()$stress
+      })
+      
+      do.mds <- reactive({
+        req(input$mds.dist)
+        req(do.dist())
+        MASS::isoMDS(do.dist())        
       })
       
       output$plotMDStree <- renderUI({
