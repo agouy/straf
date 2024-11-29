@@ -13,7 +13,7 @@ sidebarUI <- function() {
       )),
     h4('Input'),
     p('Please go to the documentation tab for details about the input file format.'),
-    HTML('<a id="raw-url" href="example_straf_pemberton13.txt" download="example_straf_pemberton13.txt" target="_blank">Click here to download an example file.</a>'),
+    HTML('<a id="raw-url" href="exampleSTRAFdiplo.txt" download="exampleSTRAFdiplo.txt" target="_blank">Click here to download an example file.</a>'),
     tags$hr(),
     radioButtons(
       inputId = 'ploidy', label =  "Ploidy",
