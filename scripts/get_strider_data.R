@@ -1,10 +1,10 @@
 # library(ggplot2)
 # library(ggrepel)
 
-fname <- "./scripts//STRidER_frequencies_2019-08-02.csv"
+fname <- "./inst/application/www/STRidER_frequencies_2024-09-24.csv"
 strider_frequencies <- freq_to_mds(fname)
-save(strider_frequencies, file="./www/strider_frequencies.rda")
-load("./www/strider_frequencies.rda")
+save(strider_frequencies, file="./inst/application/www/strider_frequencies.rda")
+load("./inst/application/www/strider_frequencies.rda")
 
 
 strider_frequencies <- strider_frequencies[!rownames(strider_frequencies) %in% c("SAUDI_ARABIA"), ]
