@@ -59,7 +59,7 @@ popgen_UI <- function(id) {
       ns = ns,
       div(tableOutput(ns('diversity')) %>% shinycssloaders::withSpinner(color="#dd4814"), style = "font-size:75%"),
       downloadButton(ns('dlPopgen'), 'Download as text (.txt)'),
-      downloadButton(ns('dlPopgenCL'), 'Download as Excel (.xlsx)'),
+      downloadButton(ns('dlPopgenXL'), 'Download as Excel (.xlsx)'),
       tags$hr(),
       uiOutput(ns("uiPG")),
       uiOutput(ns("plotPG"))
@@ -199,7 +199,11 @@ for_popgen_Server <- function(id, input_file, getgenind, popnames, ploidy, hw_pe
           req(reacIndices_pop_for())
           taB <- reacIndices_pop_for()
           out <- taB[, ! colnames(taB) %in% c("Ht", "Fis", "Fst")]
-          openxlsx::write.xlsx(list(forensics_parameters = out), file, row.names = FALSE)
+          openxlsx::write.xlsx(
+            list(forensics_parameters = out),
+            file,
+            row.names = FALSE
+          )
         }
       )
       
