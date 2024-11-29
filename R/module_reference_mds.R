@@ -9,10 +9,13 @@ ref_mds_UI <- function(id) {
     h3("Custom allele frequency database"),
     fileInput(
       ns("refdata"),
-      "Import allele frequencies (if empty, the STRidER database will be used.)",
+      "Import allele frequencies",
       width = "300px"
     ),
+    div("If left empty, the STRidER database will be used (2024-09-24 version)."),
+    br(),
     awesomeCheckbox(ns("add_current_ref"), "Include uploaded data to the MDS", FALSE),
+    br(),
     uiOutput(ns('plotMDS_ref')),
     uiOutput(ns('plotMDStree_ref')),
     uiOutput(ns('select_ref_pops')),
@@ -32,7 +35,7 @@ ref_mds_Server <- function(id, getgenind) {
       
       getRefData <- reactive({
         if(is.null(input$refdata)) { 
-          fr <- suppressWarnings({freq_to_mds("./www/STRidER_frequencies_2019-08-02.csv")})
+          fr <- suppressWarnings({freq_to_mds("./www/STRidER_frequencies_2024-09-24.csv")})
         } else { 
           fr <- freq_to_mds(input$refdata$datapath)
         }
