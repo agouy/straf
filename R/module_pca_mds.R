@@ -25,16 +25,20 @@ pca_mds_UI <- function(id) {
     
     tags$hr(),
     h3("Multidimensional Scaling (MDS)"),
-    selectInput(
-      ns("mds.dist"),
-      label = "Select genetic distance measure:",
-      choices = c(
-        "Nei's distance" = 1,
-        "Angular - Edwards' distance" = 2,
-        "Coancestrality coefficient - Reynolds' distance" = 3,
-        "Euclidean - Rogers' distance" = 4,
-        "Absolute genetics - Provesti 's distance " = 5
-      )
+    fluidRow(
+      column(4, selectInput(
+        ns("mds.dist"),
+        label = "Select genetic distance measure:",
+        choices = c(
+          "Nei's distance" = 1,
+          "Angular - Edwards' distance" = 2,
+          "Coancestrality coefficient - Reynolds' distance" = 3,
+          "Euclidean - Rogers' distance" = 4,
+          "Absolute genetics - Provesti 's distance " = 5
+        )
+      )),
+      column(4, selectInput(ns('MDSaxis1'), 'X axis component', 1:5, 1)),
+      column(4, selectInput(ns('MDSaxis2'), 'Y axis component', 1:5, 2)),
     ),
     awesomeCheckbox(
       ns('displayMDS'),
@@ -102,13 +106,11 @@ pca_mds_Server <- function(id, getgenind) {
         plotOutput(ns('runMDS'))
       })
       output$runMDS <- renderPlot({
-        # if (!input$displayMDS)  return(NULL)
-        req(input$displayMDS, do.mds())
+        req(input$displayMDS, do.mds(), input$MDSaxis1, input$MDSaxis2)
         MDS <- do.mds()
-        print(stressMDS())
         MDS <- data.frame(
-          ax1 = MDS$points[, 1],
-          ax2 = MDS$points[, 2],
+          ax1 = MDS$points[, as.numeric(input$MDSaxis1)],
+          ax2 = MDS$points[, as.numeric(input$MDSaxis2)],
           pop = rownames(MDS$points)
         )
         .data <- NA
@@ -117,7 +119,7 @@ pca_mds_Server <- function(id, getgenind) {
           geom_text_repel() + 
           labs(x = "MDS Axis 1", y = "MDS Axis 2", title = "Multidimensional Scaling")  +
           theme_minimal()
-        plot(p)
+        p
       })
       
       stressMDS <- reactive({
@@ -127,9 +129,10 @@ pca_mds_Server <- function(id, getgenind) {
       })
       
       do.mds <- reactive({
-        req(input$mds.dist)
+        req(input$mds.dist, input$MDSaxis1, input$MDSaxis2)
         req(do.dist())
-        MASS::isoMDS(do.dist())        
+        k <- max(c(2, as.numeric(input$MDSaxis1), as.numeric(input$MDSaxis2)))
+        MASS::isoMDS(d = do.dist(), k = k)        
       })
       
       output$plotMDStree <- renderUI({
