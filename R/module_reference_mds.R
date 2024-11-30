@@ -12,7 +12,7 @@ ref_mds_UI <- function(id) {
       "Import allele frequencies",
       width = "300px"
     ),
-    div("If left empty, the STRidER database will be used (2024-09-24 version)."),
+    p("If left empty, the STRidER database will be used (2024-09-24 version)."),
     br(),
     awesomeCheckbox(ns("add_current_ref"), "Include uploaded data to the MDS", FALSE),
     br(),
@@ -110,7 +110,7 @@ ref_mds_Server <- function(id, getgenind) {
         req(do.dist_ref())
         d <- do.dist_ref()
         if(is.null(d)) return(NULL)
-        mds <- cmdscale(d)
+        mds <- cmdscale(d, k = 2)
         MDS <- data.frame(ax1 = mds[, 1], ax2 = mds[, 2], pop = rownames(mds))
         .data <- NA
         p <- ggplot(MDS, aes(x=.data$ax1, y=.data$ax2, color = pop, label = pop)) +
