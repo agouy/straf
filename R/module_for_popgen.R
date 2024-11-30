@@ -8,7 +8,7 @@ for_UI <- function(id) {
     h3("Forensic parameters"),
     awesomeCheckbox(
       ns('displayForensics'),
-      'Compute forensics statistics (H, GD, PIC, PD, PE & TPI)',
+      'Compute forensics statistics (H, GD (Hexp), PIC, PD, PE & TPI)',
       FALSE
     ),
     
@@ -633,6 +633,8 @@ getIndicesFromGenind <- function(data, ploidy = 2) {
     DF$Ht <- basicstat[names(GD), "Ht"]
     DF$Fis <- basicstat[names(GD), "Fis"]
   }
+
+  colnames(DF)[colnames(DF) == "GD"] <- "GD (Hexp)"
   
   ploidy <- as.numeric(ploidy)
   return(DF)
