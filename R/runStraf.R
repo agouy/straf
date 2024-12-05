@@ -18,6 +18,7 @@ runStraf <- function(port = 3838, host = "0.0.0.0") {
     appDir = system.file("application", package = "straf"),
     port = port,
     host = host,
+    quiet = TRUE,
     display.mode = "normal"
   )
 }

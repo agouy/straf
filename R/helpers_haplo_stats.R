@@ -57,6 +57,7 @@ getHaploStatsFromGenind <- function(data) {
   compdist <- function(a, b) {
     x <- strsplit(a, "|")[[1]]
     y <- strsplit(b, "|")[[1]]
+    if(length(x) != length(y)) stop("Impossible to compute haplotype pairwise differences because of missing data.")
     return(sum(x != y))
   }
   d_mat <- outer(X = hap_data$h_value, Y = hap_data$h_value, Vectorize(compdist))
