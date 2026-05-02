@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STRAF — STR Analysis for Forensics</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <span class="navbar-brand">STRAF 3.0.0: STR Analysis for Forensics</span>
+        <div class="navbar-tabs" id="topTabs">
+          <button class="navbar-tab active" data-toptab="analysis">Analysis</button>
+          <button class="navbar-tab" data-toptab="documentation">Documentation</button>
+          <button class="navbar-tab" data-toptab="about">About</button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <!-- ANALYSIS PAGE -->
+      <section class="page active" id="page-analysis">
+        <div class="layout">
+          <aside class="sidebar">
+            <div class="sidebar-header">
+              <img src="./STRAF_logo.png" alt="STRAF" class="logo" />
+              <div class="welcome">
+                <strong>Welcome!</strong>
+                <p>STRAF is an STR data analysis application. All computation runs in your browser — your data never leaves this page.</p>
+              </div>
+            </div>
+
+            <h4>Input</h4>
+            <p class="muted">Please go to the documentation tab for details about the input file format.</p>
+            <p><a href="./exampleSTRAFdiplo.txt" download>Click here to download an example file.</a></p>
+            <hr />
+
+            <div class="field">
+              <label class="field-label">Ploidy</label>
+              <div class="radio-group">
+                <label><input type="radio" name="ploidy" value="2" checked /> Diploid</label>
+                <label><input type="radio" name="ploidy" value="1" /> Haploid</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="file">Import a file</label>
+              <input type="file" id="file" accept=".txt,.tsv,.csv" />
+            </div>
+
+            <button id="loadExample" type="button" class="btn-secondary">Load example dataset</button>
+
+            <p id="status" class="status"></p>
+
+            <hr />
+            <h4>The STRAF Book</h4>
+            <p class="muted small">Click the cover for the online book.</p>
+            <p style="text-align:center"><a href="https://agouy.github.io/straf_book/" target="_blank"><img src="./cover.png" alt="STRAF Book" style="width:140px" /></a></p>
+
+            <hr />
+            <h4>Contact</h4>
+            <p class="muted small">For any question, feature request or bug report, open an issue:</p>
+            <p style="text-align:center"><a href="https://github.com/agouy/straf/issues" target="_blank">Create an issue on GitHub</a></p>
+
+            <hr />
+            <h4>Citation</h4>
+            <p class="muted small">Gouy, A., &amp; Zieger, M. (2017). STRAF — A convenient online tool for STR data evaluation in forensic genetics. <em>Forensic Science International: Genetics</em>, 30, 148–151.</p>
+            <hr />
+            <h4>Source</h4>
+            <p class="muted small"><a href="https://github.com/agouy/straf" target="_blank">github.com/agouy/straf</a></p>
+          </aside>
+
+          <section class="content">
+            <div id="parseIssues" class="issues" style="display:none"></div>
+            <div id="noData" class="empty">Please import a data set.</div>
+
+            <div id="hasData" style="display:none">
+              <nav class="subtabs" id="subtabs">
+                <button class="subtab active" data-subtab="data">Data</button>
+                <button class="subtab" data-subtab="forensic">Forensic parameters</button>
+                <button class="subtab" data-subtab="popgen">Population genetics</button>
+                <button class="subtab" data-subtab="pcamds">PCA - MDS</button>
+                <button class="subtab" data-subtab="refmds">Reference population</button>
+                <button class="subtab" data-subtab="conv">File conversion</button>
+              </nav>
+
+              <!-- Data sub-tab -->
+              <article class="subpanel active" id="sub-data">
+                <h3>Summary</h3>
+                <div id="summaryCards" class="summary-grid"></div>
+                <h4>Population sizes</h4>
+                <div id="popSizesTable" class="table-wrap small-text"></div>
+
+                <hr />
+                <h3>Dataset</h3>
+                <div id="dataPreview" class="table-wrap small-text"></div>
+
+                <hr />
+                <h3>Allele frequencies per locus</h3>
+                <p class="muted small">Distribution of allele counts faceted by locus.</p>
+                <div id="alleleFreqPlot" class="plot"></div>
+
+                <hr />
+                <h3>Allele frequency table</h3>
+                <div class="controls">
+                  <label>Population:
+                    <select id="freqPop"></select>
+                  </label>
+                  <button id="dlFreq" type="button" class="dl">Download as text (.tsv)</button>
+                  <button id="dlFreqXL" type="button" class="dl">Download as Excel (.xlsx)</button>
+                </div>
+                <div id="freqTable" class="table-wrap small-text"></div>
+              </article>
+
+              <!-- Forensic parameters sub-tab -->
+              <article class="subpanel" id="sub-forensic">
+                <h3>Forensic parameters</h3>
+                <label class="awesome-checkbox">
+                  <input type="checkbox" id="displayForensics" checked />
+                  <span>Compute forensics statistics (H, GD (Hexp), PIC, PD, PE &amp; TPI)</span>
+                </label>
+                <div id="forensicWrap">
+                  <div class="controls">
+                    <label>Population:
+                      <select id="forensicPop"></select>
+                    </label>
+                    <button id="dlForensics" type="button" class="dl">Download as text (.tsv)</button>
+                    <button id="dlForensicsXL" type="button" class="dl">Download as Excel (.xlsx)</button>
+                  </div>
+                  <div id="forensicTable" class="table-wrap small-text"></div>
+                  <hr />
+                  <div class="controls">
+                    <label>Plot the statistic:
+                      <select id="forensicCol"></select>
+                    </label>
+                  </div>
+                  <div id="forensicPlot" class="plot"></div>
+                </div>
+              </article>
+
+              <!-- Population genetics sub-tab -->
+              <article class="subpanel" id="sub-popgen">
+                <h3>Summary statistics</h3>
+                <label class="awesome-checkbox">
+                  <input type="checkbox" id="displayDiv" checked />
+                  <span>Compute heterozygosities and Hardy–Weinberg test</span>
+                </label>
+                <div id="popgenWrap">
+                  <div class="controls">
+                    <label>Population:
+                      <select id="popgenPop"></select>
+                    </label>
+                    <button id="dlPopgen" type="button" class="dl">Download as text (.tsv)</button>
+                    <button id="dlPopgenXL" type="button" class="dl">Download as Excel (.xlsx)</button>
+                  </div>
+                  <div id="popgenTable" class="table-wrap small-text"></div>
+                  <p class="muted small">Hardy–Weinberg p-values from an asymptotic χ² test (the original STRAF uses Genepop's exact MCMC test).</p>
+                  <hr />
+                  <div class="controls">
+                    <label>Plot the statistic:
+                      <select id="popgenCol"></select>
+                    </label>
+                  </div>
+                  <div id="popgenPlot" class="plot"></div>
+                </div>
+
+                <hr />
+                <h3>Linkage disequilibrium</h3>
+                <label class="awesome-checkbox">
+                  <input type="checkbox" id="displayLD" />
+                  <span>Display pairwise LD p-values matrix</span>
+                </label>
+                <div id="ldWrap" style="display:none">
+                  <p class="muted small">Asymptotic χ² test of independence on 2-locus genotype contingency tables. The original STRAF uses Genepop's exact MCMC test — be cautious with sparse genotype counts.</p>
+                  <div class="controls">
+                    <button id="dlLD" type="button" class="dl">Download as text (.tsv)</button>
+                  </div>
+                  <div id="ldTable" class="table-wrap small-text"></div>
+                  <div id="ldHeatmap" class="plot"></div>
+                </div>
+
+                <hr />
+                <h3>Pairwise Fst</h3>
+                <label class="awesome-checkbox">
+                  <input type="checkbox" id="displayFst" />
+                  <span>Compute pairwise Fst matrix (Weir &amp; Cockerham)</span>
+                </label>
+                <div id="fstWrap" style="display:none">
+                  <div class="controls">
+                    <button id="dlFst" type="button" class="dl">Download as text (.tsv)</button>
+                    <button id="dlFstXL" type="button" class="dl">Download as Excel (.xlsx)</button>
+                  </div>
+                  <div id="fstTable" class="table-wrap small-text"></div>
+                </div>
+
+                <div id="haploSection" style="display:none">
+                  <hr />
+                  <h3>Haploid data statistics</h3>
+                  <div class="controls">
+                    <label>Population:
+                      <select id="haploPop"></select>
+                    </label>
+                    <button id="dlHaplo" type="button" class="dl">Download haplotypes (.tsv)</button>
+                  </div>
+                  <div id="haploTable" class="table-wrap small-text"></div>
+                  <p id="haploDiv" class="muted small"></p>
+                  <h4>Number of pairwise differences between haplotypes</h4>
+                  <div id="haploDistPlot" class="plot"></div>
+                </div>
+              </article>
+
+              <!-- PCA - MDS sub-tab -->
+              <article class="subpanel" id="sub-pcamds">
+                <h3>Principal Component Analysis (PCA)</h3>
+                <label class="awesome-checkbox">
+                  <input type="checkbox" id="displayPCA" />
+                  <span>Run and plot a PCA (Principal Component Analysis)</span>
+                </label>
+                <div id="pcaWrap" style="display:none">
+                  <div class="controls">
+                    <label>PC on x axis: <select id="pcX"></select></label>
+                    <label>PC on y axis: <select id="pcY"></select></label>
+                    <label class="awesome-checkbox inline">
+                      <input type="checkbox" id="showEllipses" checked />
+                      <span>95% confidence ellipses</span>
+                    </label>
+                    <label class="awesome-checkbox inline">
+                      <input type="checkbox" id="pcaScale" checked />
+                      <span>Scale columns (prcomp scale=TRUE)</span>
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <button id="dlPCA" type="button" class="dl">Download PCA coordinates</button>
+                    <button id="dlPCAEig" type="button" class="dl">Download PCA eigenvectors</button>
+                  </div>
+                  <div id="pcaPlot" class="plot"></div>
+                </div>
+
+                <hr />
+
+                <h3>Multidimensional Scaling (MDS)</h3>
+                <div class="controls">
+                  <label>Algorithm:
+                    <select id="mdsAlgo">
+                      <option value="iso">Non-metric (isoMDS)</option>
+                      <option value="classical">Classical (cmdscale)</option>
+                    </select>
+                  </label>
+                  <label>Genetic distance:
+                    <select id="mdsDist">
+                      <option value="nei">Nei's distance</option>
+                      <option value="edwards">Edwards' (angular) distance</option>
+                      <option value="reynolds">Reynolds' (coancestrality) distance</option>
+                      <option value="rogers">Rogers' (Euclidean) distance</option>
+                      <option value="provesti">Provesti's (absolute genetics) distance</option>
+                    </select>
+                  </label>
+                  <label>X axis: <select id="mdsX"></select></label>
+                  <label>Y axis: <select id="mdsY"></select></label>
+                </div>
+                <label class="awesome-checkbox">
+                  <input type="checkbox" id="displayMDS" />
+                  <span>Run MDS</span>
+                </label>
+                <div id="mdsWrap" style="display:none">
+                  <div id="mdsPlot" class="plot"></div>
+                  <p id="mdsStress" class="muted small"></p>
+                  <h4 style="margin-top:1.5rem">UPGMA tree</h4>
+                  <p class="muted small">Hierarchical clustering (average linkage) of populations using the same distance matrix as the MDS.</p>
+                  <div id="mdsTree" class="plot"></div>
+                </div>
+              </article>
+
+              <!-- File conversion sub-tab -->
+              <article class="subpanel" id="sub-conv">
+                <h3>Population genetics software</h3>
+                <p class="muted small">Convert the loaded dataset to common population-genetics file formats. All conversion runs in your browser.</p>
+                <div class="conv-grid">
+                  <button id="dlGenepop" type="button" class="dl">Download file in the Genepop format</button>
+                  <button id="dlArlequin" type="button" class="dl">Download file in the Arlequin format (diploid only)</button>
+                </div>
+
+                <hr />
+                <h3>Allele frequencies — reference datasets</h3>
+                <div class="controls">
+                  <label>Population:
+                    <select id="convPop"></select>
+                  </label>
+                </div>
+                <div class="conv-grid">
+                  <button id="dlFamilias" type="button" class="dl">Download file in the Familias format</button>
+                  <button id="dlEuroformix" type="button" class="dl">Download file in the Euroformix format</button>
+                  <button id="dlSTRmix" type="button" class="dl">Download file in the STRmix format</button>
+                  <button id="dlLRmix" type="button" class="dl">Download file in the LRmix format</button>
+                </div>
+              </article>
+
+              <!-- Reference population sub-tab -->
+              <article class="subpanel" id="sub-refmds">
+                <h3>Reference population MDS</h3>
+                <p class="muted">Plot the populations from the STRidER reference database (or a custom CSV in the same format) on a Nei-distance MDS. Optionally include the currently-loaded dataset to see where it lands relative to the references.</p>
+                <div class="controls">
+                  <label>Reference CSV (optional override):
+                    <input type="file" id="refFile" accept=".csv" />
+                  </label>
+                </div>
+                <p class="muted small">Default: STRidER 2024-09-24.</p>
+                <label class="awesome-checkbox">
+                  <input type="checkbox" id="includeCurrentRef" />
+                  <span>Include the currently-loaded dataset</span>
+                </label>
+                <hr />
+                <div class="controls">
+                  <label>Populations:
+                    <select id="refPopsSelect" multiple size="6" style="min-width:260px"></select>
+                  </label>
+                  <button id="refSelectAll" type="button" class="dl">Select all</button>
+                  <button id="refSelectNone" type="button" class="dl">Clear</button>
+                </div>
+                <div id="refMdsWrap">
+                  <div id="refMdsPlot" class="plot"></div>
+                  <p id="refCommonLoci" class="muted small"></p>
+                  <h4 style="margin-top:1.5rem">UPGMA tree</h4>
+                  <div id="refMdsTree" class="plot"></div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- DOCUMENTATION PAGE -->
+      <section class="page" id="page-documentation">
+        <div class="docs">
+          <p>STRAF is a browser-based application that allows to perform forensics and population genetics analysis of STR data.</p>
+
+          <h3>The STRAF Book</h3>
+          <p>Click on the image below to access the online book with a lot more details about the software.</p>
+          <p style="text-align:center"><a href="https://agouy.github.io/straf_book/" target="_blank"><img src="./cover.png" alt="STRAF Book" style="width:269px" /></a></p>
+
+          <h3>Input file format</h3>
+          <p>STRAF accepts tab-delimited text tables containing genotypes.</p>
+          <ul>
+            <li>The first column, named <strong>ind</strong>, contains the sample ID.</li>
+            <li>The second column, named <strong>pop</strong>, contains the population ID (this column must exist even if a single population is studied).</li>
+            <li>The next columns correspond to genotypes: for haploid samples, one column per locus must be reported; for diploid data, two columns per locus (with the same name).</li>
+            <li>Genotypes must be encoded as numbers (STRAF accepts point alleles such as <code>9.3</code>).</li>
+            <li>Missing data (e.g. null alleles) must be indicated with a "0".</li>
+          </ul>
+          <p>This format is designed to facilitate the input file generation from a typical Excel file (Save as &gt; Text (Tab-delimited) (*.txt)).</p>
+
+          <p>Examples of diploid and haploid input files can be downloaded using the following links:</p>
+          <ul>
+            <li><a href="./exampleSTRAFdiplo.txt" download>Download STRAF diploid example file.</a></li>
+            <li><a href="./exampleSTRAFhaplo.txt" download>Download STRAF haploid example file.</a></li>
+          </ul>
+
+          <h3>Using STRAF</h3>
+          <p>STRAF computes standard forensics parameters. Some standard population genetics analyses can be performed if the samples are assigned to different populations. STRAF generates downloadable tables and plots. Details about the methods can be found in Gouy &amp; Zieger (2017).</p>
+
+          <p>Use the left panel to choose and upload your file. Once the file is uploaded, the analysis tabs become available: <strong>Data</strong>, <strong>Forensic parameters</strong>, <strong>Population genetics</strong>, <strong>PCA - MDS</strong>, and <strong>Reference population</strong>.</p>
+
+          <p>On the <strong>Data</strong> tab, two checkboxes allow to plot the distribution of allele frequencies per locus and to display a table of allele frequencies. The frequency table is formatted as in most forensics data reports (rows = alleles; columns = loci) and can be downloaded as a TSV file readable in Excel.</p>
+
+          <p>On the <strong>Forensic parameters</strong> tab, you can compute all the standard forensics parameters for your dataset (N, Nall, GD, PIC, PM, PD, PE, TPI). The table can be downloaded and any column can be plotted.</p>
+
+          <p>On the <strong>Population genetics</strong> tab, summary statistics (Ho, He, HWE), pairwise linkage disequilibrium and pairwise Fst (Weir &amp; Cockerham) can be computed.</p>
+
+          <p>The <strong>PCA - MDS</strong> tab runs a Principal Component Analysis on the dataset (with optional 95% confidence ellipses per population) and a population-level Multidimensional Scaling using a choice of genetic distance measures (Nei, Rogers, Provesti, Edwards).</p>
+
+          <p>The <strong>Reference population</strong> tab projects the populations from the STRidER reference database (or a custom CSV in the same format) on a Nei-distance MDS, optionally including the currently-loaded dataset.</p>
+
+          <h3>Differences from the original STRAF</h3>
+          <p>This is a pure-browser TypeScript reimplementation. The most commonly used features have been ported, but the following differences apply:</p>
+          <ul>
+            <li>HWE and LD tests use an asymptotic χ² approximation rather than Genepop's exact MCMC test.</li>
+            <li>MDS is classical (cmdscale) rather than non-metric (isoMDS).</li>
+            <li>File conversion to Genepop, Familias, Arlequin, etc. is not yet implemented.</li>
+            <li>Haplotype statistics (haploid pairwise distances, haplotype diversity) are not yet implemented.</li>
+            <li>All computation runs in your browser; no data is uploaded to a server.</li>
+          </ul>
+
+          <h3>Reference</h3>
+          <p>Please cite STRAF if you use it for your project using the following reference:</p>
+          <blockquote>Gouy, A., &amp; Zieger, M. (2017). STRAF — A convenient online tool for STR data evaluation in forensic genetics. <em>Forensic Science International: Genetics</em>, 30, 148–151.</blockquote>
+        </div>
+      </section>
+
+      <!-- ABOUT PAGE -->
+      <section class="page" id="page-about">
+        <div class="docs">
+          <p>STRAF is a browser-based application that allows to perform forensics and population genetics analysis of STR data.</p>
+
+          <h3>Updates</h3>
+          <ul class="changelog">
+            <li><strong>3.0.0</strong> – Pure-browser TypeScript reimplementation. Static deployment, no server-side computation. Implements Data, Forensic parameters, Population genetics (heterozygosities, HWE, LD, pairwise Fst), PCA with confidence ellipses, isoMDS / classical MDS with multiple distance measures, Reference population MDS against the STRidER database, file conversion to Genepop / Arlequin / Familias / Euroformix / STRmix / LRmix, and detailed input file validation.</li>
+            <li><strong>2.1.1</strong> (09/09/2022) – Added conversion to Euroformix, LRMix and STRMix formats.</li>
+            <li><strong>2.1.0</strong> (26/08/2022) – Added haplotype statistics for haploid data and unit tests. Fully refactored deployment material.</li>
+            <li><strong>2.0.8</strong> (04/12/2021) – Bug fix in HWE computation for single population.</li>
+            <li><strong>2.0.7</strong> (03/10/2021) – STRAF includes now more robust HW and LD tests, calling Genepop to run the tests. Graphical representations are now interactive.</li>
+            <li><strong>2.0.0</strong> (01/05/2021) – STRAF reimplemented as an R package. MDS with reference population improved. The STRAF book has been populated. Input parameters simplified (only the "ploidy" input parameter remains).</li>
+            <li><strong>1.4.6</strong> (25/04/2021) – It is now possible to add custom reference frequency data to perform an MDS.</li>
+            <li><strong>1.4.5</strong> (25/04/2021) – Genepop conversion now works for haploid data. Common alleles are displayed for MDS.</li>
+            <li><strong>1.4.4</strong> (24/04/2021) – Various UI improvements, code optimisation. MDS now excluding alleles with at least 1 missing value instead of imputing with the mean.</li>
+            <li><strong>1.4.3</strong> (18/04/2021) – It is now possible to add uploaded population to the STRidER MDS. Minor UI improvements.</li>
+            <li><strong>1.4.2</strong> (17/04/2021) – MDS on STRidER reference database has been added.</li>
+            <li><strong>1.4.1</strong> (08/03/2021) – STRAF now accepts point alleles for haploid data.</li>
+            <li><strong>1.4.0</strong> (09/02/2021) – STRAF can now perform an MDS. All results can be downloaded as Excel files.</li>
+            <li><strong>1.3.3</strong> (03/02/2021) – Minor bug fixes in file conversion and PIC computation. Improved graphics.</li>
+            <li><strong>1.3.2</strong> (02/02/2021) – STRAF can convert files to the Arlequin format.</li>
+            <li><strong>1.3.0</strong> (01/02/2021) – STRAF can convert files to the Genepop and Familias formats. A File conversion tab has been added.</li>
+            <li><strong>1.2.2</strong> (09/01/2021) – STRAF has moved to an AWS server (without any changes in the License).</li>
+            <li><strong>1.1.2</strong> (03/10/2020) – Preparation for integration to Tercen; minor updates.</li>
+            <li><strong>1.0.5</strong> (18/09/2018) – Bug fixes; new page with updates, license, data usage.</li>
+            <li><strong>1.0.4</strong> (30/01/2018) – Percentages of explained variance appear now on the PCA plot; style improvements.</li>
+            <li><strong>1.0.3</strong> (18/12/2017) – Bug fixes; it is now possible to analyse a single locus.</li>
+            <li><strong>1.0.2</strong> (20/10/2017) – Forensics parameters and population genetics indices can be computed for each population separately; PCA coordinates and eigenvectors can be downloaded.</li>
+            <li><strong>1.0.1</strong> (22/09/2017) – Allele frequencies can now be computed and downloaded for each population separately.</li>
+            <li><strong>1.0.0</strong> (02/06/2017) – STRAF 1.0.0 release.</li>
+          </ul>
+
+          <h3>Data policy</h3>
+          <p>This reimplementation runs entirely in your browser. <strong>No data leaves your machine</strong> — all computation happens client-side, and there is no server to retain or process your input.</p>
+
+          <h3>License</h3>
+          <p>The STRAF software as a whole is distributed under GPL-3 (GNU GENERAL PUBLIC LICENSE version 3). This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3 (GPL-3) as published by the Free Software Foundation.</p>
+          <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+          <p>See the <a href="https://www.gnu.org/licenses/gpl.txt" target="_blank">GNU General Public License for more details</a>.</p>
+
+          <h3>Acknowledgments</h3>
+          <p>STRAF benefited of the comments of Martin Zieger, Peter Vallone, Peter de Knijff, Guanglin He and Martin Bodner.</p>
+
+          <h3>Source code</h3>
+          <p>Original Shiny application: <a href="https://github.com/agouy/straf" target="_blank">github.com/agouy/straf</a> &middot; <a href="https://straf.fr" target="_blank">straf.fr</a></p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
