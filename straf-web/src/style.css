@@ -243,6 +243,33 @@ button.dl::before {
 .status.error { color: #c0392b; }
 .status.ok { color: #27ae60; }
 
+.computing {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.6rem 0;
+  padding: 0.4rem 0.75rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  background: var(--panel-muted);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+.computing::before {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: straf-spin 0.8s linear infinite;
+  flex: none;
+}
+@keyframes straf-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Content area */
 .content {
   min-width: 0;
