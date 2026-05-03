@@ -1,0 +1,14 @@
+{
+  "datasets": [
+    { "name": "tiny_single_pop_diploid", "ploidy": 2, "description": "1 pop, 2 loci, 8 inds — minimal sanity (no F-stats / no MDS)" },
+    { "name": "two_pop_two_loci_diploid", "ploidy": 2, "description": "2 pops, 2 loci, 12 inds — minimal pairwise Fst" },
+    { "name": "multi_pop_diploid", "ploidy": 2, "description": "3 pops, 4 loci, 27 inds — common case" },
+    { "name": "with_missing_diploid", "ploidy": 2, "description": "2 pops, 3 loci, scattered \"0\" alleles" },
+    { "name": "point_alleles_diploid", "ploidy": 2, "description": "2 pops, 3 loci, includes 9.3 / 11.3 fractional alleles" },
+    { "name": "monomorphic_diploid", "ploidy": 2, "description": "2 pops, 3 loci, L2 fully monomorphic — division by (Nall-1) edge cases" },
+    { "name": "tiny_haploid", "ploidy": 1, "description": "1 pop, 4 loci, 8 inds" },
+    { "name": "multi_pop_haploid", "ploidy": 1, "description": "2 pops, 5 loci, 17 inds" },
+    { "name": "haploid_missing", "ploidy": 1, "description": "1 pop, 4 loci, scattered missing values" },
+    { "name": "haploid_point_alleles", "ploidy": 1, "description": "1 pop, 3 loci, fractional alleles" }
+  ]
+}
