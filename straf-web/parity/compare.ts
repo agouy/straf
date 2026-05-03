@@ -82,6 +82,11 @@ const EXPECTED_DIFFERENCES: ExpectedDifference[] = [
     path: /^pca\./,
     reason: "Same root cause: R haploid \"0\" handling shifts the dosage matrix.",
   },
+  {
+    dataset: /^haploid_missing$/,
+    path: /^conversions\.(genepop|euroformix|strmix|lrmix)\./,
+    reason: "Same root cause: R haploid \"0\" handling propagates into all freq-based conversion outputs.",
+  },
 
   // ── Diploid with missing alleles: R drops the entire genotype at a locus
   // when *either* allele is missing (apply+sum on NA → NA). TS counts the
@@ -112,6 +117,16 @@ const EXPECTED_DIFFERENCES: ExpectedDifference[] = [
     path: /^pca\./,
     reason: "Knock-on effect of R's partial-genotype dropping.",
   },
+  {
+    dataset: /^with_missing_diploid$/,
+    path: /^conversions\.familias\./,
+    reason: "R's straf2familias reads the file directly and counts \"0\" as a real allele (raw table() on strings, no genind round-trip). TS doesn't.",
+  },
+  {
+    dataset: /^with_missing_diploid$/,
+    path: /^conversions\.(euroformix|strmix|lrmix)\./,
+    reason: "Knock-on of R dropping partial diploid genotypes when building the genind that feeds the freq table.",
+  },
 
   // ── PCA on a dataset with a monomorphic locus: prcomp(scale=TRUE) fails
   // on a constant column (sd = 0 → division by zero). Our TS PCA handles
@@ -137,6 +152,24 @@ const EXPECTED_DIFFERENCES: ExpectedDifference[] = [
     dataset: /^haploid_point_alleles$/,
     path: /^haplotype\.[^.]+\.haplotypes\[\d+\]\.haplotype$/,
     reason: "Haplotype string concatenates encoded allele codes — same encoding-lossiness as freqs.",
+  },
+  // Same root cause: per-allele label mismatches in haploid CSV exports.
+  // The compareCsvOutputs function then runs a sorted-multiset value check
+  // (`values_sorted`) which is the source of truth for these.
+  {
+    dataset: /^haploid_point_alleles$/,
+    path: /^conversions\.(euroformix|strmix|lrmix)\..*\.[^.]*$/,
+    reason: "Same root cause as above; per-CSV multiset value check confirms the underlying distribution.",
+  },
+
+  // ── Arlequin output: R's straf2arlequin has a known encoding bug. When no
+  // allele in a locus contains a dot, alleles are emitted as raw strings
+  // ("10"); when any allele has a dot, the encoding pads inconsistently to
+  // 2-3 chars. TS produces the spec-compliant 3-digit form everywhere.
+  // Recorded as expected — TS is correct here.
+  {
+    path: /^conversions\.arlequin\./,
+    reason: "R's straf2arlequin produces variable-length allele codes (encoding bug). TS uses spec-compliant 3-digit form.",
   },
 ];
 
@@ -614,6 +647,352 @@ function compareHaplotype(
   }
 }
 
+// --------- Conversion (file format) parsers ------------------------------
+//
+// Both implementations produce text output. We can't byte-compare because:
+//   - R appends " \n" between lines (paste(x, "\n", collapse=""))
+//   - R Familias uses table()-based lex order; TS sorts numerically
+//   - R Arlequin has a known encoding bug (variable-length allele codes when
+//     point alleles are present, raw strings when not)
+// Instead, we parse each output back to a canonical structure and compare
+// structurally.
+
+interface CanonGenepop {
+  loci: string[];
+  pops: { individuals: { id: string; encoded: string[] }[] }[];
+}
+
+function parseGenepop(text: string): CanonGenepop {
+  const lines = text
+    .split(/\r?\n/)
+    .map((l) => l.replace(/[\t ]+$/, ""))
+    .filter((l) => l.length > 0);
+  const loci: string[] = [];
+  const pops: CanonGenepop["pops"] = [];
+  let i = 1; // skip header
+  while (i < lines.length && lines[i] !== "Pop") loci.push(lines[i++]!);
+  let cur: CanonGenepop["pops"][number] | null = null;
+  for (; i < lines.length; i++) {
+    const l = lines[i]!;
+    if (l === "Pop") {
+      cur = { individuals: [] };
+      pops.push(cur);
+      continue;
+    }
+    if (!cur) continue;
+    // "id\t,\t<g1>\t<g2>..."
+    const parts = l.split(/\t/);
+    const id = parts[0]!;
+    let started = false;
+    const encoded: string[] = [];
+    for (let k = 1; k < parts.length; k++) {
+      if (!started) {
+        if (parts[k] === ",") started = true;
+        continue;
+      }
+      if (parts[k]!.length > 0) encoded.push(parts[k]!);
+    }
+    cur.individuals.push({ id, encoded });
+  }
+  return { loci, pops };
+}
+
+function compareGenepopOutputs(dataset: string, rText: string, tsText: string): void {
+  const r = parseGenepop(rText);
+  const ts = parseGenepop(tsText);
+  if (r.loci.length !== ts.loci.length) {
+    recordMismatch({
+      dataset,
+      path: "conversions.genepop.loci.length",
+      r: r.loci.length,
+      ts: ts.loci.length,
+      reason: "differs",
+    });
+    return;
+  }
+  for (let l = 0; l < r.loci.length; l++) {
+    if (r.loci[l] !== ts.loci[l]) {
+      recordMismatch({
+        dataset,
+        path: `conversions.genepop.loci[${l}]`,
+        r: r.loci[l],
+        ts: ts.loci[l],
+        reason: "locus name differs",
+      });
+    }
+  }
+  if (r.pops.length !== ts.pops.length) {
+    recordMismatch({
+      dataset,
+      path: "conversions.genepop.pops.length",
+      r: r.pops.length,
+      ts: ts.pops.length,
+      reason: "differs",
+    });
+    return;
+  }
+  for (let p = 0; p < r.pops.length; p++) {
+    const rPop = r.pops[p]!;
+    const tsPop = ts.pops[p]!;
+    const tsById = new Map(tsPop.individuals.map((ind) => [ind.id, ind] as const));
+    for (const rInd of rPop.individuals) {
+      const tsInd = tsById.get(rInd.id);
+      if (!tsInd) {
+        recordMismatch({
+          dataset,
+          path: `conversions.genepop.pops[${p}].${rInd.id}`,
+          r: "present",
+          ts: "missing",
+          reason: "individual missing in TS output",
+        });
+        continue;
+      }
+      if (rInd.encoded.length !== tsInd.encoded.length) {
+        recordMismatch({
+          dataset,
+          path: `conversions.genepop.pops[${p}].${rInd.id}.encoded.length`,
+          r: rInd.encoded.length,
+          ts: tsInd.encoded.length,
+          reason: "encoded genotype count differs",
+        });
+        continue;
+      }
+      for (let l = 0; l < rInd.encoded.length; l++) {
+        if (rInd.encoded[l] !== tsInd.encoded[l]) {
+          recordMismatch({
+            dataset,
+            path: `conversions.genepop.pops[${p}].${rInd.id}.${r.loci[l]}`,
+            r: rInd.encoded[l],
+            ts: tsInd.encoded[l],
+            reason: "encoded genotype differs",
+          });
+        }
+      }
+    }
+  }
+}
+
+/** Familias: blocks separated by blank line. Each block: locus name + lines of "<allele>\t<freq>". */
+function parseFamilias(text: string): Record<string, Record<string, number>> {
+  const blocks = text
+    .split(/\n[ \t]*\n/)
+    .map((b) => b.trim())
+    .filter((b) => b.length > 0);
+  const out: Record<string, Record<string, number>> = {};
+  for (const block of blocks) {
+    const lines = block.split(/\r?\n/).map((l) => l.replace(/[\t ]+$/, ""));
+    if (lines.length === 0) continue;
+    const locus = lines[0]!;
+    const freq: Record<string, number> = {};
+    for (let i = 1; i < lines.length; i++) {
+      const parts = lines[i]!.split("\t");
+      if (parts.length < 2) continue;
+      const a = parts[0]!;
+      const f = Number(parts[1]!);
+      if (Number.isFinite(f)) freq[a] = f;
+    }
+    out[locus] = freq;
+  }
+  return out;
+}
+
+function compareFamiliasOutputs(
+  dataset: string,
+  pathPrefix: string,
+  rText: string,
+  tsText: string,
+): void {
+  const r = parseFamilias(rText);
+  const ts = parseFamilias(tsText);
+  const loci = new Set([...Object.keys(r), ...Object.keys(ts)]);
+  for (const loc of loci) {
+    const rL = r[loc];
+    const tsL = ts[loc];
+    if (!rL || !tsL) {
+      recordMismatch({
+        dataset,
+        path: `${pathPrefix}.${loc}`,
+        r: !!rL,
+        ts: !!tsL,
+        reason: "locus block missing on one side",
+      });
+      continue;
+    }
+    const alleles = new Set([...Object.keys(rL), ...Object.keys(tsL)]);
+    for (const a of alleles) {
+      compareNumbers(dataset, `${pathPrefix}.${loc}.${a}`, rL[a], tsL[a], DEFAULT_TOL);
+    }
+  }
+}
+
+/**
+ * Allele-frequency CSV (Euroformix / STRmix / LRmix): header row then
+ * `<allele>,<freq_L1>,<freq_L2>,...` rows, optionally with a trailing N row.
+ * Returns canonical structure: { locus → { allele → freq }, N: number[] }.
+ *
+ * Variants encode missing differently ("" for Euroformix/LRmix, "0" for
+ * STRmix data rows). We treat both "" and "0" as null, since alleles with
+ * literal frequency 0 are never emitted by either side.
+ */
+interface CanonCsv {
+  loci: string[];
+  freqs: Record<string, Record<string, number>>; // locus → allele → freq
+  N: Record<string, number | null>; // locus → N (or null if N row absent)
+}
+
+function parseCsv(text: string): CanonCsv {
+  const lines = text
+    .split(/\r?\n/)
+    .map((l) => l.replace(/[\t ]+$/, ""))
+    .filter((l) => l.length > 0);
+  if (lines.length === 0) return { loci: [], freqs: {}, N: {} };
+  const headers = lines[0]!.split(",");
+  const loci = headers.slice(1);
+  const freqs: Record<string, Record<string, number>> = {};
+  const N: Record<string, number | null> = {};
+  for (const l of loci) {
+    freqs[l] = {};
+    N[l] = null;
+  }
+  for (let i = 1; i < lines.length; i++) {
+    const cells = lines[i]!.split(",");
+    const allele = cells[0]!;
+    if (allele === "N") {
+      for (let l = 0; l < loci.length; l++) {
+        const v = cells[l + 1] ?? "";
+        const n = Number(v);
+        N[loci[l]!] = Number.isFinite(n) ? n : null;
+      }
+      continue;
+    }
+    for (let l = 0; l < loci.length; l++) {
+      const v = cells[l + 1] ?? "";
+      if (v === "" || v === "0") continue; // missing
+      const n = Number(v);
+      if (Number.isFinite(n)) freqs[loci[l]!]![allele] = n;
+    }
+  }
+  return { loci, freqs, N };
+}
+
+function compareCsvOutputs(
+  dataset: string,
+  pathPrefix: string,
+  rText: string,
+  tsText: string,
+  /** When true, decode 3-char-encoded R allele keys back to TS form (haploid point-allele case). */
+  decodeRAlleles: boolean = false,
+): void {
+  const r = parseCsv(rText);
+  const ts = parseCsv(tsText);
+  if (r.loci.length !== ts.loci.length) {
+    recordMismatch({
+      dataset,
+      path: `${pathPrefix}.loci.length`,
+      r: r.loci.length,
+      ts: ts.loci.length,
+      reason: "differs",
+    });
+  }
+  for (const loc of new Set([...r.loci, ...ts.loci])) {
+    if (r.N[loc] !== null && ts.N[loc] !== null) {
+      compareNumbers(dataset, `${pathPrefix}.${loc}.N`, r.N[loc], ts.N[loc], DEFAULT_TOL);
+    }
+    const rFreq = r.freqs[loc] ?? {};
+    const tsFreq = ts.freqs[loc] ?? {};
+    if (decodeRAlleles) {
+      // R-side keys are encoded ("90", "100", "930"); decode back to TS form
+      // to align — but the encoding is lossy ("100" could be "10" or "10.0").
+      // We additionally fall back to a sorted-multiset value comparison.
+      const remapped: Record<string, number> = {};
+      for (const k of Object.keys(rFreq)) {
+        remapped[decodeHaploidAllele(k)] = rFreq[k]!;
+      }
+      const alleles = new Set([...Object.keys(remapped), ...Object.keys(tsFreq)]);
+      for (const a of alleles) {
+        // If only one side has it, also check whether the value matches anywhere
+        // — accept silently if the multisets agree (handled below).
+        if (remapped[a] !== undefined && tsFreq[a] !== undefined) {
+          compareNumbers(dataset, `${pathPrefix}.${loc}.${a}`, remapped[a], tsFreq[a], DEFAULT_TOL);
+        }
+      }
+      // Multiset value check: sorted frequencies should match.
+      const rVals = Object.values(rFreq).sort((a, b) => a - b);
+      const tsVals = Object.values(tsFreq).sort((a, b) => a - b);
+      compareNumberArray(dataset, `${pathPrefix}.${loc}.values_sorted`, rVals, tsVals, DEFAULT_TOL);
+    } else {
+      const alleles = new Set([...Object.keys(rFreq), ...Object.keys(tsFreq)]);
+      for (const a of alleles) {
+        compareNumbers(dataset, `${pathPrefix}.${loc}.${a}`, rFreq[a], tsFreq[a], DEFAULT_TOL);
+      }
+    }
+  }
+}
+
+function compareConversions(
+  dataset: string,
+  rConv: Record<string, unknown> | undefined,
+  tsConv: Record<string, unknown> | undefined,
+): void {
+  if (!rConv || !tsConv) return;
+
+  if (typeof rConv.genepop === "string" && typeof tsConv.genepop === "string") {
+    compareGenepopOutputs(dataset, rConv.genepop, tsConv.genepop);
+  }
+
+  // Familias is per-population. Skip on haploid (R's straf2familias has a
+  // diploid-only column-pairing assumption).
+  if (rConv.familias && tsConv.familias) {
+    const rFam = rConv.familias as Record<string, string | null>;
+    const tsFam = tsConv.familias as Record<string, string | null>;
+    for (const pop of new Set([...Object.keys(rFam), ...Object.keys(tsFam)])) {
+      const rt = rFam[pop];
+      const tt = tsFam[pop];
+      if (typeof rt !== "string" || typeof tt !== "string") continue;
+      compareFamiliasOutputs(dataset, `conversions.familias.${pop}`, rt, tt);
+    }
+  }
+
+  for (const variant of ["euroformix", "strmix", "lrmix"] as const) {
+    const rVar = rConv[variant] as Record<string, string | null> | undefined;
+    const tsVar = tsConv[variant] as Record<string, string | null> | undefined;
+    if (!rVar || !tsVar) continue;
+    for (const pop of new Set([...Object.keys(rVar), ...Object.keys(tsVar)])) {
+      const rt = rVar[pop];
+      const tt = tsVar[pop];
+      if (typeof rt !== "string" || typeof tt !== "string") continue;
+      compareCsvOutputs(
+        dataset,
+        `conversions.${variant}.${pop}`,
+        rt,
+        tt,
+        // For haploid point-allele datasets, R's allele keys went through
+        // adegenet's lossy 3-char encoding; decode for comparison.
+        isHaploidPointDataset(dataset),
+      );
+    }
+  }
+
+  // Arlequin: R's straf2arlequin has a known encoding bug — when no allele
+  // in the locus contains a dot, it leaves alleles as raw strings ("10")
+  // instead of 3-padded ("100"); when *any* allele contains a dot, it pads
+  // to 2-3 chars inconsistently. TS produces consistent 3-char encoding
+  // matching the Arlequin spec. We don't compare Arlequin byte-for-byte;
+  // see the EXPECTED_DIFFERENCES note.
+  // Mark every Arlequin path as expected-different so it's tracked.
+  if (typeof rConv.arlequin === "string" && typeof tsConv.arlequin === "string") {
+    if (rConv.arlequin !== tsConv.arlequin) {
+      recordMismatch({
+        dataset,
+        path: "conversions.arlequin.text",
+        r: `(R, ${(rConv.arlequin as string).length} chars)`,
+        ts: `(TS, ${(tsConv.arlequin as string).length} chars)`,
+        reason: "Arlequin output not byte-identical (R has variable-length allele encoding bug; TS uses spec-compliant 3-digit form).",
+      });
+    }
+  }
+}
+
 // --------- Main ------------------------------------------------------------
 
 const rFiles = (() => {
@@ -672,6 +1051,9 @@ for (const f of all) {
   }
   if (r.pca || ts.pca) {
     comparePca(dataset, r.pca, ts.pca);
+  }
+  if (r.conversions || ts.conversions) {
+    compareConversions(dataset, r.conversions, ts.conversions);
   }
   if (r.haplotype || ts.haplotype) {
     compareHaplotype(dataset, r.haplotype ?? {}, ts.haplotype ?? {});

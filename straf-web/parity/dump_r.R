@@ -242,6 +242,68 @@ for (i in seq_len(nrow(manifest))) {
     out$haplotype <- tryCatch(dump_haplotype(g), error = function(e) NULL)
   }
 
+  # File conversions: capture the raw text of each output. Some conversions
+  # don't apply to all ploidies (R's straf2arlequin pairs columns assuming
+  # diploid; straf2familias has the same assumption).
+  out$conversions <- list()
+
+  out$conversions$genepop <- tryCatch({
+    tmp <- tempfile(); on.exit(unlink(tmp), add = TRUE)
+    straf2genepop(fpath, tmp, ploidy = ploidy)
+    paste(readLines(tmp, warn = FALSE), collapse = "\n")
+  }, error = function(e) NULL)
+
+  if (ploidy == 2) {
+    out$conversions$arlequin <- tryCatch({
+      tmp <- tempfile(); on.exit(unlink(tmp), add = TRUE)
+      straf2arlequin(fpath, tmp)
+      paste(readLines(tmp, warn = FALSE), collapse = "\n")
+    }, error = function(e) NULL)
+
+    out$conversions$familias <- list()
+    pops_for_freq <- c("all", out$pops)
+    for (p in pops_for_freq) {
+      out$conversions$familias[[p]] <- tryCatch({
+        tmp <- tempfile(); on.exit(unlink(tmp), add = TRUE)
+        straf2familias(fpath, tmp, pop = p)
+        paste(readLines(tmp, warn = FALSE), collapse = "\n")
+      }, error = function(e) NULL)
+    }
+  }
+
+  # Euroformix / STRmix / LRmix: these pull from getFreqAllPop, which works
+  # for both ploidies. We mirror the UI's write.table calls exactly.
+  freqs_for_csv <- tryCatch(getFreqAllPop(g), error = function(e) NULL)
+  if (!is.null(freqs_for_csv)) {
+    write_csv_variant <- function(matr, drop_n_row, na_repr) {
+      tmp <- tempfile(); on.exit(unlink(tmp), add = TRUE)
+      m <- if (drop_n_row) matr[-nrow(matr), , drop = FALSE] else matr
+      utils::write.table(
+        m, tmp, sep = ",",
+        na = na_repr, row.names = FALSE, quote = FALSE
+      )
+      paste(readLines(tmp, warn = FALSE), collapse = "\n")
+    }
+    out$conversions$euroformix <- list()
+    out$conversions$strmix <- list()
+    out$conversions$lrmix <- list()
+    for (p in names(freqs_for_csv)) {
+      matr <- freqs_for_csv[[p]]
+      out$conversions$euroformix[[p]] <- tryCatch(
+        write_csv_variant(matr, drop_n_row = TRUE, na_repr = ""),
+        error = function(e) NULL
+      )
+      out$conversions$strmix[[p]] <- tryCatch(
+        write_csv_variant(matr, drop_n_row = FALSE, na_repr = "0"),
+        error = function(e) NULL
+      )
+      out$conversions$lrmix[[p]] <- tryCatch(
+        write_csv_variant(matr, drop_n_row = TRUE, na_repr = ""),
+        error = function(e) NULL
+      )
+    }
+  }
+
   jsonlite::write_json(
     out,
     file.path(out_dir, paste0(name, ".json")),

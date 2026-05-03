@@ -23,6 +23,12 @@ import { populationDistances } from "../src/stats/distances.ts";
 import type { DistanceMethod } from "../src/stats/distances.ts";
 import { pca } from "../src/stats/pca.ts";
 import { haplotypeStatsForPop } from "../src/stats/haplotype.ts";
+import {
+  toGenepop,
+  toArlequin,
+  toFamilias,
+  toAlleleFreqCsv,
+} from "../src/convert/formats.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const dsDir = join(here, "datasets");
@@ -287,6 +293,43 @@ for (const ds of datasets) {
       process.stderr.write(`  haplotype skipped: ${(err as Error).message}\n`);
     }
   }
+
+  // File conversions: capture the raw text of each output. Skips match
+  // dump_r.R: Arlequin and Familias are diploid-only on the R side.
+  const conversions: Record<string, unknown> = {};
+  try {
+    conversions.genepop = toGenepop(g);
+  } catch {
+    conversions.genepop = null;
+  }
+  if (ploidy === 2) {
+    try {
+      conversions.arlequin = toArlequin(g);
+    } catch {
+      conversions.arlequin = null;
+    }
+    const familias: Record<string, string | null> = {};
+    for (const p of ["all", ...uniquePopulations(g)]) {
+      try {
+        familias[p] = toFamilias(g, p);
+      } catch {
+        familias[p] = null;
+      }
+    }
+    conversions.familias = familias;
+  }
+  for (const variant of ["euroformix", "strmix", "lrmix"] as const) {
+    const tbl: Record<string, string | null> = {};
+    for (const p of ["all", ...uniquePopulations(g)]) {
+      try {
+        tbl[p] = toAlleleFreqCsv(g, variant, p);
+      } catch {
+        tbl[p] = null;
+      }
+    }
+    conversions[variant] = tbl;
+  }
+  out.conversions = conversions;
 
   writeFileSync(join(outDir, `${ds.name}.json`), JSON.stringify(out, null, 2));
   count++;

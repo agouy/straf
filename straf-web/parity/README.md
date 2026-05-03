@@ -53,6 +53,10 @@ For each dataset:
 | `distances` | Nei, Edwards, Reynolds, Rogers, Provesti — population × population | abs/rel = 1e-6 |
 | `pca` | Variance proportions + pairwise distances on first ≤5 PCs (sign-invariant) | abs/rel = 1e-4 |
 | `haplotype` | Counts, frequencies, sumP², R-style diversity (haploid only) | abs/rel = 1e-9 |
+| `conversions.genepop` | Loci, populations, per-individual encoded genotypes (parsed structurally) | exact |
+| `conversions.familias` | Per-locus allele→frequency map, per population (diploid only) | abs/rel = 1e-6 |
+| `conversions.{euroformix,strmix,lrmix}` | Per-locus allele→frequency map, per population, both ploidies | abs/rel = 1e-6 |
+| `conversions.arlequin` | Tracked but not byte-compared — R-side encoding is buggy (see expected diffs) | — |
 
 ## What is *not* checked
 
@@ -130,7 +134,25 @@ from the encoded number alone. The comparator decodes what it can and
 falls back to a *value-multiset* check (`freqValuesMultiset.*`) that
 compares the sorted frequency distribution per locus, ignoring labels.
 
-### 4. PCA on a fully monomorphic column — `monomorphic_diploid` dataset
+### 4. Arlequin output — every diploid dataset
+
+`R/module_file_conversion.R::straf2arlequin` has a known encoding bug: when
+*no* allele in a locus contains a dot, alleles are emitted as raw strings
+(`"10"`, `"12"`); when *any* allele has a dot, the encoding pads
+inconsistently to 2-3 chars (`"90"`, `"930"` instead of `"090"`, `"093"`).
+The Arlequin `MICROSAT` data type expects fixed-width 3-digit codes. Our TS
+`toArlequin` produces the spec-compliant 3-digit form everywhere. The
+comparator records this as a single text-length mismatch per dataset.
+
+### 5. R `straf2familias` counts `"0"` as a real allele — `with_missing_diploid`
+
+`straf2familias` reads the source file directly and calls `table()` on the
+raw allele strings, including `"0"` cells. The TS implementation goes
+through the parser (which interprets `"0"` as missing) and so doesn't emit
+a `0` row. Affects only Familias, not the other freq exports (which go
+through the genind round-trip).
+
+### 6. PCA on a fully monomorphic column — `monomorphic_diploid` dataset
 
 `prcomp(scale = TRUE)` divides by per-column SD; a constant column has
 SD = 0 and the call fails. The original R STRAF surfaces this as an

@@ -222,5 +222,25 @@
       "i7",
       "i8"
     ]
+  },
+  "conversions": {
+    "genepop": "STRAF-generated GENEPOP input file.\nL1\nL2\nPop\ni1\t,\t100110\t140140\ni2\t,\t100120\t140150\ni3\t,\t110120\t150150\ni4\t,\t110110\t140160\ni5\t,\t120120\t150160\ni6\t,\t100120\t140150\ni7\t,\t110130\t160170\ni8\t,\t130130\t140160\n",
+    "arlequin": "[Profile]\nTitle=\"STRAF-generated Arlequin file.\"\nNbSamples=1\nDataType=MICROSAT\n\nGenotypicData=1\nGameticPhase=0\nMissingData=\"?\"\nLocusSeparator=WHITESPACE\n\n[Data]\n\n[[Samples]]\n\nSampleName=\"A\"\nSampleSize=8\nSampleData={\ni1\t1\t100\t140\n\t\t110\t140\ni2\t1\t100\t140\n\t\t120\t150\ni3\t1\t110\t150\n\t\t120\t150\ni4\t1\t110\t140\n\t\t110\t160\ni5\t1\t120\t150\n\t\t120\t160\ni6\t1\t100\t140\n\t\t120\t150\ni7\t1\t110\t160\n\t\t130\t170\ni8\t1\t130\t140\n\t\t130\t160\n}\n\n",
+    "familias": {
+      "all": "L1\n10\t0.1875\n11\t0.3125\n12\t0.3125\n13\t0.1875\n\nL2\n14\t0.375\n15\t0.3125\n16\t0.25\n17\t0.0625\n",
+      "A": "L1\n10\t0.1875\n11\t0.3125\n12\t0.3125\n13\t0.1875\n\nL2\n14\t0.375\n15\t0.3125\n16\t0.25\n17\t0.0625\n"
+    },
+    "euroformix": {
+      "all": "Allele,L1,L2\n10,0.1875,\n11,0.3125,\n12,0.3125,\n13,0.1875,\n14,,0.375\n15,,0.3125\n16,,0.25\n17,,0.0625\n",
+      "A": "Allele,L1,L2\n10,0.1875,\n11,0.3125,\n12,0.3125,\n13,0.1875,\n14,,0.375\n15,,0.3125\n16,,0.25\n17,,0.0625\n"
+    },
+    "strmix": {
+      "all": "Allele,L1,L2\n10,0.1875,\n11,0.3125,\n12,0.3125,\n13,0.1875,\n14,,0.375\n15,,0.3125\n16,,0.25\n17,,0.0625\nN,16,16\n",
+      "A": "Allele,L1,L2\n10,0.1875,\n11,0.3125,\n12,0.3125,\n13,0.1875,\n14,,0.375\n15,,0.3125\n16,,0.25\n17,,0.0625\nN,16,16\n"
+    },
+    "lrmix": {
+      "all": "Allele,L1,L2\n10,0.1875,0\n11,0.3125,0\n12,0.3125,0\n13,0.1875,0\n14,0,0.375\n15,0,0.3125\n16,0,0.25\n17,0,0.0625\n",
+      "A": "Allele,L1,L2\n10,0.1875,0\n11,0.3125,0\n12,0.3125,0\n13,0.1875,0\n14,0,0.375\n15,0,0.3125\n16,0,0.25\n17,0,0.0625\n"
+    }
   }
 }
