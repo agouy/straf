@@ -1,4 +1,5 @@
 import type { Genotypes } from "../parser.ts";
+import { uniquePopulations } from "../parser.ts";
 
 /**
  * Pairwise Weir & Cockerham (1984) θ̂ between every pair of populations.
@@ -147,6 +148,118 @@ export interface LocusFStats {
   Fis: number;
   Fst: number;
   Fit: number;
+}
+
+/**
+ * Per-locus stats matching `hierfstat::basic.stats(diploid=TRUE)$perloc`.
+ *
+ * For each locus, with `np` = number of populations actually typed at the
+ * locus (drop pops with n_i = 0), n_i = number of typed individuals in pop i:
+ *
+ *   p_ia    = sample frequency of allele a in pop i  (= count / 2 n_i)
+ *   sp2_i   = Σ_a p_ia²
+ *   sHo_i   = fraction of typed individuals heterozygous in pop i
+ *   mp_a    = mean over typed pops of p_ia
+ *
+ *   mn      = harmonic mean of n_i over typed pops
+ *   msp2    = mean of sp2_i
+ *   mHo     = mean of sHo_i
+ *   mp2     = Σ_a mp_a²
+ *
+ *   mHs = mn/(mn−1) · ( 1 − msp2 − mHo / (2 mn) )
+ *   Ht  = 1 − mp2 + mHs / (mn · np) − mHo / (2 mn · np)
+ *   Fis = 1 − mHo / mHs
+ *   Fst = (Ht − mHs) / Ht          ← Nei-style; NOT the W&C estimator below
+ *
+ * The R STRAF UI sources Ht / Hs / Fis from this function (via
+ * hierfstat::basic.stats) but uses W&C `wc()$per.loc$FST` for Fst. We follow
+ * the same split: this returns the basic.stats-style values; Fst should be
+ * read from `perLocusFStats` (which uses W&C's θ̂).
+ */
+export interface LocusBasicStats {
+  locus: string;
+  Ho: number;
+  Hs: number;
+  Ht: number;
+  Fis: number;
+  /** Nei's Fst = (Ht − Hs)/Ht. Kept for completeness; STRAF prefers W&C's. */
+  FstNei: number;
+}
+
+export function basicStatsPerLocus(genos: Genotypes): LocusBasicStats[] {
+  if (genos.ploidy !== 2) {
+    throw new Error("basicStatsPerLocus requires diploid data.");
+  }
+  const pops = uniquePopulations(genos);
+  const out: LocusBasicStats[] = [];
+
+  for (let l = 0; l < genos.loci.length; l++) {
+    const tuples = genos.alleles[l]!;
+    const nByPop = new Map<string, number>();
+    const alleleByPop = new Map<string, Map<string, number>>();
+    const hetIndCountByPop = new Map<string, number>();
+    for (const p of pops) {
+      nByPop.set(p, 0);
+      alleleByPop.set(p, new Map());
+      hetIndCountByPop.set(p, 0);
+    }
+    for (let i = 0; i < tuples.length; i++) {
+      const t = tuples[i]!;
+      if (t[0] === null || t[1] === null) continue;
+      const pop = genos.populations[i]!;
+      nByPop.set(pop, nByPop.get(pop)! + 1);
+      const aMap = alleleByPop.get(pop)!;
+      aMap.set(t[0]!, (aMap.get(t[0]!) ?? 0) + 1);
+      aMap.set(t[1]!, (aMap.get(t[1]!) ?? 0) + 1);
+      if (t[0] !== t[1]) hetIndCountByPop.set(pop, hetIndCountByPop.get(pop)! + 1);
+    }
+
+    const typedPops = pops.filter((p) => nByPop.get(p)! > 0);
+    const np = typedPops.length;
+    if (np === 0) {
+      out.push({ locus: genos.loci[l]!, Ho: NaN, Hs: NaN, Ht: NaN, Fis: NaN, FstNei: NaN });
+      continue;
+    }
+
+    const allAlleles = new Set<string>();
+    let sumSp2 = 0;
+    let sumSHo = 0;
+    let sumInvN = 0;
+    for (const p of typedPops) {
+      const n = nByPop.get(p)!;
+      const aMap = alleleByPop.get(p)!;
+      let sp2 = 0;
+      for (const c of aMap.values()) sp2 += (c / (2 * n)) ** 2;
+      for (const a of aMap.keys()) allAlleles.add(a);
+      sumSp2 += sp2;
+      sumSHo += hetIndCountByPop.get(p)! / n;
+      sumInvN += 1 / n;
+    }
+    const mn = np / sumInvN; // harmonic mean of n_i
+    const msp2 = sumSp2 / np;
+    const mHo = sumSHo / np;
+
+    let mp2 = 0;
+    for (const a of allAlleles) {
+      let s = 0;
+      for (const p of typedPops) {
+        const n = nByPop.get(p)!;
+        const c = alleleByPop.get(p)!.get(a) ?? 0;
+        s += c / (2 * n);
+      }
+      const mpa = s / np;
+      mp2 += mpa * mpa;
+    }
+
+    const mHs = mn > 1 ? (mn / (mn - 1)) * (1 - msp2 - mHo / (2 * mn)) : NaN;
+    const Ht = 1 - mp2 + mHs / (mn * np) - mHo / (2 * mn * np);
+    const Fis = mHs > 0 ? 1 - mHo / mHs : NaN;
+    const Dst = Ht - mHs;
+    const FstNei = Ht !== 0 ? Dst / Ht : NaN;
+
+    out.push({ locus: genos.loci[l]!, Ho: mHo, Hs: mHs, Ht, Fis, FstNei });
+  }
+  return out;
 }
 
 export function perLocusFStats(genos: Genotypes): LocusFStats[] {
