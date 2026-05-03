@@ -17,8 +17,8 @@ import { populationDistances } from "./stats/distances.ts";
 import type { DistanceMethod } from "./stats/distances.ts";
 import { classicalMds } from "./stats/mds.ts";
 import { confidenceEllipse } from "./stats/ellipse.ts";
-import { pairwiseFst, perLocusFStats } from "./stats/fst.ts";
-import type { LocusFStats } from "./stats/fst.ts";
+import { pairwiseFst, perLocusFStats, basicStatsPerLocus } from "./stats/fst.ts";
+import type { LocusFStats, LocusBasicStats } from "./stats/fst.ts";
 import { pairwiseLd, ldMatrix } from "./stats/ld.ts";
 import { isoMds } from "./stats/iso_mds.ts";
 import { haplotypeStatsForPop } from "./stats/haplotype.ts";
@@ -50,9 +50,25 @@ interface AppState {
   genos: Genotypes | null;
   pcaResult: PcaResult | null;
   rawText: string | null;
+  /** Lazy sections the user has triggered — replayed when the dataset is reloaded. */
+  ran: { pca: boolean; mds: boolean; ld: boolean; fst: boolean };
 }
 
-const state: AppState = { genos: null, pcaResult: null, rawText: null };
+const state: AppState = {
+  genos: null,
+  pcaResult: null,
+  rawText: null,
+  ran: { pca: false, mds: false, ld: false, fst: false },
+};
+
+/**
+ * Defer heavy compute until after the next browser paint, so any UI placed
+ * before the call (spinner, status text) actually becomes visible to the user.
+ * A single rAF runs *before* the upcoming paint; the second rAF runs after it.
+ */
+function deferCompute(fn: () => void): void {
+  requestAnimationFrame(() => requestAnimationFrame(fn));
+}
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T =>
   document.getElementById(id) as T;
@@ -162,16 +178,8 @@ function renderIssues(issues: ParseIssue[]): void {
         (warnCount > 0 ? ` and ${warnCount} warning${warnCount === 1 ? "" : "s"}` : "")
       : `${warnCount} warning${warnCount === 1 ? "" : "s"}`;
 
-  const items = issues
-    .map((i) => {
-      const where =
-        i.line !== undefined
-          ? `<span class="where">L${i.line}${i.column !== undefined ? `:C${i.column}` : ""}</span>`
-          : "";
-      const hint = i.hint ? `<br/><span class="hint">${escapeHtml(i.hint)}</span>` : "";
-      return `<li class="${i.kind}">${where}${escapeHtml(i.message)}${hint}</li>`;
-    })
-    .join("");
+  const groups = groupIssues(issues);
+  const items = groups.map(renderIssueGroup).join("");
 
   el.innerHTML = `
     <button class="dismiss" type="button" aria-label="Dismiss">×</button>
@@ -180,6 +188,87 @@ function renderIssues(issues: ParseIssue[]): void {
   `;
   const dismiss = el.querySelector<HTMLButtonElement>(".dismiss");
   if (dismiss) dismiss.addEventListener("click", () => renderIssues([]));
+}
+
+interface IssueGroup {
+  kind: "error" | "warning";
+  template: string;
+  hint?: string;
+  members: ParseIssue[];
+  /** Distinct quoted values extracted from each member's message (e.g. individual IDs). */
+  values: string[];
+}
+
+/** Replace quoted values in a message with "…" so messages that differ only by ID collapse together. */
+function templateOf(msg: string): string {
+  return msg.replace(/"[^"]*"/g, '"…"');
+}
+
+function extractQuoted(msg: string): string[] {
+  const out: string[] = [];
+  const re = /"([^"]*)"/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(msg)) !== null) out.push(m[1]!);
+  return out;
+}
+
+function groupIssues(issues: ParseIssue[]): IssueGroup[] {
+  const map = new Map<string, IssueGroup>();
+  const order: string[] = [];
+  for (const i of issues) {
+    const tmpl = templateOf(i.message);
+    const key = `${i.kind}|${tmpl}|${i.hint ?? ""}`;
+    let g = map.get(key);
+    if (!g) {
+      g = { kind: i.kind, template: tmpl, hint: i.hint, members: [], values: [] };
+      map.set(key, g);
+      order.push(key);
+    }
+    g.members.push(i);
+    for (const v of extractQuoted(i.message)) g.values.push(v);
+  }
+  return order.map((k) => map.get(k)!);
+}
+
+function renderIssueGroup(g: IssueGroup): string {
+  const first = g.members[0]!;
+  const where =
+    first.line !== undefined
+      ? `<span class="where">L${first.line}${first.column !== undefined ? `:C${first.column}` : ""}</span>`
+      : "";
+  const hint = g.hint ? `<br/><span class="hint">${escapeHtml(g.hint)}</span>` : "";
+
+  if (g.members.length === 1) {
+    return `<li class="${g.kind}">${where}${escapeHtml(first.message)}${hint}</li>`;
+  }
+
+  const lastLine = g.members[g.members.length - 1]!.line;
+  const lineRange =
+    first.line !== undefined && lastLine !== undefined && lastLine !== first.line
+      ? `lines ${first.line}–${lastLine}`
+      : first.line !== undefined
+        ? `line ${first.line}`
+        : "";
+  const occ = `${g.members.length} occurrences${lineRange ? ` (${lineRange})` : ""}`;
+
+  // Show up to 5 distinct example values, if the message had any quoted bits.
+  const distinct: string[] = [];
+  const seen = new Set<string>();
+  for (const v of g.values) {
+    if (seen.has(v)) continue;
+    seen.add(v);
+    distinct.push(v);
+    if (distinct.length >= 5) break;
+  }
+  let examples = "";
+  if (distinct.length > 0) {
+    const totalDistinct = new Set(g.values).size;
+    const remaining = totalDistinct - distinct.length;
+    const list = distinct.map((v) => `"${escapeHtml(v)}"`).join(", ");
+    examples = `<br/><span class="hint">Examples: ${list}${remaining > 0 ? ` (+${remaining} more)` : ""}</span>`;
+  }
+
+  return `<li class="${g.kind}">${where}<span class="muted small">[${occ}]</span> ${escapeHtml(g.template)}${examples}${hint}</li>`;
 }
 
 function escapeHtml(s: string): string {
@@ -197,6 +286,22 @@ function setStatus(msg: string, kind: "ok" | "error" | "" = ""): void {
   el.className = "status" + (kind ? ` ${kind}` : "");
 }
 
+/** Show or hide a spinner badge inside a wrap element. Pass null to remove. */
+function setComputing(wrapId: string, label: string | null): void {
+  const wrap = $(wrapId);
+  let s = wrap.querySelector<HTMLElement>(":scope > .computing");
+  if (label === null) {
+    if (s) s.remove();
+    return;
+  }
+  if (!s) {
+    s = document.createElement("div");
+    s.className = "computing";
+    wrap.prepend(s);
+  }
+  s.textContent = label;
+}
+
 // --- Refresh orchestrator --------------------------------------------------
 function refreshAll(): void {
   if (!state.genos) return;
@@ -208,12 +313,33 @@ function refreshAll(): void {
   renderForensic();
   renderPopgen();
   renderHaploSection();
-  // PCA + MDS are gated behind their checkboxes (lazy compute)
+  // PCA / MDS / LD / Fst are gated behind run buttons (lazy compute).
+  // If the user had already run them on the previous dataset, replay them on
+  // the new one so they don't have to re-click after every upload.
   state.pcaResult = null;
-  $("pcaWrap").style.display = "none";
-  $("mdsWrap").style.display = "none";
-  $<HTMLInputElement>("displayPCA").checked = false;
-  $<HTMLInputElement>("displayMDS").checked = false;
+  cachedMds = null;
+  syncLazySection("pca", "pcaWrap", "runPCA", computePca);
+  syncLazySection("mds", "mdsWrap", "runMDS", computeMds);
+  syncLazySection("ld", "ldWrap", "runLD", renderLd);
+  syncLazySection("fst", "fstWrap", "runFst", renderFst);
+}
+
+function syncLazySection(
+  key: keyof AppState["ran"],
+  wrapId: string,
+  buttonId: string,
+  run: () => void,
+): void {
+  const wrap = $(wrapId);
+  const btn = $<HTMLButtonElement>(buttonId);
+  if (state.ran[key]) {
+    wrap.style.display = "";
+    btn.disabled = true;
+    run();
+  } else {
+    wrap.style.display = "none";
+    btn.disabled = false;
+  }
 }
 
 function populatePopSelectors(): void {
@@ -505,14 +631,22 @@ function renderPopgen(): void {
       : null;
 
   // Per-locus F-statistics (only meaningful when more than one population
-  // exists in the dataset and we're showing "all").
+  // exists in the dataset and we're showing "all"). To match the original R
+  // STRAF UI: Ht/Hs/Fis come from hierfstat::basic.stats; Fst comes from
+  // hierfstat::wc (W&C θ̂). We mirror that split here.
   let fstats: LocusFStats[] | null = null;
+  let bstats: LocusBasicStats[] | null = null;
   const allPops = uniquePopulations(state.genos);
   if (state.genos.ploidy === 2 && allPops.length > 1 && pop === "all") {
     try {
       fstats = perLocusFStats(state.genos);
     } catch {
       fstats = null;
+    }
+    try {
+      bstats = basicStatsPerLocus(state.genos);
+    } catch {
+      bstats = null;
     }
   }
 
@@ -524,8 +658,8 @@ function renderPopgen(): void {
     Hexp: s.GD,
     HW_p: hwe ? hwe[i]!.pValue : null,
     HW_chi: hwe ? hwe[i]!.chiSq : null,
-    Ht: fstats ? fstats[i]!.Ht : null,
-    Fis: fstats ? fstats[i]!.Fis : null,
+    Ht: bstats ? bstats[i]!.Ht : null,
+    Fis: bstats ? bstats[i]!.Fis : null,
     Fst: fstats ? fstats[i]!.Fst : null,
   }));
   lastPopgenRows = rows;
@@ -601,10 +735,11 @@ function renderPopgenPlot(): void {
 }
 
 // --- LD ---
-$<HTMLInputElement>("displayLD").addEventListener("change", (e) => {
-  const checked = (e.target as HTMLInputElement).checked;
-  $("ldWrap").style.display = checked ? "" : "none";
-  if (checked) renderLd();
+$<HTMLButtonElement>("runLD").addEventListener("click", () => {
+  state.ran.ld = true;
+  $("ldWrap").style.display = "";
+  $<HTMLButtonElement>("runLD").disabled = true;
+  renderLd();
 });
 
 function renderLd(): void {
@@ -614,7 +749,8 @@ function renderLd(): void {
     return;
   }
   setStatus("Computing LD…");
-  requestAnimationFrame(() => {
+  setComputing("ldWrap", "Computing pairwise LD…");
+  deferCompute(() => {
     try {
       const results = pairwiseLd(state.genos!);
       const headers = ["Locus 1", "Locus 2", "N", "df", "χ²", "p-value"];
@@ -644,6 +780,10 @@ function renderLd(): void {
       setStatus("LD test done.", "ok");
     } catch (err) {
       setStatus(`LD test failed: ${(err as Error).message}`, "error");
+      $<HTMLButtonElement>("runLD").disabled = false;
+      state.ran.ld = false;
+    } finally {
+      setComputing("ldWrap", null);
     }
   });
 }
@@ -673,16 +813,18 @@ function renderLdHeatmap(loci: string[], matrix: (number | null)[][]): void {
 }
 
 // --- Pairwise Fst ---
-$<HTMLInputElement>("displayFst").addEventListener("change", (e) => {
-  const checked = (e.target as HTMLInputElement).checked;
-  $("fstWrap").style.display = checked ? "" : "none";
-  if (checked) renderFst();
+$<HTMLButtonElement>("runFst").addEventListener("click", () => {
+  state.ran.fst = true;
+  $("fstWrap").style.display = "";
+  $<HTMLButtonElement>("runFst").disabled = true;
+  renderFst();
 });
 
 function renderFst(): void {
   if (!state.genos) return;
   setStatus("Computing pairwise Fst…");
-  requestAnimationFrame(() => {
+  setComputing("fstWrap", "Computing pairwise Fst…");
+  deferCompute(() => {
     try {
       const fst = pairwiseFst(state.genos!);
       const headers = ["", ...fst.populations];
@@ -710,28 +852,34 @@ function renderFst(): void {
       setStatus("Pairwise Fst done.", "ok");
     } catch (err) {
       setStatus(`Pairwise Fst failed: ${(err as Error).message}`, "error");
+      $<HTMLButtonElement>("runFst").disabled = false;
+      state.ran.fst = false;
+    } finally {
+      setComputing("fstWrap", null);
     }
   });
 }
 
 // --- PCA + MDS tab ---------------------------------------------------------
-$<HTMLInputElement>("displayPCA").addEventListener("change", (e) => {
-  const checked = (e.target as HTMLInputElement).checked;
-  $("pcaWrap").style.display = checked ? "" : "none";
-  if (checked) computePca();
+$<HTMLButtonElement>("runPCA").addEventListener("click", () => {
+  state.ran.pca = true;
+  $("pcaWrap").style.display = "";
+  $<HTMLButtonElement>("runPCA").disabled = true;
+  computePca();
 });
 
 $<HTMLInputElement>("showEllipses").addEventListener("change", renderPcaPlot);
 $<HTMLSelectElement>("pcX").addEventListener("change", renderPcaPlot);
 $<HTMLSelectElement>("pcY").addEventListener("change", renderPcaPlot);
 $<HTMLInputElement>("pcaScale").addEventListener("change", () => {
-  if ($<HTMLInputElement>("displayPCA").checked) computePca();
+  if (state.pcaResult) computePca();
 });
 
 function computePca(): void {
   if (!state.genos) return;
   setStatus("Computing PCA…");
-  requestAnimationFrame(() => {
+  setComputing("pcaWrap", "Computing PCA…");
+  deferCompute(() => {
     try {
       const scale = $<HTMLInputElement>("pcaScale").checked;
       const res = pca(state.genos!, undefined, { scale });
@@ -772,6 +920,10 @@ function computePca(): void {
       );
     } catch (err) {
       setStatus(`PCA failed: ${(err as Error).message}`, "error");
+      $<HTMLButtonElement>("runPCA").disabled = false;
+      state.ran.pca = false;
+    } finally {
+      setComputing("pcaWrap", null);
     }
   });
 }
@@ -818,13 +970,14 @@ function renderPcaPlot(): void {
 }
 
 // MDS
-$<HTMLInputElement>("displayMDS").addEventListener("change", (e) => {
-  const checked = (e.target as HTMLInputElement).checked;
-  $("mdsWrap").style.display = checked ? "" : "none";
-  if (checked) computeMds();
+$<HTMLButtonElement>("runMDS").addEventListener("click", () => {
+  state.ran.mds = true;
+  $("mdsWrap").style.display = "";
+  $<HTMLButtonElement>("runMDS").disabled = true;
+  computeMds();
 });
 $<HTMLSelectElement>("mdsDist").addEventListener("change", () => {
-  if ($<HTMLInputElement>("displayMDS").checked) computeMds();
+  if (cachedMds) computeMds();
 });
 $<HTMLSelectElement>("mdsX").addEventListener("change", renderMdsPlot);
 $<HTMLSelectElement>("mdsY").addEventListener("change", renderMdsPlot);
@@ -844,12 +997,15 @@ function computeMds(): void {
   const pops = uniquePopulations(state.genos);
   if (pops.length < 2) {
     setStatus("MDS requires at least 2 populations.", "error");
-    $<HTMLInputElement>("displayMDS").checked = false;
     $("mdsWrap").style.display = "none";
+    cachedMds = null;
+    state.ran.mds = false;
+    $<HTMLButtonElement>("runMDS").disabled = false;
     return;
   }
   setStatus("Computing MDS…");
-  requestAnimationFrame(() => {
+  setComputing("mdsWrap", "Computing MDS…");
+  deferCompute(() => {
     try {
       const method = $<HTMLSelectElement>("mdsDist").value as DistanceMethod;
       const algo = $<HTMLSelectElement>("mdsAlgo").value;
@@ -899,13 +1055,17 @@ function computeMds(): void {
       setStatus("MDS done.", "ok");
     } catch (err) {
       setStatus(`MDS failed: ${(err as Error).message}`, "error");
+      $<HTMLButtonElement>("runMDS").disabled = false;
+      state.ran.mds = false;
+    } finally {
+      setComputing("mdsWrap", null);
     }
   });
 }
 
 // Trigger recompute when algorithm changes too.
 $<HTMLSelectElement>("mdsAlgo").addEventListener("change", () => {
-  if ($<HTMLInputElement>("displayMDS").checked) computeMds();
+  if (cachedMds) computeMds();
 });
 
 function renderMdsPlot(): void {

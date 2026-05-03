@@ -9,7 +9,9 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test src/**/*.test.ts"
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "parity:dump": "node --import tsx parity/dump_ts.ts",
+    "parity:compare": "node --import tsx parity/compare.ts"
   },
   "dependencies": {
     "@observablehq/plot": "^0.6.17",
