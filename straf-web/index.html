@@ -199,8 +199,9 @@
                     <button id="dlHaplo" type="button" class="dl">Download haplotypes (.tsv)</button>
                   </div>
                   <div id="haploTable" class="table-wrap small-text"></div>
+                  <p id="haploTableNote" class="muted small"></p>
                   <p id="haploDiv" class="muted small"></p>
-                  <h4>Number of pairwise differences between haplotypes</h4>
+                  <h4 id="haploDistTitle">Number of pairwise differences between haplotypes</h4>
                   <div id="haploDistPlot" class="plot"></div>
                 </div>
               </article>
@@ -294,19 +295,20 @@
                     <input type="file" id="refFile" accept=".csv" />
                   </label>
                 </div>
-                <p class="muted small">Default: STRidER 2024-09-24.</p>
+                <p class="muted small">Default: STRidER 2025-08-06.</p>
                 <label class="awesome-checkbox">
                   <input type="checkbox" id="includeCurrentRef" />
                   <span>Include the currently-loaded dataset</span>
                 </label>
                 <hr />
-                <div class="controls">
-                  <label>Populations:
-                    <select id="refPopsSelect" multiple size="6" style="min-width:260px"></select>
-                  </label>
+                <div class="ref-pops-bar">
+                  <label class="ref-pops-label">Populations:</label>
+                  <input type="search" id="refPopsSearch" placeholder="Filter…" class="ref-pops-search" />
+                  <span id="refPopsCount" class="muted small"></span>
                   <button id="refSelectAll" type="button" class="dl">Select all</button>
                   <button id="refSelectNone" type="button" class="dl">Clear</button>
                 </div>
+                <div id="refPopsList" class="checkbox-grid"></div>
                 <div id="refMdsWrap">
                   <div id="refMdsPlot" class="plot"></div>
                   <p id="refCommonLoci" class="muted small"></p>

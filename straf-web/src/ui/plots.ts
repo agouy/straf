@@ -129,6 +129,74 @@ export function barPlot(
   });
 }
 
+/**
+ * Vertical rank–frequency plot. Each datum becomes one thin bar at x = rank
+ * (1..N), y = value. No per-bar labels — designed for displaying hundreds of
+ * items where the horizontal `barPlot` would grow unmanageably tall.
+ */
+const rankConfigs = new WeakMap<HTMLElement, BarConfig>();
+
+export function rankPlot(
+  container: HTMLElement,
+  values: number[],
+  ylabel: string,
+  tooltipNames?: string[],
+  color = "#36648B",
+): void {
+  const cfg: BarConfig = rankConfigs.get(container) ?? {
+    color,
+    width: 720,
+    height: 320,
+    showValues: false,
+  };
+  rankConfigs.set(container, cfg);
+
+  const fields: ControlField[] = [
+    { kind: "color", key: "color", label: "Bar color" },
+    { kind: "range", key: "width", label: "Plot width", min: 400, max: 1400, step: 20, suffix: "px" },
+    { kind: "range", key: "height", label: "Plot height", min: 200, max: 800, step: 20, suffix: "px" },
+  ];
+
+  const render = (): void => {
+    const data = values.map((v, i) => ({
+      rank: i + 1,
+      value: v,
+      name: tooltipNames?.[i] ?? `#${i + 1}`,
+    }));
+    const fig = Plot.plot({
+      marginLeft: 60,
+      marginBottom: 40,
+      marginRight: 20,
+      marginTop: 20,
+      width: cfg.width,
+      height: cfg.height,
+      x: { label: "Rank (sorted by descending frequency)", grid: true },
+      y: { label: ylabel, grid: true },
+      marks: [
+        Plot.barY(data, {
+          x: "rank",
+          y: "value",
+          fill: cfg.color,
+          tip: true,
+          title: (d: { rank: number; value: number; name: string }) =>
+            `${d.name}\nrank: ${d.rank}\n${ylabel}: ${formatNum(d.value)}`,
+        }),
+        Plot.ruleY([0]),
+      ],
+    });
+    getFigureSlot(container).replaceChildren(fig);
+  };
+
+  render();
+  attachToolbar(container, {
+    filename: "rankplot",
+    title: "Rank plot",
+    fields,
+    config: cfg as unknown as Record<string, unknown>,
+    onChange: render,
+  });
+}
+
 // --- multi-locus allele frequency grid ------------------------------------
 
 export function alleleFreqGrid(

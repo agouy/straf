@@ -1107,7 +1107,7 @@ refTabBtn.addEventListener("click", async () => {
 async function loadDefaultReference(): Promise<void> {
   setStatus("Loading reference frequencies…");
   try {
-    const res = await fetch("./STRidER_frequencies_2024-09-24.csv");
+    const res = await fetch("./STRidER_frequencies_2025-08-06.csv");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const text = await res.text();
     refData = parseReferenceCsv(text);
@@ -1134,26 +1134,65 @@ $<HTMLInputElement>("refFile").addEventListener("change", async (e) => {
 });
 
 $<HTMLInputElement>("includeCurrentRef").addEventListener("change", renderRefMds);
-$<HTMLSelectElement>("refPopsSelect").addEventListener("change", renderRefMds);
+
 $<HTMLButtonElement>("refSelectAll").addEventListener("click", () => {
-  const sel = $<HTMLSelectElement>("refPopsSelect");
-  for (const o of Array.from(sel.options)) o.selected = true;
+  for (const cb of refPopCheckboxes()) cb.checked = true;
+  updateRefPopsCount();
   renderRefMds();
 });
 $<HTMLButtonElement>("refSelectNone").addEventListener("click", () => {
-  const sel = $<HTMLSelectElement>("refPopsSelect");
-  for (const o of Array.from(sel.options)) o.selected = false;
+  for (const cb of refPopCheckboxes()) cb.checked = false;
+  updateRefPopsCount();
   renderRefMds();
 });
 
+$<HTMLInputElement>("refPopsSearch").addEventListener("input", (e) => {
+  const q = (e.target as HTMLInputElement).value.trim().toLowerCase();
+  const labels = $("refPopsList").querySelectorAll<HTMLLabelElement>("label[data-pop]");
+  for (const lbl of labels) {
+    const pop = lbl.dataset.pop!.toLowerCase();
+    lbl.classList.toggle("hidden", q !== "" && !pop.includes(q));
+  }
+});
+
+function refPopCheckboxes(): HTMLInputElement[] {
+  return Array.from(
+    $("refPopsList").querySelectorAll<HTMLInputElement>('input[type="checkbox"]'),
+  );
+}
+
 function populateRefPopList(pops: string[]): void {
-  const sel = $<HTMLSelectElement>("refPopsSelect");
-  sel.innerHTML = pops.map((p) => `<option value="${p}" selected>${p}</option>`).join("");
+  const container = $("refPopsList");
+  container.innerHTML = pops
+    .map(
+      (p) => `
+        <label data-pop="${escapeHtml(p)}">
+          <input type="checkbox" value="${escapeHtml(p)}" checked />
+          <span class="pop-name" title="${escapeHtml(p)}">${escapeHtml(p)}</span>
+        </label>`,
+    )
+    .join("");
+  for (const cb of refPopCheckboxes()) {
+    cb.addEventListener("change", () => {
+      updateRefPopsCount();
+      renderRefMds();
+    });
+  }
+  // Reset filter when the list is rebuilt (e.g. after a custom CSV upload).
+  $<HTMLInputElement>("refPopsSearch").value = "";
+  updateRefPopsCount();
+}
+
+function updateRefPopsCount(): void {
+  const cbs = refPopCheckboxes();
+  const sel = cbs.filter((cb) => cb.checked).length;
+  $("refPopsCount").textContent = `${sel} / ${cbs.length} selected`;
 }
 
 function selectedRefPops(): string[] {
-  const sel = $<HTMLSelectElement>("refPopsSelect");
-  return Array.from(sel.selectedOptions).map((o) => o.value);
+  return refPopCheckboxes()
+    .filter((cb) => cb.checked)
+    .map((cb) => cb.value);
 }
 
 function renderRefMds(): void {
@@ -1310,39 +1349,61 @@ function renderHaploStats(): void {
     return;
   }
 
-  // Haplotype table.
+  const N = res.haplotypes.length;
+  const TABLE_LIMIT = 50;
+
+  // Haplotype table — cap visible rows for large N; the TSV download still
+  // contains every row.
   const headers = ["Haplotype ID", "Haplotype", "Count", "Frequency"];
-  const rows: (string | number | null)[][] = res.haplotypes.map((h) => [
+  const allRows: (string | number | null)[][] = res.haplotypes.map((h) => [
     h.id,
     h.haplotype,
     h.count,
     h.frequency,
   ]);
-  renderTable($("haploTable"), headers, rows, (v, col) => {
+  const visibleRows = N > TABLE_LIMIT ? allRows.slice(0, TABLE_LIMIT) : allRows;
+  renderTable($("haploTable"), headers, visibleRows, (v, col) => {
     if (col <= 1) return v as string;
     if (typeof v !== "number") return "";
     if (col === 2) return String(v);
     return fmtNum(v, 4);
   });
+  $("haploTableNote").textContent =
+    N > TABLE_LIMIT
+      ? `Showing the ${TABLE_LIMIT} most frequent of ${N} haplotypes. Download the .tsv for the full table.`
+      : "";
 
-  $("haploDiv").textContent = `Haplotype diversity h = ${fmtNum(res.diversity, 4)}  (n = ${res.n}, distinct haplotypes = ${res.haplotypes.length})`;
+  $("haploDiv").textContent = `Haplotype diversity h = ${fmtNum(res.diversity, 4)}  (n = ${res.n}, distinct haplotypes = ${N})`;
 
   $<HTMLButtonElement>("dlHaplo").onclick = () => {
     downloadText(
       `haplotypes_${pop}.tsv`,
-      tsvFromMatrix(headers, rows),
+      tsvFromMatrix(headers, allRows),
       "text/tab-separated-values",
     );
   };
 
-  // Pairwise difference heatmap (only if ≥ 2 distinct haplotypes).
-  if (res.haplotypes.length >= 2) {
+  // Pairwise differences: heatmap when small, UPGMA tree when large.
+  // The heatmap renders one DOM cell per pair (N²), so we cap it; trees
+  // scale linearly in the number of leaves.
+  const HEATMAP_LIMIT = 30;
+  const distTitle = $("haploDistTitle");
+  const distPlot = $("haploDistPlot");
+  if (N < 2) {
+    distTitle.textContent = "Number of pairwise differences between haplotypes";
+    distPlot.innerHTML = `<p class="muted small">At least 2 distinct haplotypes required for pairwise differences.</p>`;
+  } else if (N <= HEATMAP_LIMIT) {
+    distTitle.textContent = "Number of pairwise differences between haplotypes";
     renderHaploDistHeatmap(
       res.haplotypes.map((h) => h.id),
       res.pairDiff,
     );
   } else {
-    $("haploDistPlot").innerHTML = `<p class="muted small">At least 2 distinct haplotypes required for pairwise differences.</p>`;
+    distTitle.textContent = "UPGMA tree of pairwise haplotype differences";
+    const labels = res.haplotypes.map((h) => h.id);
+    const tree = hclust(res.pairDiff, labels, "average");
+    const seg = dendrogramSegments(tree);
+    dendrogramPlot(distPlot, seg.leafX, seg.leafLabels, seg.segments, seg.height);
   }
 }
 
