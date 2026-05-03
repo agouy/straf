@@ -145,9 +145,10 @@ function pairwiseDistance(
     }
     case "reynolds": {
       // Reynolds, Weir & Cockerham (1983) coancestrality coefficient θ_W.
-      // Per locus: num = ½ Σ_a (p_xa − p_ya)²
-      //           den = 1 − Σ_a p_xa · p_ya
-      // Distance = − ln( 1 − Σ num / Σ den ) summed over loci.
+      // Matches `adegenet::dist.genpop(method = 3)`:
+      //   per locus: num = ½ Σ_a (p_xa − p_ya)²
+      //              den = 1 − Σ_a p_xa · p_ya
+      //   D = sqrt( Σ num / Σ den )  summed over loci.
       let num = 0;
       let den = 0;
       let usedLoci = 0;
@@ -169,9 +170,7 @@ function pairwiseDistance(
         usedLoci++;
       }
       if (usedLoci === 0 || den <= 0) return 0;
-      const ratio = num / den;
-      if (ratio >= 1) return Infinity;
-      return -Math.log(Math.max(1e-12, 1 - ratio));
+      return Math.sqrt(Math.max(0, num / den));
     }
   }
 }
